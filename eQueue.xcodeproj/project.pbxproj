@@ -9,21 +9,39 @@
 /* Begin PBXBuildFile section */
 		5B91A8B024116AAC005A23DB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B91A8AF24116AAC005A23DB /* AppDelegate.swift */; };
 		5B91A8B224116AAC005A23DB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B91A8B124116AAC005A23DB /* SceneDelegate.swift */; };
-		5B91A8B424116AAC005A23DB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B91A8B324116AAC005A23DB /* ViewController.swift */; };
-		5B91A8B724116AAC005A23DB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5B91A8B524116AAC005A23DB /* Main.storyboard */; };
 		5B91A8B924116AAF005A23DB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B91A8B824116AAF005A23DB /* Assets.xcassets */; };
-		5B91A8BC24116AAF005A23DB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5B91A8BA24116AAF005A23DB /* LaunchScreen.storyboard */; };
+		5B91A8D424116AF2005A23DB /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B91A8C424116AF2005A23DB /* UIImageView+Extension.swift */; };
+		5B91A8D524116AF2005A23DB /* UIFont+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B91A8C524116AF2005A23DB /* UIFont+Extension.swift */; };
+		5B91A8D624116AF2005A23DB /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B91A8C624116AF2005A23DB /* UIColor+Extension.swift */; };
+		5B91A8D724116AF2005A23DB /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B91A8C724116AF2005A23DB /* UILabel+Extension.swift */; };
+		5B91A8D824116AF2005A23DB /* UIButton+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B91A8C824116AF2005A23DB /* UIButton+Extension.swift */; };
+		5B91A8D924116AF2005A23DB /* UIStackView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B91A8C924116AF2005A23DB /* UIStackView+Extension.swift */; };
+		5B91A8DA24116AF2005A23DB /* AuthNavigatingDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B91A8CB24116AF2005A23DB /* AuthNavigatingDelegate.swift */; };
+		5B91A8DB24116AF2005A23DB /* OneLineTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B91A8CD24116AF2005A23DB /* OneLineTextField.swift */; };
+		5B91A8DC24116AF2005A23DB /* ButtonFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B91A8CE24116AF2005A23DB /* ButtonFormView.swift */; };
+		5B91A8DD24116AF2005A23DB /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B91A8D124116AF2005A23DB /* SignUpViewController.swift */; };
+		5B91A8DE24116AF2005A23DB /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B91A8D224116AF2005A23DB /* AuthViewController.swift */; };
+		5B91A8DF24116AF2005A23DB /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B91A8D324116AF2005A23DB /* LoginViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		5B91A8AC24116AAC005A23DB /* eQueue.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = eQueue.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B91A8AF24116AAC005A23DB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5B91A8B124116AAC005A23DB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		5B91A8B324116AAC005A23DB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		5B91A8B624116AAC005A23DB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		5B91A8B824116AAF005A23DB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		5B91A8BB24116AAF005A23DB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5B91A8BD24116AAF005A23DB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5B91A8C424116AF2005A23DB /* UIImageView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
+		5B91A8C524116AF2005A23DB /* UIFont+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFont+Extension.swift"; sourceTree = "<group>"; };
+		5B91A8C624116AF2005A23DB /* UIColor+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
+		5B91A8C724116AF2005A23DB /* UILabel+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UILabel+Extension.swift"; sourceTree = "<group>"; };
+		5B91A8C824116AF2005A23DB /* UIButton+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+Extension.swift"; sourceTree = "<group>"; };
+		5B91A8C924116AF2005A23DB /* UIStackView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIStackView+Extension.swift"; sourceTree = "<group>"; };
+		5B91A8CB24116AF2005A23DB /* AuthNavigatingDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthNavigatingDelegate.swift; sourceTree = "<group>"; };
+		5B91A8CD24116AF2005A23DB /* OneLineTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OneLineTextField.swift; sourceTree = "<group>"; };
+		5B91A8CE24116AF2005A23DB /* ButtonFormView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonFormView.swift; sourceTree = "<group>"; };
+		5B91A8D124116AF2005A23DB /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		5B91A8D224116AF2005A23DB /* AuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
+		5B91A8D324116AF2005A23DB /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,6 +55,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5B38FF5324116FE1009F3B0A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				5B91A8B824116AAF005A23DB /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		5B91A8A324116AAC005A23DB = {
 			isa = PBXGroup;
 			children = (
@@ -56,15 +82,72 @@
 		5B91A8AE24116AAC005A23DB /* eQueue */ = {
 			isa = PBXGroup;
 			children = (
-				5B91A8AF24116AAC005A23DB /* AppDelegate.swift */,
-				5B91A8B124116AAC005A23DB /* SceneDelegate.swift */,
-				5B91A8B324116AAC005A23DB /* ViewController.swift */,
-				5B91A8B524116AAC005A23DB /* Main.storyboard */,
-				5B91A8B824116AAF005A23DB /* Assets.xcassets */,
-				5B91A8BA24116AAF005A23DB /* LaunchScreen.storyboard */,
-				5B91A8BD24116AAF005A23DB /* Info.plist */,
+				5B91A8E024116B08005A23DB /* App */,
+				5B91A8CF24116AF2005A23DB /* Controllers */,
+				5B91A8C324116AF2005A23DB /* Extensions */,
+				5B91A8CA24116AF2005A23DB /* Protocols */,
+				5B38FF5324116FE1009F3B0A /* Resources */,
+				5B91A8CC24116AF2005A23DB /* Views */,
 			);
 			path = eQueue;
+			sourceTree = "<group>";
+		};
+		5B91A8C324116AF2005A23DB /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				5B91A8C424116AF2005A23DB /* UIImageView+Extension.swift */,
+				5B91A8C524116AF2005A23DB /* UIFont+Extension.swift */,
+				5B91A8C624116AF2005A23DB /* UIColor+Extension.swift */,
+				5B91A8C724116AF2005A23DB /* UILabel+Extension.swift */,
+				5B91A8C824116AF2005A23DB /* UIButton+Extension.swift */,
+				5B91A8C924116AF2005A23DB /* UIStackView+Extension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		5B91A8CA24116AF2005A23DB /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				5B91A8CB24116AF2005A23DB /* AuthNavigatingDelegate.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		5B91A8CC24116AF2005A23DB /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				5B91A8CD24116AF2005A23DB /* OneLineTextField.swift */,
+				5B91A8CE24116AF2005A23DB /* ButtonFormView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		5B91A8CF24116AF2005A23DB /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				5B91A8D024116AF2005A23DB /* Auth&SignUp */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		5B91A8D024116AF2005A23DB /* Auth&SignUp */ = {
+			isa = PBXGroup;
+			children = (
+				5B91A8D124116AF2005A23DB /* SignUpViewController.swift */,
+				5B91A8D224116AF2005A23DB /* AuthViewController.swift */,
+				5B91A8D324116AF2005A23DB /* LoginViewController.swift */,
+			);
+			path = "Auth&SignUp";
+			sourceTree = "<group>";
+		};
+		5B91A8E024116B08005A23DB /* App */ = {
+			isa = PBXGroup;
+			children = (
+				5B91A8AF24116AAC005A23DB /* AppDelegate.swift */,
+				5B91A8B124116AAC005A23DB /* SceneDelegate.swift */,
+				5B91A8BD24116AAF005A23DB /* Info.plist */,
+			);
+			path = App;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -125,9 +208,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5B91A8BC24116AAF005A23DB /* LaunchScreen.storyboard in Resources */,
 				5B91A8B924116AAF005A23DB /* Assets.xcassets in Resources */,
-				5B91A8B724116AAC005A23DB /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,32 +219,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5B91A8B424116AAC005A23DB /* ViewController.swift in Sources */,
 				5B91A8B024116AAC005A23DB /* AppDelegate.swift in Sources */,
+				5B91A8DA24116AF2005A23DB /* AuthNavigatingDelegate.swift in Sources */,
+				5B91A8DF24116AF2005A23DB /* LoginViewController.swift in Sources */,
+				5B91A8D424116AF2005A23DB /* UIImageView+Extension.swift in Sources */,
+				5B91A8D724116AF2005A23DB /* UILabel+Extension.swift in Sources */,
+				5B91A8D624116AF2005A23DB /* UIColor+Extension.swift in Sources */,
+				5B91A8DC24116AF2005A23DB /* ButtonFormView.swift in Sources */,
+				5B91A8DB24116AF2005A23DB /* OneLineTextField.swift in Sources */,
+				5B91A8D924116AF2005A23DB /* UIStackView+Extension.swift in Sources */,
+				5B91A8D824116AF2005A23DB /* UIButton+Extension.swift in Sources */,
+				5B91A8DE24116AF2005A23DB /* AuthViewController.swift in Sources */,
+				5B91A8D524116AF2005A23DB /* UIFont+Extension.swift in Sources */,
+				5B91A8DD24116AF2005A23DB /* SignUpViewController.swift in Sources */,
 				5B91A8B224116AAC005A23DB /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		5B91A8B524116AAC005A23DB /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				5B91A8B624116AAC005A23DB /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		5B91A8BA24116AAF005A23DB /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				5B91A8BB24116AAF005A23DB /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		5B91A8BE24116AAF005A23DB /* Debug */ = {
@@ -286,7 +359,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 73A856J95H;
-				INFOPLIST_FILE = eQueue/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/eQueue/App/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -294,7 +367,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.gkashin.eQueue;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -304,7 +377,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 73A856J95H;
-				INFOPLIST_FILE = eQueue/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/eQueue/App/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -312,7 +385,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.gkashin.eQueue;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
