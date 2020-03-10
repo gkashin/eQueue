@@ -10,6 +10,8 @@ import UIKit
 
 class QueueViewController: UIViewController {
     
+    let isOwnCreatedQueue = true
+    
     let currentQueue = Queue()
     let lineNumberLabel = UILabel(text: "Вы 3-й в очереди!")
     let waitingTimeLabel = UILabel(text: "Среднее время ожидания: ∞")
@@ -17,7 +19,7 @@ class QueueViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+//        view.isHidden = true
         view.backgroundColor = .mainWhite()
         title = currentQueue.name
         
@@ -28,12 +30,19 @@ class QueueViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         
-        tableView.register(QueueItemTableViewCell.self, forCellReuseIdentifier: QueueItemTableViewCell.id)
+        let cellType = isOwnCreatedQueue ? OwnCreatedQueueItemTableViewCell.self : QueueItemTableViewCell.self
+        let id = isOwnCreatedQueue ? OwnCreatedQueueItemTableViewCell.id : QueueItemTableViewCell.id
+        tableView.register(cellType, forCellReuseIdentifier: id)
         
         view.addSubview(tableView)
         
         setupConstraints()
     }
+}
+
+// MARK: - Second View
+extension QueueViewController {
+    
 }
 
 // MARK: - UI
@@ -45,7 +54,7 @@ extension QueueViewController {
         view.addSubview(stackView)
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150),
+            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
         ])
     }
@@ -55,17 +64,17 @@ extension QueueViewController {
 extension QueueViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 //        currentQueue.people.count
-        return 3
+        return isOwnCreatedQueue ? 3 : 2
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: QueueItemTableViewCell.id, for: indexPath)
-        
+        let id = isOwnCreatedQueue ? OwnCreatedQueueItemTableViewCell.id : QueueItemTableViewCell.id
+        let cell = tableView.dequeueReusableCell(withIdentifier: id, for: indexPath)
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 120
+        return isOwnCreatedQueue ? 80 : 120
     }
 }
 

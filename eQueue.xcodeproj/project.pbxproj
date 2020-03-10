@@ -16,6 +16,7 @@
 		5B86179B2416A1660031B776 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B86179A2416A1660031B776 /* Queue.swift */; };
 		5B86179D2416A3D00031B776 /* QueueItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B86179C2416A3D00031B776 /* QueueItemTableViewCell.swift */; };
 		5B8617A22417F1460031B776 /* QueueTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8617A12417F1460031B776 /* QueueTableViewCell.swift */; };
+		5B8617A42417FE5C0031B776 /* OwnCreatedQueueItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8617A32417FE5C0031B776 /* OwnCreatedQueueItemTableViewCell.swift */; };
 		5B91A8B024116AAC005A23DB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B91A8AF24116AAC005A23DB /* AppDelegate.swift */; };
 		5B91A8B224116AAC005A23DB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B91A8B124116AAC005A23DB /* SceneDelegate.swift */; };
 		5B91A8B924116AAF005A23DB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B91A8B824116AAF005A23DB /* Assets.xcassets */; };
@@ -43,6 +44,7 @@
 		5B86179A2416A1660031B776 /* Queue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 		5B86179C2416A3D00031B776 /* QueueItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueItemTableViewCell.swift; sourceTree = "<group>"; };
 		5B8617A12417F1460031B776 /* QueueTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueTableViewCell.swift; sourceTree = "<group>"; };
+		5B8617A32417FE5C0031B776 /* OwnCreatedQueueItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OwnCreatedQueueItemTableViewCell.swift; sourceTree = "<group>"; };
 		5B91A8AC24116AAC005A23DB /* eQueue.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = eQueue.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B91A8AF24116AAC005A23DB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5B91A8B124116AAC005A23DB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 			children = (
 				5B86179C2416A3D00031B776 /* QueueItemTableViewCell.swift */,
 				5B8617A12417F1460031B776 /* QueueTableViewCell.swift */,
+				5B8617A32417FE5C0031B776 /* OwnCreatedQueueItemTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -290,6 +293,7 @@
 				5B91A8DD24116AF2005A23DB /* SignUpViewController.swift in Sources */,
 				5B861795241695CB0031B776 /* MainViewController.swift in Sources */,
 				5B86179D2416A3D00031B776 /* QueueItemTableViewCell.swift in Sources */,
+				5B8617A42417FE5C0031B776 /* OwnCreatedQueueItemTableViewCell.swift in Sources */,
 				5B91A8B224116AAC005A23DB /* SceneDelegate.swift in Sources */,
 				5B861799241697980031B776 /* ControlViewController.swift in Sources */,
 				5B861793241695820031B776 /* MainTabBarController.swift in Sources */,
