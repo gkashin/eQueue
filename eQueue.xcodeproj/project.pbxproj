@@ -32,6 +32,8 @@
 		5B91A8DD24116AF2005A23DB /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B91A8D124116AF2005A23DB /* SignUpViewController.swift */; };
 		5B91A8DE24116AF2005A23DB /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B91A8D224116AF2005A23DB /* AuthViewController.swift */; };
 		5B91A8DF24116AF2005A23DB /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B91A8D324116AF2005A23DB /* LoginViewController.swift */; };
+		5BB7ADC824194CF4008C21DD /* CreateQueueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB7ADC724194CF4008C21DD /* CreateQueueViewController.swift */; };
+		5BB7ADCA24194ED8008C21DD /* TextFieldFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB7ADC924194ED8008C21DD /* TextFieldFormView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +64,8 @@
 		5B91A8D124116AF2005A23DB /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		5B91A8D224116AF2005A23DB /* AuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		5B91A8D324116AF2005A23DB /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		5BB7ADC724194CF4008C21DD /* CreateQueueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateQueueViewController.swift; sourceTree = "<group>"; };
+		5BB7ADC924194ED8008C21DD /* TextFieldFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFormView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -165,9 +169,10 @@
 		5B91A8CC24116AF2005A23DB /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				5B91A8CE24116AF2005A23DB /* ButtonFormView.swift */,
 				5B8617A02417F1280031B776 /* Cells */,
 				5B91A8CD24116AF2005A23DB /* OneLineTextField.swift */,
-				5B91A8CE24116AF2005A23DB /* ButtonFormView.swift */,
+				5BB7ADC924194ED8008C21DD /* TextFieldFormView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -177,6 +182,7 @@
 			children = (
 				5B91A8D024116AF2005A23DB /* Auth&SignUp */,
 				5B861794241695CB0031B776 /* MainViewController.swift */,
+				5BB7ADC724194CF4008C21DD /* CreateQueueViewController.swift */,
 				5B861796241696AE0031B776 /* QueueViewController.swift */,
 				5B861798241697980031B776 /* ControlViewController.swift */,
 				5B861792241695820031B776 /* MainTabBarController.swift */,
@@ -281,6 +287,7 @@
 				5B8617A22417F1460031B776 /* QueueTableViewCell.swift in Sources */,
 				5B91A8D424116AF2005A23DB /* UIImageView+Extension.swift in Sources */,
 				5B38FF592412C12B009F3B0A /* User.swift in Sources */,
+				5BB7ADCA24194ED8008C21DD /* TextFieldFormView.swift in Sources */,
 				5B91A8D724116AF2005A23DB /* UILabel+Extension.swift in Sources */,
 				5B91A8D624116AF2005A23DB /* UIColor+Extension.swift in Sources */,
 				5B91A8DC24116AF2005A23DB /* ButtonFormView.swift in Sources */,
@@ -294,6 +301,7 @@
 				5B861795241695CB0031B776 /* MainViewController.swift in Sources */,
 				5B86179D2416A3D00031B776 /* QueueItemTableViewCell.swift in Sources */,
 				5B8617A42417FE5C0031B776 /* OwnCreatedQueueItemTableViewCell.swift in Sources */,
+				5BB7ADC824194CF4008C21DD /* CreateQueueViewController.swift in Sources */,
 				5B91A8B224116AAC005A23DB /* SceneDelegate.swift in Sources */,
 				5B861799241697980031B776 /* ControlViewController.swift in Sources */,
 				5B861793241695820031B776 /* MainTabBarController.swift in Sources */,

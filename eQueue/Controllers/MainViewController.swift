@@ -24,6 +24,13 @@ class MainViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         
         setupConstraints()
+        
+        createQueueButton.addTarget(self, action: #selector(createQueueButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func createQueueButtonTapped() {
+        let createQueueVC = CreateQueueViewController()
+        present(createQueueVC, animated: true)
     }
 }
 
