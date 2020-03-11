@@ -15,7 +15,7 @@ class ControlViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .mainWhite()
+        view.backgroundColor = .white
         title = "Управление"
         
         navigationController?.navigationBar.prefersLargeTitles = true

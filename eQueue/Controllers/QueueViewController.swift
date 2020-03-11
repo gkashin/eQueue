@@ -10,17 +10,18 @@ import UIKit
 
 class QueueViewController: UIViewController {
     
-    let isOwnCreatedQueue = true
+    let isOwnCreatedQueue = false
     
     let currentQueue = Queue()
     let lineNumberLabel = UILabel(text: "Вы 3-й в очереди!")
     let waitingTimeLabel = UILabel(text: "Среднее время ожидания: ∞")
+    let removeQueueButton = UIButton(title: "Удалить очередь", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false)
     var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 //        view.isHidden = true
-        view.backgroundColor = .mainWhite()
+        view.backgroundColor = .white
         title = currentQueue.name
         
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -34,6 +35,7 @@ class QueueViewController: UIViewController {
         let id = isOwnCreatedQueue ? OwnCreatedQueueItemTableViewCell.id : QueueItemTableViewCell.id
         tableView.register(cellType, forCellReuseIdentifier: id)
         
+        view.addSubview(UIView(frame: .zero))
         view.addSubview(tableView)
         
         setupConstraints()
@@ -48,15 +50,24 @@ extension QueueViewController {
 // MARK: - UI
 extension QueueViewController {
     private func setupConstraints() {
-        let stackView = UIStackView(arrangedSubviews: [lineNumberLabel, waitingTimeLabel], axis: .vertical, spacing: 10)
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.alignment = .center
-        view.addSubview(stackView)
-        
-        NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-        ])
+        if !isOwnCreatedQueue {
+            let stackView = UIStackView(arrangedSubviews: [lineNumberLabel, waitingTimeLabel], axis: .vertical, spacing: 10)
+            stackView.translatesAutoresizingMaskIntoConstraints = false
+            stackView.alignment = .center
+            
+            view.addSubview(stackView)
+            NSLayoutConstraint.activate([
+                stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+                stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            ])
+        } else {
+            view.addSubview(removeQueueButton)
+            removeQueueButton.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                removeQueueButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+                removeQueueButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            ])
+        }
     }
 }
 
