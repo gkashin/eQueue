@@ -9,20 +9,27 @@
 import UIKit
 
 class QueueViewController: UIViewController {
+        
+    static let updateNotificationName = Notification.Name("updateNotification")
     
-    let isOwnCreatedQueue = false
+    var currentQueue = Queue() {
+        didSet {
+            updateUI()
+            tableView.reloadData()
+        }
+    }
+    var tableView: UITableView!
     
-    let currentQueue = Queue()
     let lineNumberLabel = UILabel(text: "Вы 3-й в очереди!")
     let waitingTimeLabel = UILabel(text: "Среднее время ожидания: ∞")
+    var queueInfoStackView: UIStackView!
+    
+    let totalPeopleLabel = UILabel(text: "Всего человек: 1024")
     let removeQueueButton = UIButton(title: "Удалить очередь", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false)
-    var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        view.isHidden = true
         view.backgroundColor = .white
-        title = currentQueue.name
         
         navigationController?.navigationBar.prefersLargeTitles = true
         
@@ -31,42 +38,71 @@ class QueueViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         
-        let cellType = isOwnCreatedQueue ? OwnCreatedQueueItemTableViewCell.self : QueueItemTableViewCell.self
-        let id = isOwnCreatedQueue ? OwnCreatedQueueItemTableViewCell.id : QueueItemTableViewCell.id
-        tableView.register(cellType, forCellReuseIdentifier: id)
+        let firstCellType = QueueItemTableViewCell.self
+        let secondCellType = OwnCreatedQueueItemTableViewCell.self
+        let firstId = QueueItemTableViewCell.id
+        let secondId = OwnCreatedQueueItemTableViewCell.id
+        tableView.register(firstCellType, forCellReuseIdentifier: firstId)
+        tableView.register(secondCellType, forCellReuseIdentifier: secondId)
         
         view.addSubview(UIView(frame: .zero))
         view.addSubview(tableView)
         
-        setupConstraints()
+        setupUI()
+        updateUI()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(getData), name: QueueViewController.updateNotificationName, object: nil)
     }
-}
-
-// MARK: - Second View
-extension QueueViewController {
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        title = currentQueue.name
+    }
+    
+    @objc func getData(from notification: Notification) {
+        currentQueue = notification.userInfo!["queue"] as! Queue
+    }
 }
 
 // MARK: - UI
 extension QueueViewController {
-    private func setupConstraints() {
-        if !isOwnCreatedQueue {
-            let stackView = UIStackView(arrangedSubviews: [lineNumberLabel, waitingTimeLabel], axis: .vertical, spacing: 10)
-            stackView.translatesAutoresizingMaskIntoConstraints = false
-            stackView.alignment = .center
-            
-            view.addSubview(stackView)
-            NSLayoutConstraint.activate([
-                stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-                stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            ])
+    private func setupUI() {
+        queueInfoStackView = UIStackView(arrangedSubviews: [lineNumberLabel, waitingTimeLabel], axis: .vertical, spacing: 10)
+        queueInfoStackView.translatesAutoresizingMaskIntoConstraints = false
+        queueInfoStackView.alignment = .center
+        
+        view.addSubview(queueInfoStackView)
+        NSLayoutConstraint.activate([
+            queueInfoStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            queueInfoStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+        ])
+        
+        view.addSubview(totalPeopleLabel)
+        view.addSubview(removeQueueButton)
+        totalPeopleLabel.translatesAutoresizingMaskIntoConstraints = false
+        removeQueueButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            totalPeopleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            totalPeopleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+        ])
+        
+        NSLayoutConstraint.activate([
+            removeQueueButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            removeQueueButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+        ])
+    }
+    
+    private func updateUI() {
+        if currentQueue.isOwnCreated {
+            queueInfoStackView.isHidden = true
+            totalPeopleLabel.isHidden = false
+            removeQueueButton.isHidden = false
         } else {
-            view.addSubview(removeQueueButton)
-            removeQueueButton.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                removeQueueButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-                removeQueueButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            ])
+            queueInfoStackView.isHidden = false
+            totalPeopleLabel.isHidden = true
+            removeQueueButton.isHidden = true
         }
     }
 }
@@ -75,17 +111,17 @@ extension QueueViewController {
 extension QueueViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 //        currentQueue.people.count
-        return isOwnCreatedQueue ? 3 : 2
+        return currentQueue.isOwnCreated ? 3 : 2
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let id = isOwnCreatedQueue ? OwnCreatedQueueItemTableViewCell.id : QueueItemTableViewCell.id
+        let id = currentQueue.isOwnCreated ? OwnCreatedQueueItemTableViewCell.id : QueueItemTableViewCell.id
         let cell = tableView.dequeueReusableCell(withIdentifier: id, for: indexPath)
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return isOwnCreatedQueue ? 80 : 120
+        return currentQueue.isOwnCreated ? 80 : 120
     }
 }
 

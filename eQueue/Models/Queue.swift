@@ -11,6 +11,7 @@ import UIKit
 struct Queue {
     var name = "Только спросить"
     var description = ""
-    var startDate = Date()
+    var startDate = String()
     var people = [User]()
+    var isOwnCreated = Bool()
 }

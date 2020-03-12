@@ -10,26 +10,75 @@ import UIKit
 
 class CreateQueueViewController: UIViewController {
     
-    let label = UILabel(text: "Label1")
-    let textField = OneLineTextField(font: .avenir20())
+    let titleLabel = UILabel(text: "Создать очередь")
+    let nameLabel = UILabel(text: "Name")
+    let descriptionLabel = UILabel(text: "Description")
+    let startDateLabel = UILabel(text: "Start date")
+    let nameTextField = OneLineTextField(font: .avenir20())
+    let descriptionTextField = OneLineTextField(font: .avenir20())
+    let startDateTextField = OneLineTextField(font: .avenir20())
+    
+    let createButton = UIButton(title: "Создать", backgroundColor: .buttonDark(), titleColor: .white, font: .avenir20(), isShadow: false)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .white
         
-        let textFieldFormView = TextFieldFormView(label: label, textField: textField)
-        textFieldFormView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(textFieldFormView)
-
-        textFieldFormView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        textFieldFormView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        setupUI()
         
-//        let stackView = UIStackView(arrangedSubviews: [label, textField], axis: .vertical, spacing: 10)
-//        stackView.translatesAutoresizingMaskIntoConstraints = false
-//        view.addSubview(stackView)
-//        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-//        stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func createButtonTapped() {
+        guard let name = nameTextField.text,
+            let description = descriptionTextField.text,
+            let startDate = startDateTextField.text,
+            name != "",
+            description != "",
+            startDate != "" else {
+                return
+        }
+        
+        let queue = Queue(name: name, description: description, startDate: startDate, people: [], isOwnCreated: true)
+        NotificationCenter.default.post(name: QueueViewController.updateNotificationName, object: nil, userInfo: ["queue": queue])
+    }
+}
+
+// MARK: - UI
+extension CreateQueueViewController {
+    private func setupUI() {
+        let nameTextFieldFormView = TextFieldFormView(label: nameLabel, textField: nameTextField)
+        let descriptionTextFieldFormView = TextFieldFormView(label: descriptionLabel, textField: descriptionTextField)
+        let startDateTextFieldFormView = TextFieldFormView(label: startDateLabel, textField: startDateTextField)
+        
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(titleLabel)
+        
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 120),
+            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+        ])
+        
+        let stackView = UIStackView(arrangedSubviews: [nameTextFieldFormView, descriptionTextFieldFormView, startDateTextFieldFormView], axis: .vertical, spacing: 0)
+        
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(stackView)
+        
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 50),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
+        ])
+        
+        createButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(createButton)
+        
+        NSLayoutConstraint.activate([
+            createButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
+            createButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            createButton.widthAnchor.constraint(equalToConstant: 100)
+        ])
     }
 }
 
