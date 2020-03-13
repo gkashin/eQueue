@@ -46,8 +46,8 @@ class MainTabBarController: UITabBarController {
         
         viewControllers = [
             generateNavigationController(rootViewController: queueViewController, title: "Моя очередь", image: conversationImage),
-            generateNavigationController(rootViewController: controlViewController, title: "Управление", image: conversationImage),
             generateNavigationController(rootViewController: mainViewController, title: "Главная", image: peopleImage),
+            generateNavigationController(rootViewController: controlViewController, title: "Управление", image: conversationImage),
         ]
     }
     

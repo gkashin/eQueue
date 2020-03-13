@@ -55,19 +55,21 @@ extension MainViewController {
         
         buttonStackView.translatesAutoresizingMaskIntoConstraints = false
         buttonStackView.setCustomSpacing(70, after: findQueueButton)
+        buttonStackView.distribution = .fillEqually
         view.addSubview(buttonStackView)
         
         NSLayoutConstraint.activate([
             logoImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150),
             logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            logoImageView.heightAnchor.constraint(equalToConstant: 500),
+            logoImageView.heightAnchor.constraint(equalToConstant: 300),
             logoImageView.widthAnchor.constraint(equalToConstant: 350)
         ])
         
         NSLayoutConstraint.activate([
-            buttonStackView.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 50),
+            buttonStackView.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 30),
             buttonStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
             buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
+            buttonStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -150),
         ])
     }
 }

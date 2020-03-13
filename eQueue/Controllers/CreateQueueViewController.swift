@@ -11,9 +11,9 @@ import UIKit
 class CreateQueueViewController: UIViewController {
     
     let titleLabel = UILabel(text: "Создать очередь")
-    let nameLabel = UILabel(text: "Name")
-    let descriptionLabel = UILabel(text: "Description")
-    let startDateLabel = UILabel(text: "Start date")
+    let nameLabel = UILabel(text: "Название очереди")
+    let descriptionLabel = UILabel(text: "Описание")
+    let startDateLabel = UILabel(text: "Дата начала")
     let nameTextField = OneLineTextField(font: .avenir20())
     let descriptionTextField = OneLineTextField(font: .avenir20())
     let startDateTextField = OneLineTextField(font: .avenir20())
@@ -28,6 +28,13 @@ class CreateQueueViewController: UIViewController {
         setupUI()
         
         createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        
+    }
+    @objc func keyboardWillShow() {
+        print(12132)
+        
     }
     
     @objc private func createButtonTapped() {
@@ -40,8 +47,12 @@ class CreateQueueViewController: UIViewController {
                 return
         }
         
-        let queue = Queue(name: name, description: description, startDate: startDate, people: [], isOwnCreated: true)
+        let queue = Queue(name: name, description: description, startDate: "", people: [], isOwnCreated: true)
         NotificationCenter.default.post(name: QueueViewController.updateNotificationName, object: nil, userInfo: ["queue": queue])
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
     }
 }
 
@@ -51,6 +62,11 @@ extension CreateQueueViewController {
         let nameTextFieldFormView = TextFieldFormView(label: nameLabel, textField: nameTextField)
         let descriptionTextFieldFormView = TextFieldFormView(label: descriptionLabel, textField: descriptionTextField)
         let startDateTextFieldFormView = TextFieldFormView(label: startDateLabel, textField: startDateTextField)
+        
+        let datePicker = UIDatePicker()
+        datePicker.datePickerMode = .dateAndTime
+        startDateTextField.inputView = datePicker
+        datePicker.addTarget(self, action: #selector(handleDatePicker), for: .valueChanged)
         
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(titleLabel)
@@ -77,8 +93,14 @@ extension CreateQueueViewController {
         NSLayoutConstraint.activate([
             createButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
             createButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            createButton.widthAnchor.constraint(equalToConstant: 100)
+            createButton.widthAnchor.constraint(equalToConstant: 200)
         ])
+    }
+    
+    @objc private func handleDatePicker(sender: UIDatePicker) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .long
+        startDateTextField.text = dateFormatter.string(from: sender.date)
     }
 }
 

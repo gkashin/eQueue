@@ -26,11 +26,9 @@ class TextFieldFormView: UIView {
         NSLayoutConstraint.activate([
             textField.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 20),
             textField.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-//            textField.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             textField.widthAnchor.constraint(equalTo: self.widthAnchor)
         ])
-        
-//        bottomAnchor.constraint(equalTo: textField.bottomAnchor).isActive = true
+    
         heightAnchor.constraint(equalToConstant: 200).isActive = true
     }
     

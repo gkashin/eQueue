@@ -172,9 +172,9 @@
 			isa = PBXGroup;
 			children = (
 				5B91A8CE24116AF2005A23DB /* ButtonFormView.swift */,
-				5B8617A02417F1280031B776 /* Cells */,
 				5B91A8CD24116AF2005A23DB /* OneLineTextField.swift */,
 				5BB7ADC924194ED8008C21DD /* TextFieldFormView.swift */,
+				5B8617A02417F1280031B776 /* Cells */,
 			);
 			path = Views;
 			sourceTree = "<group>";
