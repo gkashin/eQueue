@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5B38FF562412BE42009F3B0A /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B38FF552412BE42009F3B0A /* NetworkManager.swift */; };
 		5B38FF592412C12B009F3B0A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B38FF582412C12B009F3B0A /* User.swift */; };
+		5B740F3E241BD85E008E093E /* ScanQRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B740F3D241BD85E008E093E /* ScanQRViewController.swift */; };
 		5B861793241695820031B776 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B861792241695820031B776 /* MainTabBarController.swift */; };
 		5B861795241695CB0031B776 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B861794241695CB0031B776 /* MainViewController.swift */; };
 		5B861797241696AE0031B776 /* QueueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B861796241696AE0031B776 /* QueueViewController.swift */; };
@@ -39,6 +40,7 @@
 /* Begin PBXFileReference section */
 		5B38FF552412BE42009F3B0A /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		5B38FF582412C12B009F3B0A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		5B740F3D241BD85E008E093E /* ScanQRViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanQRViewController.swift; sourceTree = "<group>"; };
 		5B861792241695820031B776 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		5B861794241695CB0031B776 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		5B861796241696AE0031B776 /* QueueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueViewController.swift; sourceTree = "<group>"; };
@@ -182,6 +184,7 @@
 			children = (
 				5B91A8D024116AF2005A23DB /* Auth&SignUp */,
 				5B861794241695CB0031B776 /* MainViewController.swift */,
+				5B740F3D241BD85E008E093E /* ScanQRViewController.swift */,
 				5BB7ADC724194CF4008C21DD /* CreateQueueViewController.swift */,
 				5B861796241696AE0031B776 /* QueueViewController.swift */,
 				5B861798241697980031B776 /* ControlViewController.swift */,
@@ -299,6 +302,7 @@
 				5B38FF562412BE42009F3B0A /* NetworkManager.swift in Sources */,
 				5B91A8DD24116AF2005A23DB /* SignUpViewController.swift in Sources */,
 				5B861795241695CB0031B776 /* MainViewController.swift in Sources */,
+				5B740F3E241BD85E008E093E /* ScanQRViewController.swift in Sources */,
 				5B86179D2416A3D00031B776 /* QueueItemTableViewCell.swift in Sources */,
 				5B8617A42417FE5C0031B776 /* OwnCreatedQueueItemTableViewCell.swift in Sources */,
 				5BB7ADC824194CF4008C21DD /* CreateQueueViewController.swift in Sources */,

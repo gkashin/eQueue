@@ -10,7 +10,12 @@ import UIKit
 
 class MainViewController: UIViewController {
     
-    let logoImageView = UIImageView(image: #imageLiteral(resourceName: "logo"))
+    let logoImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = #imageLiteral(resourceName: "logo")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
     
     let scanQrButton = UIButton(title: "Отсканировать QR", backgroundColor: .white, titleColor: .black, font: .avenir20(), isShadow: true, cornerRadius: 4)
     let findQueueButton = UIButton(title: "Найти очередь", backgroundColor: .white, titleColor: .black, font: .avenir20(), isShadow: true, cornerRadius: 4)
@@ -24,8 +29,14 @@ class MainViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         
         setupConstraints()
-        
+            
+        scanQrButton.addTarget(self, action: #selector(scanQrButtonTapped), for: .touchUpInside)
         createQueueButton.addTarget(self, action: #selector(createQueueButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func scanQrButtonTapped() {
+        let scanQrVC = ScanQRViewController()
+        present(scanQrVC, animated: true)
     }
     
     @objc private func createQueueButtonTapped() {
@@ -48,7 +59,9 @@ extension MainViewController {
         
         NSLayoutConstraint.activate([
             logoImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150),
-            logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logoImageView.heightAnchor.constraint(equalToConstant: 500),
+            logoImageView.widthAnchor.constraint(equalToConstant: 350)
         ])
         
         NSLayoutConstraint.activate([
