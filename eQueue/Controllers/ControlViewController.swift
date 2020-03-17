@@ -10,6 +10,8 @@ import UIKit
 
 class ControlViewController: UIViewController {
     
+    var queues = [Queue()]
+    
     var tableView: UITableView!
     
     override func viewDidLoad() {
@@ -27,7 +29,18 @@ class ControlViewController: UIViewController {
         
         tableView.register(QueueTableViewCell.self, forCellReuseIdentifier: QueueTableViewCell.id)
         
+        tableView.tableFooterView = UIView()
+        
         view.addSubview(tableView)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(addQueue), name: CreateQueueViewController.addQueueNotificationName, object: nil)
+    }
+    
+    @objc private func addQueue(from notification: Notification) {
+        guard let queue = notification.userInfo!["queue"] as? Queue else { return }
+        queues.append(queue)
+        
+        tableView.reloadData()
     }
 }
 
@@ -37,9 +50,26 @@ extension ControlViewController: UITableViewDelegate, UITableViewDataSource {
         return 2
     }
     
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case 0:
+            return "Предстоящие"
+        case 1:
+            return "Завершенные"
+        default:
+            return ""
+        }
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        currentQueue.people.count
-        return 3
+        switch section {
+        case 0:
+            return queues.map { $0.startDate > Date() }.count
+        case 1:
+            return queues.map { $0.startDate < Date() }.count
+        default:
+            return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

@@ -52,8 +52,9 @@ class ScanQRViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                 let alert = UIAlertController(title: "Обнаружена очередь", message: object.stringValue, preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Отменить", style: .cancel))
                 alert.addAction(UIAlertAction(title: "Встать в очередь", style: .default, handler: { _ in
-                    let queue = Queue(name: object.stringValue!, description: "", startDate: "", people: [], isOwnCreated: false)
-                    NotificationCenter.default.post(name: QueueViewController.updateNotificationName, object: nil, userInfo: ["queue": queue])
+                    let queue = Queue(name: object.stringValue!, description: "", startDate: Date(), people: [], isOwnCreated: false)
+                    
+                    NotificationCenter.default.post(name: CreateQueueViewController.addQueueNotificationName, object: nil, userInfo: ["queue": queue])
                     self.view.layer.sublayers?.removeLast()
                     self.session.stopRunning()
                     

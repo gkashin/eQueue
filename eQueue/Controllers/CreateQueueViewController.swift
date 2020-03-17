@@ -10,6 +10,8 @@ import UIKit
 
 class CreateQueueViewController: UIViewController {
     
+    static let addQueueNotificationName = Notification.Name("addQueueNotification")
+    
     let titleLabel = UILabel(text: "Создать очередь")
     let nameLabel = UILabel(text: "Название очереди")
     let descriptionLabel = UILabel(text: "Описание")
@@ -31,10 +33,16 @@ class CreateQueueViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-    @objc func keyboardWillShow() {
-        print(12132)
-        
+
+    @objc func keyboardWillShow(notification: NSNotification) {
+        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
+        view.frame.origin.y = 0 - keyboardSize.height
+    }
+    
+    @objc func keyboardWillHide() {
+        view.frame.origin.y = .zero
     }
     
     @objc private func createButtonTapped() {
@@ -47,8 +55,17 @@ class CreateQueueViewController: UIViewController {
                 return
         }
         
-        let queue = Queue(name: name, description: description, startDate: "", people: [], isOwnCreated: true)
-        NotificationCenter.default.post(name: QueueViewController.updateNotificationName, object: nil, userInfo: ["queue": queue])
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM-dd-yyyy HH:mm"
+        let date = dateFormatter.date(from: startDate)
+        
+        let queue = Queue(name: name, description: description, startDate: date!, people: [], isOwnCreated: true)
+        NotificationCenter.default.post(name: CreateQueueViewController.addQueueNotificationName, object: nil, userInfo: ["queue": queue])
+        
+        dismiss(animated: true) {
+            let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
+            tabBarController.selectedIndex = 0
+        }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -99,7 +116,9 @@ extension CreateQueueViewController {
     
     @objc private func handleDatePicker(sender: UIDatePicker) {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .long
+//        dateFormatter.dateStyle = .long
+//        dateFormatter.timeStyle = .short
+        dateFormatter.dateFormat = "MM-dd-yyyy HH:mm"
         startDateTextField.text = dateFormatter.string(from: sender.date)
     }
 }
