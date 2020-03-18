@@ -56,11 +56,16 @@ class CreateQueueViewController: UIViewController {
         }
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM-dd-yyyy HH:mm"
-        let date = dateFormatter.date(from: startDate)
+        let date = dateFormatter.getDate(from: startDate)
         
-        let queue = Queue(name: name, description: description, startDate: date!, people: [], isOwnCreated: true)
+        let queue = Queue(name: name, description: description, startDate: date, people: [], isOwnCreated: true)
         NotificationCenter.default.post(name: CreateQueueViewController.addQueueNotificationName, object: nil, userInfo: ["queue": queue])
+        
+        if date > Date() {
+            ControlViewController.upcomingQueues.append(queue)
+        } else {
+            ControlViewController.completedQueues.append(queue)
+        }
         
         dismiss(animated: true) {
             let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
@@ -82,8 +87,11 @@ extension CreateQueueViewController {
         
         let datePicker = UIDatePicker()
         datePicker.datePickerMode = .dateAndTime
-        startDateTextField.inputView = datePicker
         datePicker.addTarget(self, action: #selector(handleDatePicker), for: .valueChanged)
+        
+        let dateFormatter = DateFormatter()
+        startDateTextField.text = dateFormatter.getString(from: Date())
+        startDateTextField.inputView = datePicker
         
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(titleLabel)
@@ -116,10 +124,7 @@ extension CreateQueueViewController {
     
     @objc private func handleDatePicker(sender: UIDatePicker) {
         let dateFormatter = DateFormatter()
-//        dateFormatter.dateStyle = .long
-//        dateFormatter.timeStyle = .short
-        dateFormatter.dateFormat = "MM-dd-yyyy HH:mm"
-        startDateTextField.text = dateFormatter.string(from: sender.date)
+        startDateTextField.text = dateFormatter.getString(from: sender.date)
     }
 }
 

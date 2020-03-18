@@ -10,7 +10,8 @@ import UIKit
 
 class ControlViewController: UIViewController {
     
-    var queues = [Queue()]
+    static var upcomingQueues = [Queue]()
+    static var completedQueues = [Queue]()
     
     var tableView: UITableView!
     
@@ -22,7 +23,7 @@ class ControlViewController: UIViewController {
         
         navigationController?.navigationBar.prefersLargeTitles = true
         
-        tableView = UITableView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: view.frame.size.height), style: .plain)
+        tableView = UITableView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: view.frame.size.height), style: .insetGrouped)
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -32,13 +33,10 @@ class ControlViewController: UIViewController {
         tableView.tableFooterView = UIView()
         
         view.addSubview(tableView)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(addQueue), name: CreateQueueViewController.addQueueNotificationName, object: nil)
     }
     
-    @objc private func addQueue(from notification: Notification) {
-        guard let queue = notification.userInfo!["queue"] as? Queue else { return }
-        queues.append(queue)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
         
         tableView.reloadData()
     }
@@ -64,16 +62,25 @@ extension ControlViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return queues.map { $0.startDate > Date() }.count
+            return ControlViewController.upcomingQueues.count
         case 1:
-            return queues.map { $0.startDate < Date() }.count
+            return ControlViewController.completedQueues.count
         default:
             return 0
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: QueueTableViewCell.id, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: QueueTableViewCell.id, for: indexPath) as! QueueTableViewCell
+        
+        switch indexPath.section {
+        case 0:
+            cell.setupUI(with: ControlViewController.upcomingQueues[indexPath.row])
+        case 1:
+            cell.setupUI(with: ControlViewController.completedQueues[indexPath.row])
+        default:
+            break
+        }
         
         return cell
     }

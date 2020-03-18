@@ -33,6 +33,8 @@ class QueueTableViewCell: UITableViewCell {
     let dateLabel: UILabel = {
         let label = UILabel()
         label.text = "01.01.2020"
+        label.numberOfLines = 2
+        label.textAlignment = .right
         return label
     }()
     
@@ -68,13 +70,21 @@ extension QueueTableViewCell {
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
         
-
-        
         addSubview(dateLabel)
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            dateLabel.leadingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: 5),
+            dateLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -40),
             dateLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
+    }
+    
+    func setupUI(with queue: Queue) {
+        nameLabel.text = queue.name
+        extraInfoLabel.text = queue.description
+        peopleCountLabel.text = "Участники: \(queue.people.count)"
+        
+        let dateFormatter = DateFormatter()
+        let dateTime = dateFormatter.getString(from: queue.startDate).split(separator: " ")
+        dateLabel.text = "\(dateTime.first!)\n\(dateTime.last!)"
     }
 }
