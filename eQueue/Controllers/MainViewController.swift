@@ -51,7 +51,7 @@ extension MainViewController {
         logoImageView.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(logoImageView)
-        let buttonStackView = UIStackView(arrangedSubviews: [scanQrButton, findQueueButton, createQueueButton], axis: .vertical, spacing: 30)
+        let buttonStackView = UIStackView(arrangedSubviews: [scanQrButton, findQueueButton, createQueueButton], axis: .vertical, spacing: 10)
         
         buttonStackView.translatesAutoresizingMaskIntoConstraints = false
         buttonStackView.setCustomSpacing(70, after: findQueueButton)
@@ -59,17 +59,17 @@ extension MainViewController {
         view.addSubview(buttonStackView)
         
         NSLayoutConstraint.activate([
-            logoImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150),
+            logoImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
             logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            logoImageView.heightAnchor.constraint(equalToConstant: 300),
-            logoImageView.widthAnchor.constraint(equalToConstant: 350)
+            logoImageView.heightAnchor.constraint(equalToConstant: 0.5 * view.frame.size.height),
+            logoImageView.widthAnchor.constraint(equalToConstant: 0.5 * view.frame.size.width)
         ])
         
         NSLayoutConstraint.activate([
-            buttonStackView.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 30),
+            buttonStackView.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 10),
             buttonStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
             buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
-            buttonStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -150),
+            buttonStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -70),
         ])
     }
 }

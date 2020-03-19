@@ -10,19 +10,17 @@ import UIKit
 
 class QueueViewController: UIViewController {
     
-    var currentQueue: Queue? = Queue() {
-        didSet {
-            updateUI()
-        }
-    }
+    static var currentQueue: Queue?
+    
     var tableView: UITableView!
     
     let lineNumberLabel = UILabel(text: "Вы 3-й в очереди!")
     let waitingTimeLabel = UILabel(text: "Среднее время ожидания: ∞")
     var queueInfoStackView: UIStackView!
+    let quitQueueButton = UIButton(title: "Покинуть очередь", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false)
     
     let totalPeopleLabel = UILabel(text: "Всего человек: 1024")
-    let removeQueueButton = UIButton(title: "Удалить очередь", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false)
+    let terminateQueueButton = UIButton(title: "Завершить очередь", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false)
     
     let stubLabel = UILabel(text: "У вас нет текущей очереди")
     
@@ -50,26 +48,28 @@ class QueueViewController: UIViewController {
         view.addSubview(tableView)
         
         setupUI()
-        updateUI()
         
-        removeQueueButton.addTarget(self, action: #selector(removeButtonTapped), for: .touchUpInside)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(getData), name: CreateQueueViewController.addQueueNotificationName, object: nil)
+        terminateQueueButton.addTarget(self, action: #selector(terminateQueueButtonTapped), for: .touchUpInside)
+        quitQueueButton.addTarget(self, action: #selector(quitQueueButtonTapped), for: .touchUpInside)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
-        navigationItem.title = currentQueue?.name ?? "Моя очередь"
-    }
-    
-    @objc private func removeButtonTapped() {
-        currentQueue = nil
+        navigationItem.title = QueueViewController.currentQueue?.name ?? "Моя очередь"
         updateUI()
     }
     
-    @objc private func getData(from notification: Notification) {
-        currentQueue = notification.userInfo!["queue"] as? Queue
+    @objc private func terminateQueueButtonTapped() {
+        ControlViewController.completedQueues.append(QueueViewController.currentQueue!)
+        QueueViewController.currentQueue = nil
+        updateUI()
+    }
+    
+    @objc private func quitQueueButtonTapped() {
+        ControlViewController.completedQueues.append(QueueViewController.currentQueue!)
+        QueueViewController.currentQueue = nil
+        updateUI()
     }
 }
 
@@ -87,9 +87,9 @@ extension QueueViewController {
         ])
         
         view.addSubview(totalPeopleLabel)
-        view.addSubview(removeQueueButton)
+        view.addSubview(terminateQueueButton)
         totalPeopleLabel.translatesAutoresizingMaskIntoConstraints = false
-        removeQueueButton.translatesAutoresizingMaskIntoConstraints = false
+        terminateQueueButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             totalPeopleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
@@ -97,9 +97,17 @@ extension QueueViewController {
         ])
         
         NSLayoutConstraint.activate([
-            removeQueueButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            removeQueueButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            removeQueueButton.widthAnchor.constraint(equalToConstant: 200),
+            terminateQueueButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            terminateQueueButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            terminateQueueButton.widthAnchor.constraint(equalToConstant: 200),
+        ])
+        
+        quitQueueButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(quitQueueButton)
+        NSLayoutConstraint.activate([
+            quitQueueButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            quitQueueButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            quitQueueButton.widthAnchor.constraint(equalToConstant: 200),
         ])
         
         view.addSubview(stubLabel)
@@ -114,7 +122,7 @@ extension QueueViewController {
     private func updateUI() {
         tableView.reloadData()
         
-        guard currentQueue != nil else {
+        guard QueueViewController.currentQueue != nil else {
             navigationItem.title = "Моя очередь"
             stubLabel.isHidden = false
             hideAll()
@@ -122,43 +130,46 @@ extension QueueViewController {
         }
         
         stubLabel.isHidden = true
-        if currentQueue!.isOwnCreated {
+        if QueueViewController.currentQueue!.isOwnCreated {
             queueInfoStackView.isHidden = true
             totalPeopleLabel.isHidden = false
-            removeQueueButton.isHidden = false
+            terminateQueueButton.isHidden = false
+            quitQueueButton.isHidden = true
         } else {
             queueInfoStackView.isHidden = false
             totalPeopleLabel.isHidden = true
-            removeQueueButton.isHidden = true
+            terminateQueueButton.isHidden = true
+            quitQueueButton.isHidden = false
         }
     }
     
     private func hideAll() {
         queueInfoStackView.isHidden = true
         totalPeopleLabel.isHidden = true
-        removeQueueButton.isHidden = true
+        terminateQueueButton.isHidden = true
+        quitQueueButton.isHidden = true
     }
 }
 
 // MARK: - UITableViewDelegate, UITableViewDataSource
 extension QueueViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        currentQueue.people.count
-        guard currentQueue != nil else { return 0 }
+        //        currentQueue.people.count
+        guard QueueViewController.currentQueue != nil else { return 0 }
         return /* currentQueue!.people.count */ 3
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard currentQueue != nil else { return UITableViewCell() }
+        guard QueueViewController.currentQueue != nil else { return UITableViewCell() }
         
-        let id = currentQueue!.isOwnCreated ? OwnCreatedQueueItemTableViewCell.id : QueueItemTableViewCell.id
+        let id = QueueViewController.currentQueue!.isOwnCreated ? OwnCreatedQueueItemTableViewCell.id : QueueItemTableViewCell.id
         let cell = tableView.dequeueReusableCell(withIdentifier: id, for: indexPath)
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        guard currentQueue != nil else { return 0 }
-        return currentQueue!.isOwnCreated ? 80 : 120
+        guard QueueViewController.currentQueue != nil else { return 0 }
+        return QueueViewController.currentQueue!.isOwnCreated ? 80 : 120
     }
 }
 

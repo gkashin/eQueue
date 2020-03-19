@@ -29,7 +29,7 @@ class TextFieldFormView: UIView {
             textField.widthAnchor.constraint(equalTo: self.widthAnchor)
         ])
     
-        heightAnchor.constraint(equalToConstant: 200).isActive = true
+        heightAnchor.constraint(equalToConstant: 100).isActive = true
     }
     
     required init?(coder: NSCoder) {

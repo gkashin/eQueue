@@ -42,7 +42,6 @@ class QueueTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.accessoryType = .disclosureIndicator
-        self.imageView?.image = #imageLiteral(resourceName: "crown")
         
         setupConstraints()
     }
@@ -86,5 +85,7 @@ extension QueueTableViewCell {
         let dateFormatter = DateFormatter()
         let dateTime = dateFormatter.getString(from: queue.startDate).split(separator: " ")
         dateLabel.text = "\(dateTime.first!)\n\(dateTime.last!)"
+        
+        imageView?.image = queue.isOwnCreated ? #imageLiteral(resourceName: "crown") : #imageLiteral(resourceName: "circle")
     }
 }

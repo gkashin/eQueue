@@ -10,8 +10,6 @@ import UIKit
 
 class CreateQueueViewController: UIViewController {
     
-    static let addQueueNotificationName = Notification.Name("addQueueNotification")
-    
     let titleLabel = UILabel(text: "Создать очередь")
     let nameLabel = UILabel(text: "Название очереди")
     let descriptionLabel = UILabel(text: "Описание")
@@ -19,6 +17,9 @@ class CreateQueueViewController: UIViewController {
     let nameTextField = OneLineTextField(font: .avenir20())
     let descriptionTextField = OneLineTextField(font: .avenir20())
     let startDateTextField = OneLineTextField(font: .avenir20())
+    
+    let setCurrentDateLabel = UILabel(text: "Использовать текущую дату?", font: .avenir16())
+    let setCurrentDateSwitch = UISwitch()
     
     let createButton = UIButton(title: "Создать", backgroundColor: .buttonDark(), titleColor: .white, font: .avenir20(), isShadow: false)
     
@@ -29,11 +30,14 @@ class CreateQueueViewController: UIViewController {
         
         setupUI()
         
-        createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
-        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        setCurrentDateSwitch.addTarget(self, action: #selector(setCurrentDateSwitchTapped), for: .touchUpInside)
+        
+        createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
+        
     }
 
     @objc func keyboardWillShow(notification: NSNotification) {
@@ -59,9 +63,10 @@ class CreateQueueViewController: UIViewController {
         let date = dateFormatter.getDate(from: startDate)
         
         let queue = Queue(name: name, description: description, startDate: date, people: [], isOwnCreated: true)
-        NotificationCenter.default.post(name: CreateQueueViewController.addQueueNotificationName, object: nil, userInfo: ["queue": queue])
         
-        if date > Date() {
+        if setCurrentDateSwitch.isOn {
+            QueueViewController.currentQueue = queue
+        } else if date > Date() {
             ControlViewController.upcomingQueues.append(queue)
         } else {
             ControlViewController.completedQueues.append(queue)
@@ -70,6 +75,15 @@ class CreateQueueViewController: UIViewController {
         dismiss(animated: true) {
             let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
             tabBarController.selectedIndex = 0
+        }
+    }
+    
+    @objc private func setCurrentDateSwitchTapped() {
+        if setCurrentDateSwitch.isOn {
+            let dateFormatter = DateFormatter()
+            startDateTextField.text = dateFormatter.getString(from: Date())
+        } else {
+            startDateTextField.text = ""
         }
     }
     
@@ -87,10 +101,10 @@ extension CreateQueueViewController {
         
         let datePicker = UIDatePicker()
         datePicker.datePickerMode = .dateAndTime
+        datePicker.backgroundColor = .white
+        datePicker.minimumDate = Date()
         datePicker.addTarget(self, action: #selector(handleDatePicker), for: .valueChanged)
-        
-        let dateFormatter = DateFormatter()
-        startDateTextField.text = dateFormatter.getString(from: Date())
+    
         startDateTextField.inputView = datePicker
         
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -105,15 +119,29 @@ extension CreateQueueViewController {
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stackView)
+        view.addSubview(createButton)
         
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 50),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
+//            stackView.heightAnchor.constraint(equalTo: view.heightAnchor, constant: 0),
+        ])
+        
+        setCurrentDateLabel.translatesAutoresizingMaskIntoConstraints = false
+        setCurrentDateSwitch.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(setCurrentDateLabel)
+        view.addSubview(setCurrentDateSwitch)
+        
+        NSLayoutConstraint.activate([
+            setCurrentDateLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+            setCurrentDateLabel.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 0),
+            setCurrentDateSwitch.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+            setCurrentDateSwitch.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 0)
         ])
         
         createButton.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(createButton)
         
         NSLayoutConstraint.activate([
             createButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
