@@ -39,7 +39,7 @@ class OwnCreatedQueueItemTableViewCell: UITableViewCell {
         return label
     }()
     
-    let removePersonButton: UIButton = {
+    let exchangeButton: UIButton = {
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "remove"), for: .normal)
         return button
@@ -50,10 +50,16 @@ class OwnCreatedQueueItemTableViewCell: UITableViewCell {
         
         
         setupConstraints()
+        
+        exchangeButton.addTarget(self, action: #selector(exchangeButtonTapped), for: .touchUpInside)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc private func exchangeButtonTapped() {
+        
     }
 }
 
@@ -78,14 +84,24 @@ extension OwnCreatedQueueItemTableViewCell {
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
         
-        addSubview(removePersonButton)
-        removePersonButton.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(exchangeButton)
+        exchangeButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            removePersonButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-            removePersonButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-            removePersonButton.widthAnchor.constraint(equalToConstant: 40),
-            removePersonButton.heightAnchor.constraint(equalToConstant: 40),
+            exchangeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            exchangeButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+            exchangeButton.widthAnchor.constraint(equalToConstant: 40),
+            exchangeButton.heightAnchor.constraint(equalToConstant: 43),
         ])
+    }
+    
+    func setup(with user: User, at indexPath: IndexPath) {
+        if indexPath.section == 0 {
+            numberLabel.text = "0"
+        } else {
+            numberLabel.text = "\(indexPath.row + 1)"
+        }
+        fullNameLabel.text = "\(user.firstName) \(user.lastName)"
+        extraInfoLabel.text = user.group
     }
 }

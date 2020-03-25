@@ -9,16 +9,18 @@
 import Foundation
 
 struct User: Codable {
-    var username: String
-    var password: String
-    var email: String
-    var firstName: String
-    var lastName: String
+    var username = String()
+    var password = String()
+    var email = String()
+    var group = String()
+    var firstName = String()
+    var lastName = String()
     
     enum CodingKeys: String, CodingKey {
         case username = "username"
         case password = "password"
         case email = "email"
+        case group = "group"
         case firstName = "first_name"
         case lastName = "last_name"
     }

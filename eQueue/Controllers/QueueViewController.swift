@@ -28,9 +28,9 @@ class QueueViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.prefersLargeTitles = false
         
-        tableView = UITableView(frame: CGRect(x: 0, y: 250, width: view.frame.size.width, height: view.frame.size.height), style: .plain)
+        tableView = UITableView(frame: CGRect(x: 0, y: 100, width: view.frame.size.width, height: view.frame.size.height), style: .insetGrouped)
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -153,23 +153,86 @@ extension QueueViewController {
 
 // MARK: - UITableViewDelegate, UITableViewDataSource
 extension QueueViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        guard QueueViewController.currentQueue != nil else { return 1 }
+        return QueueViewController.currentQueue!.isOwnCreated ? 2 : 1
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case 0:
+            guard QueueViewController.currentQueue != nil else { return "" }
+            return QueueViewController.currentQueue!.isOwnCreated ? "Следующий" : ""
+        case 1:
+            return "Остальные"
+        default:
+            return ""
+        }
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         //        currentQueue.people.count
         guard QueueViewController.currentQueue != nil else { return 0 }
-        return /* currentQueue!.people.count */ 3
+        
+        switch section {
+        case 0:
+            return 1
+        case 1:
+            return QueueViewController.currentQueue!.people.count - 1
+        default:
+            return QueueViewController.currentQueue!.people.count - 1
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard QueueViewController.currentQueue != nil else { return UITableViewCell() }
         
+        
         let id = QueueViewController.currentQueue!.isOwnCreated ? OwnCreatedQueueItemTableViewCell.id : QueueItemTableViewCell.id
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: id, for: indexPath)
+        var user = User()
+        
+        switch indexPath.section {
+        case 0:
+            user = QueueViewController.currentQueue!.people.first!
+        case 1:
+            user = QueueViewController.currentQueue!.people[indexPath.row + 1]
+        default:
+            break
+        }
+        
+        if QueueViewController.currentQueue!.isOwnCreated {
+            let ownCreatedQueueItemTableViewCell = cell as! OwnCreatedQueueItemTableViewCell
+            ownCreatedQueueItemTableViewCell.setup(with: user, at: indexPath)
+        } else {
+            let queueItemTableViewCell = cell as! QueueItemTableViewCell
+        }
+        
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard QueueViewController.currentQueue != nil else { return 0 }
         return QueueViewController.currentQueue!.isOwnCreated ? 80 : 120
+    }
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .delete
+    }
+
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        switch editingStyle {
+        case .delete:
+            QueueViewController.currentQueue?.people.remove(at: indexPath.row)
+            tableView.reloadData()
+        case .insert:
+            break
+        case .none:
+            break
+        @unknown default:
+            print("New editing styles had appeared")
+        }
     }
 }
 

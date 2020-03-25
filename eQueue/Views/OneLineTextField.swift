@@ -20,6 +20,7 @@ class OneLineTextField: UITextField {
         bottomView.translatesAutoresizingMaskIntoConstraints = false
         bottomView.backgroundColor = .textFieldLight()
         self.addSubview(bottomView)
+        textInputMode 
         
         NSLayoutConstraint.activate([
             bottomView.bottomAnchor.constraint(equalTo: self.bottomAnchor),

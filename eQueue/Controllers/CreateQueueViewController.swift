@@ -39,10 +39,10 @@ class CreateQueueViewController: UIViewController {
         createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
         
     }
-
+    
     @objc func keyboardWillShow(notification: NSNotification) {
         guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
-        view.frame.origin.y = 0 - keyboardSize.height
+        view.frame.origin.y = 0 - 0.5 * keyboardSize.height
     }
     
     @objc func keyboardWillHide() {
@@ -62,19 +62,34 @@ class CreateQueueViewController: UIViewController {
         let dateFormatter = DateFormatter()
         let date = dateFormatter.getDate(from: startDate)
         
-        let queue = Queue(name: name, description: description, startDate: date, people: [], isOwnCreated: true)
+        var queue = Queue(name: name, description: description, startDate: date, people: [], isOwnCreated: true)
+        
+        queue.people.append(User(username: "Егор", password: "pass", email: "email", group: "3530202/80001", firstName: "George", lastName: "Kashin"))
+        queue.people.append(User(username: "Егор1", password: "pass", email: "email1", group: "3530202/80001", firstName: "George1", lastName: "Kashin1"))
+        queue.people.append(User(username: "Егор2", password: "pass", email: "email2", group: "3530202/80001", firstName: "George2", lastName: "Kashin2"))
         
         if setCurrentDateSwitch.isOn {
-            QueueViewController.currentQueue = queue
-        } else if date > Date() {
-            ControlViewController.upcomingQueues.append(queue)
-        } else {
-            ControlViewController.completedQueues.append(queue)
-        }
-        
-        dismiss(animated: true) {
-            let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
-            tabBarController.selectedIndex = 0
+            if QueueViewController.currentQueue != nil {
+                if QueueViewController.currentQueue!.isOwnCreated {
+                    let alert = createAlert(withTitle: "У вас уже есть текущая очередь", andMessage: "")
+                    present(alert, animated: true, completion: nil)
+                } else {
+                    let alert = createAlert(withTitle: "", andMessage: "Вы уже стоите в очереди")
+                    present(alert, animated: true, completion: nil)
+                }
+            } else if date > Date() {
+                ControlViewController.upcomingQueues.append(queue)
+                dismiss(animated: true) {
+                    let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
+                    tabBarController.selectedIndex = 0
+                }
+            } else {
+                QueueViewController.currentQueue = queue
+                dismiss(animated: true) {
+                    let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
+                    tabBarController.selectedIndex = 0
+                }
+            }
         }
     }
     
@@ -104,7 +119,7 @@ extension CreateQueueViewController {
         datePicker.backgroundColor = .white
         datePicker.minimumDate = Date()
         datePicker.addTarget(self, action: #selector(handleDatePicker), for: .valueChanged)
-    
+        
         startDateTextField.inputView = datePicker
         
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -125,7 +140,7 @@ extension CreateQueueViewController {
             stackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 50),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
-//            stackView.heightAnchor.constraint(equalTo: view.heightAnchor, constant: 0),
+            //            stackView.heightAnchor.constraint(equalTo: view.heightAnchor, constant: 0),
         ])
         
         setCurrentDateLabel.translatesAutoresizingMaskIntoConstraints = false
