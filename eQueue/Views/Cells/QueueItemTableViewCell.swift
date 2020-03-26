@@ -44,7 +44,7 @@ class QueueItemTableViewCell: UITableViewCell {
         button.setImage(#imageLiteral(resourceName: "exchange"), for: .normal)
         return button
     }()
-    
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -87,5 +87,18 @@ extension QueueItemTableViewCell {
             offerExchangeButton.widthAnchor.constraint(equalToConstant: 40),
             offerExchangeButton.heightAnchor.constraint(equalToConstant: 40),
         ])
+    }
+    
+    func setup(with user: User, at indexPath: IndexPath, isLast: Bool) {
+        numberLabel.text = "\(indexPath.row)"
+        extraInfoLabel.text = user.group
+
+        if !isLast {
+            fullNameLabel.text = "\(user.firstName) \(user.lastName)"
+        } else {
+            fullNameLabel.text = "Вы"
+            fullNameLabel.font = .avenir20()
+            offerExchangeButton.isHidden = true
+        }
     }
 }

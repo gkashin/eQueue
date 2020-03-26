@@ -68,27 +68,23 @@ class CreateQueueViewController: UIViewController {
         queue.people.append(User(username: "Егор1", password: "pass", email: "email1", group: "3530202/80001", firstName: "George1", lastName: "Kashin1"))
         queue.people.append(User(username: "Егор2", password: "pass", email: "email2", group: "3530202/80001", firstName: "George2", lastName: "Kashin2"))
         
+        let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
         if setCurrentDateSwitch.isOn {
             if QueueViewController.currentQueue != nil {
                 if QueueViewController.currentQueue!.isOwnCreated {
                     let alert = createAlert(withTitle: "У вас уже есть текущая очередь", andMessage: "")
                     present(alert, animated: true, completion: nil)
-                } else {
-                    let alert = createAlert(withTitle: "", andMessage: "Вы уже стоите в очереди")
-                    present(alert, animated: true, completion: nil)
-                }
-            } else if date > Date() {
-                ControlViewController.upcomingQueues.append(queue)
-                dismiss(animated: true) {
-                    let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
-                    tabBarController.selectedIndex = 0
                 }
             } else {
                 QueueViewController.currentQueue = queue
                 dismiss(animated: true) {
-                    let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
-                    tabBarController.selectedIndex = 0
+                    tabBarController.selectedIndex = 1
                 }
+            }
+        } else {
+            ControlViewController.upcomingQueues.append(queue)
+            dismiss(animated: true) {
+                tabBarController.selectedIndex = 2
             }
         }
     }
@@ -167,6 +163,7 @@ extension CreateQueueViewController {
     
     @objc private func handleDatePicker(sender: UIDatePicker) {
         let dateFormatter = DateFormatter()
+        setCurrentDateSwitch.isOn = false
         startDateTextField.text = dateFormatter.getString(from: sender.date)
     }
 }

@@ -26,16 +26,17 @@ class QueueViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         
         navigationController?.navigationBar.prefersLargeTitles = false
         
-        tableView = UITableView(frame: CGRect(x: 0, y: 100, width: view.frame.size.width, height: view.frame.size.height), style: .insetGrouped)
+        tableView = UITableView(frame: CGRect(x: 0, y: 120, width: view.frame.size.width, height: view.frame.size.height), style: .insetGrouped)
         
         tableView.delegate = self
         tableView.dataSource = self
         
         tableView.tableFooterView = UIView()
+        
+        view.backgroundColor = tableView.backgroundColor
         
         let firstCellType = QueueItemTableViewCell.self
         let secondCellType = OwnCreatedQueueItemTableViewCell.self
@@ -76,6 +77,9 @@ class QueueViewController: UIViewController {
 // MARK: - UI
 extension QueueViewController {
     private func setupUI() {
+        updateTotalPeopleLabel()
+        updateLineNumberLabel()
+        
         queueInfoStackView = UIStackView(arrangedSubviews: [lineNumberLabel, waitingTimeLabel], axis: .vertical, spacing: 10)
         queueInfoStackView.translatesAutoresizingMaskIntoConstraints = false
         queueInfoStackView.alignment = .center
@@ -117,6 +121,18 @@ extension QueueViewController {
             stubLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             stubLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
+    }
+    
+    private func updateTotalPeopleLabel() {
+        if let peopleCount = QueueViewController.currentQueue?.people.count {
+            totalPeopleLabel.text = "Всего человек: \(peopleCount)"
+        }
+    }
+    
+    private func updateLineNumberLabel() {
+        if let peopleCount = QueueViewController.currentQueue?.people.count {
+            lineNumberLabel.text = "Вы \(peopleCount) в очереди!"
+        }
     }
     
     private func updateUI() {
@@ -171,12 +187,16 @@ extension QueueViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //        currentQueue.people.count
         guard QueueViewController.currentQueue != nil else { return 0 }
+        guard QueueViewController.currentQueue?.people.count != 0 else { return 0 }
         
         switch section {
         case 0:
-            return 1
+            if QueueViewController.currentQueue!.isOwnCreated {
+                return 1
+            } else {
+                return QueueViewController.currentQueue!.people.count
+            }
         case 1:
             return QueueViewController.currentQueue!.people.count - 1
         default:
@@ -195,7 +215,11 @@ extension QueueViewController: UITableViewDelegate, UITableViewDataSource {
         
         switch indexPath.section {
         case 0:
-            user = QueueViewController.currentQueue!.people.first!
+            if QueueViewController.currentQueue!.isOwnCreated {
+                user = QueueViewController.currentQueue!.people.first!
+            } else {
+                user = QueueViewController.currentQueue!.people[indexPath.row]
+            }
         case 1:
             user = QueueViewController.currentQueue!.people[indexPath.row + 1]
         default:
@@ -207,6 +231,8 @@ extension QueueViewController: UITableViewDelegate, UITableViewDataSource {
             ownCreatedQueueItemTableViewCell.setup(with: user, at: indexPath)
         } else {
             let queueItemTableViewCell = cell as! QueueItemTableViewCell
+            let isLast = QueueViewController.currentQueue!.people.count - 1 == indexPath.row
+            queueItemTableViewCell.setup(with: user, at: indexPath, isLast: isLast)
         }
         
         return cell
@@ -218,13 +244,20 @@ extension QueueViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        return .delete
+        guard QueueViewController.currentQueue != nil else { return .none }
+        
+        if QueueViewController.currentQueue!.isOwnCreated {
+            return .delete
+        } else {
+            return .none
+        }
     }
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         switch editingStyle {
         case .delete:
             QueueViewController.currentQueue?.people.remove(at: indexPath.row)
+            updateTotalPeopleLabel()
             tableView.reloadData()
         case .insert:
             break
