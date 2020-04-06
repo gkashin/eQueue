@@ -9,10 +9,11 @@
 import Foundation
 
 struct User: Codable {
+    var id = Int()
     var username = String()
-    var password = String()
+    var password: String?
     var email = String()
-    var group = String()
+//    var group = String()
     var firstName = String()
     var lastName = String()
     
@@ -20,7 +21,8 @@ struct User: Codable {
         case username = "username"
         case password = "password"
         case email = "email"
-        case group = "group"
+//        case group = "group"
+        case id = "id"
         case firstName = "first_name"
         case lastName = "last_name"
     }

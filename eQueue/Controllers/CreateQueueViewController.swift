@@ -64,9 +64,9 @@ class CreateQueueViewController: UIViewController {
         
         var queue = Queue(name: name, description: description, startDate: date, people: [], isOwnCreated: true)
         
-        queue.people.append(User(username: "Егор", password: "pass", email: "email", group: "3530202/80001", firstName: "George", lastName: "Kashin"))
-        queue.people.append(User(username: "Егор1", password: "pass", email: "email1", group: "3530202/80001", firstName: "George1", lastName: "Kashin1"))
-        queue.people.append(User(username: "Егор2", password: "pass", email: "email2", group: "3530202/80001", firstName: "George2", lastName: "Kashin2"))
+        queue.people.append(User(username: "Егор", password: "pass", email: "email", firstName: "George", lastName: "Kashin"))
+        queue.people.append(User(username: "Егор1", password: "pass", email: "email1", firstName: "George1", lastName: "Kashin1"))
+        queue.people.append(User(username: "Егор2", password: "pass", email: "email2", firstName: "George2", lastName: "Kashin2"))
         
         let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
         if setCurrentDateSwitch.isOn {

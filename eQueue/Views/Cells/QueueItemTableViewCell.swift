@@ -91,7 +91,7 @@ extension QueueItemTableViewCell {
     
     func setup(with user: User, at indexPath: IndexPath, isLast: Bool) {
         numberLabel.text = "\(indexPath.row)"
-        extraInfoLabel.text = user.group
+//        extraInfoLabel.text = user.group
 
         if !isLast {
             fullNameLabel.text = "\(user.firstName) \(user.lastName)"

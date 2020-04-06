@@ -54,9 +54,9 @@ class ScanQRViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                 alert.addAction(UIAlertAction(title: "Встать в очередь", style: .default, handler: { _ in
                     var queue = Queue(name: object.stringValue!, description: "", startDate: Date(), people: [], isOwnCreated: false)
                     
-                    queue.people.append(User(username: "Егор", password: "pass", email: "email", group: "3530202/80001", firstName: "George", lastName: "Kashin"))
-                    queue.people.append(User(username: "Егор1", password: "pass", email: "email1", group: "3530202/80001", firstName: "George1", lastName: "Kashin1"))
-                    queue.people.append(User(username: "Егор2", password: "pass", email: "email2", group: "3530202/80001", firstName: "George2", lastName: "Kashin2"))
+                    queue.people.append(User(username: "Егор", password: "pass", email: "email", firstName: "George", lastName: "Kashin"))
+                    queue.people.append(User(username: "Егор1", password: "pass", email: "email1", firstName: "George1", lastName: "Kashin1"))
+                    queue.people.append(User(username: "Егор2", password: "pass", email: "email2", firstName: "George2", lastName: "Kashin2"))
                     
                     QueueViewController.currentQueue = queue
                     self.view.layer.sublayers?.removeLast()
