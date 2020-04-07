@@ -22,9 +22,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        
+//        window?.rootViewController = MainTabBarController()
         let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
-        
+
         NetworkManager.shared.verifyToken(token: token) { statusCode in
             if statusCode == 200 {
                 DispatchQueue.main.async {

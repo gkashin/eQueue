@@ -90,8 +90,8 @@ extension OwnCreatedQueueItemTableViewCell {
         NSLayoutConstraint.activate([
             exchangeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
             exchangeButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-            exchangeButton.widthAnchor.constraint(equalToConstant: 40),
-            exchangeButton.heightAnchor.constraint(equalToConstant: 43),
+            exchangeButton.widthAnchor.constraint(equalToConstant: 35),
+            exchangeButton.heightAnchor.constraint(equalToConstant: 45),
         ])
     }
     

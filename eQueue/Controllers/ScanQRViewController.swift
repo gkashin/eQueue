@@ -49,20 +49,28 @@ class ScanQRViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         guard metadataObjects.count > 0 else { return }
         if let object = metadataObjects.first as? AVMetadataMachineReadableCodeObject {
             if object.type == AVMetadataObject.ObjectType.qr {
+                self.session.stopRunning()
+                
                 let alert = UIAlertController(title: "Обнаружена очередь", message: object.stringValue, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Отменить", style: .cancel))
+                let cancelAction = UIAlertAction(title: "Отменить", style: .cancel) { _ in
+                    self.session.startRunning()
+                }
+                alert.addAction(cancelAction)
+                
                 alert.addAction(UIAlertAction(title: "Встать в очередь", style: .default, handler: { _ in
                     var queue = Queue(name: object.stringValue!, description: "", startDate: Date(), people: [], isOwnCreated: false)
                     
+                    queue.people.append(User(username: "Егор2", password: "pass", email: "email2", firstName: "Dmitry", lastName: "Chuchin"))
+                    queue.people.append(User(username: "Егор1", password: "pass", email: "email1", firstName: "Ivan", lastName: "Kuznetsov"))
                     queue.people.append(User(username: "Егор", password: "pass", email: "email", firstName: "George", lastName: "Kashin"))
-                    queue.people.append(User(username: "Егор1", password: "pass", email: "email1", firstName: "George1", lastName: "Kashin1"))
-                    queue.people.append(User(username: "Егор2", password: "pass", email: "email2", firstName: "George2", lastName: "Kashin2"))
                     
                     QueueViewController.currentQueue = queue
                     self.view.layer.sublayers?.removeLast()
-                    self.session.stopRunning()
                     
                     self.dismiss(animated: true, completion: nil)
+                    
+                    let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController
+                    tabBarController?.selectedIndex = 1
                 }))
                 present(alert, animated: true, completion: nil)
             }

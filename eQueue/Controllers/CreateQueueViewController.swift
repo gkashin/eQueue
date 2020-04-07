@@ -65,8 +65,8 @@ class CreateQueueViewController: UIViewController {
         var queue = Queue(name: name, description: description, startDate: date, people: [], isOwnCreated: true)
         
         queue.people.append(User(username: "Егор", password: "pass", email: "email", firstName: "George", lastName: "Kashin"))
-        queue.people.append(User(username: "Егор1", password: "pass", email: "email1", firstName: "George1", lastName: "Kashin1"))
-        queue.people.append(User(username: "Егор2", password: "pass", email: "email2", firstName: "George2", lastName: "Kashin2"))
+        queue.people.append(User(username: "Егор1", password: "pass", email: "email1", firstName: "Ivan", lastName: "Kuznetsov"))
+        queue.people.append(User(username: "Егор2", password: "pass", email: "email2", firstName: "Dmitry", lastName: "Chuchin"))
         
         let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
         if setCurrentDateSwitch.isOn {
@@ -122,7 +122,7 @@ extension CreateQueueViewController {
         view.addSubview(titleLabel)
         
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 120),
+            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
         ])
         

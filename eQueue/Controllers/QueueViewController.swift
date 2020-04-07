@@ -29,7 +29,7 @@ class QueueViewController: UIViewController {
         
         navigationController?.navigationBar.prefersLargeTitles = false
         
-        tableView = UITableView(frame: CGRect(x: 0, y: 120, width: view.frame.size.width, height: view.frame.size.height), style: .insetGrouped)
+        tableView = UITableView(frame: CGRect(x: 0, y: 120, width: view.frame.size.width, height: view.frame.size.height - 120), style: .insetGrouped)
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -103,7 +103,7 @@ extension QueueViewController {
         NSLayoutConstraint.activate([
             terminateQueueButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
             terminateQueueButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            terminateQueueButton.widthAnchor.constraint(equalToConstant: 200),
+            terminateQueueButton.widthAnchor.constraint(equalToConstant: 220),
         ])
         
         quitQueueButton.translatesAutoresizingMaskIntoConstraints = false
