@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5B11738E243E334300B3108A /* SetupProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B11738D243E334300B3108A /* SetupProfileViewController.swift */; };
+		5B117390243E33B300B3108A /* AddPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B11738F243E33B300B3108A /* AddPhotoView.swift */; };
 		5B38FF562412BE42009F3B0A /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B38FF552412BE42009F3B0A /* NetworkManager.swift */; };
 		5B38FF592412C12B009F3B0A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B38FF582412C12B009F3B0A /* User.swift */; };
 		5B67226E242BCB980038749C /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B67226D242BCB980038749C /* UIViewController+Extension.swift */; };
@@ -40,6 +42,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5B11738D243E334300B3108A /* SetupProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupProfileViewController.swift; sourceTree = "<group>"; };
+		5B11738F243E33B300B3108A /* AddPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPhotoView.swift; sourceTree = "<group>"; };
 		5B38FF552412BE42009F3B0A /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		5B38FF582412C12B009F3B0A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		5B67226D242BCB980038749C /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
@@ -171,6 +175,7 @@
 		5B91A8CC24116AF2005A23DB /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				5B11738F243E33B300B3108A /* AddPhotoView.swift */,
 				5B91A8CE24116AF2005A23DB /* ButtonFormView.swift */,
 				5B91A8CD24116AF2005A23DB /* OneLineTextField.swift */,
 				5BB7ADC924194ED8008C21DD /* TextFieldFormView.swift */,
@@ -198,6 +203,7 @@
 			children = (
 				5B91A8D224116AF2005A23DB /* AuthViewController.swift */,
 				5B91A8D324116AF2005A23DB /* LoginViewController.swift */,
+				5B11738D243E334300B3108A /* SetupProfileViewController.swift */,
 				5B91A8D124116AF2005A23DB /* SignUpViewController.swift */,
 			);
 			path = "Auth&SignUp";
@@ -314,9 +320,11 @@
 				5B91A8D924116AF2005A23DB /* UIStackView+Extension.swift in Sources */,
 				5B91A8D824116AF2005A23DB /* UIButton+Extension.swift in Sources */,
 				5B91A8DE24116AF2005A23DB /* AuthViewController.swift in Sources */,
+				5B11738E243E334300B3108A /* SetupProfileViewController.swift in Sources */,
 				5B91A8D524116AF2005A23DB /* UIFont+Extension.swift in Sources */,
 				5B38FF562412BE42009F3B0A /* NetworkManager.swift in Sources */,
 				5B91A8DD24116AF2005A23DB /* SignUpViewController.swift in Sources */,
+				5B117390243E33B300B3108A /* AddPhotoView.swift in Sources */,
 				5B861795241695CB0031B776 /* MainViewController.swift in Sources */,
 				5B740F3E241BD85E008E093E /* ScanQRViewController.swift in Sources */,
 				5B86179D2416A3D00031B776 /* QueueItemTableViewCell.swift in Sources */,

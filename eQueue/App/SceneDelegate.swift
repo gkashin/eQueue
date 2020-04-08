@@ -22,22 +22,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-//        window?.rootViewController = MainTabBarController()
-        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
-
-        NetworkManager.shared.verifyToken(token: token) { statusCode in
-            if statusCode == 200 {
-                DispatchQueue.main.async {
-                    let mainTabBar = MainTabBarController()
-                    mainTabBar.modalPresentationStyle = .fullScreen
-                    self.window?.rootViewController = mainTabBar
-                }
-            } else {
-                DispatchQueue.main.async {
-                    self.window?.rootViewController = AuthViewController()
-                }
-            }
-        }
+        window?.rootViewController = MainTabBarController()
+//        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
+//
+//        NetworkManager.shared.verifyToken(token: token) { statusCode in
+//            if statusCode == 200 {
+//                DispatchQueue.main.async {
+//                    let mainTabBar = MainTabBarController()
+//                    mainTabBar.modalPresentationStyle = .fullScreen
+//                    self.window?.rootViewController = mainTabBar
+//                }
+//            } else {
+//                DispatchQueue.main.async {
+//                    self.window?.rootViewController = AuthViewController()
+//                }
+//            }
+//        }
         window?.makeKeyAndVisible()
     }
 
