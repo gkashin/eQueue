@@ -70,6 +70,23 @@ extension ControlViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        var queue = Queue()
+        
+        switch indexPath.section {
+        case 0:
+            queue = ControlViewController.upcomingQueues[indexPath.row]
+        case 1:
+            queue = ControlViewController.completedQueues[indexPath.row]
+        default:
+            break
+        }
+        
+        let queueDetailsVC = QueueDetailsViewController()
+        queueDetailsVC.queue = queue
+        navigationController?.pushViewController(queueDetailsVC, animated: true)
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: QueueTableViewCell.id, for: indexPath) as! QueueTableViewCell
         

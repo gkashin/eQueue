@@ -47,29 +47,12 @@ class SetupProfileViewController: UIViewController {
         view.backgroundColor = .white
         setupConstraints()
         
-        setupProfileButton.addTarget(self, action: #selector(goToChatsButtonTapped), for: .touchUpInside)
+        setupProfileButton.addTarget(self, action: #selector(setupProfileButtonTapped), for: .touchUpInside)
         fullImageView.plusButton.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
     }
     
-    @objc private func goToChatsButtonTapped() {
-//        FirestoreService.shared.saveProfileWith(
-//            id: currentUser.uid,
-//            email: currentUser.email!,
-//            username: fullNameTextField.text,
-//            avatarImage: fullImageView.circleImageView.image,
-//            description: aboutMeTextField.text,
-//            sex: sexSegmentedControl.titleForSegment(at: sexSegmentedControl.selectedSegmentIndex)) { result in
-//                switch result {
-//                case .success(let muser):
-//                    self.showAlert(with: "Success!", and: "Have a nice chat!") {
-//                        let mainTabBar = MainTabBarController(currentUser: muser)
-//                        mainTabBar.modalPresentationStyle = .fullScreen
-//                        self.present(mainTabBar, animated: true)
-//                    }
-//                case .failure(let error):
-//                    self.showAlert(with: "Error!", and: error.localizedDescription)
-//                }
-//        }
+    @objc private func setupProfileButtonTapped() {
+        
     }
     
     @objc private func plusButtonTapped() {
