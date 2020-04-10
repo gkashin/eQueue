@@ -21,13 +21,33 @@ class CreateQueueViewController: UIViewController {
     let setCurrentDateLabel = UILabel(text: "Использовать текущую дату?", font: .avenir16())
     let setCurrentDateSwitch = UISwitch()
     
-    let createButton = UIButton(title: "Создать", backgroundColor: .buttonDark(), titleColor: .white, font: .avenir20(), isShadow: false)
+    let actionButton = UIButton(title: "Создать", backgroundColor: .buttonDark(), titleColor: .white, font: .avenir20(), isShadow: false)
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    init(queue: Queue?, action: String?) {
+        super.init(nibName: nil, bundle: nil)
+        
+        guard let queue = queue else { return }
+        guard let action = action else { return }
+        actionButton.setTitle(action, for: .normal)
+        nameTextField.text = queue.name
+        descriptionTextField.text = queue.description
+        startDateLabel.text = DateFormatter().string(from: queue.startDate)
+        titleLabel.text = "\(action) очередь"
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .white
-        
+            
         setupUI()
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -36,8 +56,7 @@ class CreateQueueViewController: UIViewController {
         
         setCurrentDateSwitch.addTarget(self, action: #selector(setCurrentDateSwitchTapped), for: .touchUpInside)
         
-        createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
-        
+        actionButton.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
@@ -49,7 +68,7 @@ class CreateQueueViewController: UIViewController {
         view.frame.origin.y = .zero
     }
     
-    @objc private func createButtonTapped() {
+    @objc private func actionButtonTapped() {
         guard let name = nameTextField.text,
             let description = descriptionTextField.text,
             let startDate = startDateTextField.text,
@@ -64,6 +83,9 @@ class CreateQueueViewController: UIViewController {
         
         var queue = Queue(name: name, description: description, startDate: date, people: [], isOwnCreated: true)
         
+        queue.people.append(User(username: "Егор", password: "pass", email: "email", firstName: "George", lastName: "Kashin"))
+        queue.people.append(User(username: "Егор1", password: "pass", email: "email1", firstName: "Ivan", lastName: "Kuznetsov"))
+        queue.people.append(User(username: "Егор2", password: "pass", email: "email2", firstName: "Dmitry", lastName: "Chuchin"))
         queue.people.append(User(username: "Егор", password: "pass", email: "email", firstName: "George", lastName: "Kashin"))
         queue.people.append(User(username: "Егор1", password: "pass", email: "email1", firstName: "Ivan", lastName: "Kuznetsov"))
         queue.people.append(User(username: "Егор2", password: "pass", email: "email2", firstName: "Dmitry", lastName: "Chuchin"))
@@ -130,7 +152,7 @@ extension CreateQueueViewController {
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stackView)
-        view.addSubview(createButton)
+        view.addSubview(actionButton)
         
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 50),
@@ -152,12 +174,12 @@ extension CreateQueueViewController {
             setCurrentDateSwitch.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 0)
         ])
         
-        createButton.translatesAutoresizingMaskIntoConstraints = false
+        actionButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            createButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
-            createButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            createButton.widthAnchor.constraint(equalToConstant: 200)
+            actionButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
+            actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            actionButton.widthAnchor.constraint(equalToConstant: 200)
         ])
     }
     
