@@ -71,7 +71,7 @@ extension ControlViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        var queue = Queue()
+        var queue: Queue!
         
         switch indexPath.section {
         case 0:

@@ -10,6 +10,8 @@ import UIKit
 
 class CreateQueueViewController: UIViewController {
     
+    var completionHandler: ((Queue) -> Void)?
+    
     let titleLabel = UILabel(text: "Создать очередь")
     let nameLabel = UILabel(text: "Название очереди")
     let descriptionLabel = UILabel(text: "Описание")
@@ -20,6 +22,9 @@ class CreateQueueViewController: UIViewController {
     
     let setCurrentDateLabel = UILabel(text: "Использовать текущую дату?", font: .avenir16())
     let setCurrentDateSwitch = UISwitch()
+    
+    var queue = Queue()
+    var action = String()
     
     let actionButton = UIButton(title: "Создать", backgroundColor: .buttonDark(), titleColor: .white, font: .avenir20(), isShadow: false)
     
@@ -32,10 +37,13 @@ class CreateQueueViewController: UIViewController {
         
         guard let queue = queue else { return }
         guard let action = action else { return }
+        
+        self.queue = queue
+        self.action = action
         actionButton.setTitle(action, for: .normal)
         nameTextField.text = queue.name
         descriptionTextField.text = queue.description
-        startDateLabel.text = DateFormatter().string(from: queue.startDate)
+        startDateTextField.text = queue.startDate > Date() ? DateFormatter().getString(from: queue.startDate) : nil
         titleLabel.text = "\(action) очередь"
     }
     
@@ -47,7 +55,7 @@ class CreateQueueViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .white
-            
+        
         setupUI()
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -81,7 +89,11 @@ class CreateQueueViewController: UIViewController {
         let dateFormatter = DateFormatter()
         let date = dateFormatter.getDate(from: startDate)
         
-        var queue = Queue(name: name, description: description, startDate: date, people: [], isOwnCreated: true)
+        //        queue = Queue(name: name, description: description, startDate: date, people: [], isOwnCreated: true)
+        queue.name = name
+        queue.description = description
+        queue.startDate = date
+        queue.isOwnCreated = true
         
         queue.people.append(User(username: "Егор", password: "pass", email: "email", firstName: "George", lastName: "Kashin"))
         queue.people.append(User(username: "Егор1", password: "pass", email: "email1", firstName: "Ivan", lastName: "Kuznetsov"))
@@ -100,8 +112,22 @@ class CreateQueueViewController: UIViewController {
             } else {
                 QueueViewController.currentQueue = queue
                 dismiss(animated: true) {
+                    if tabBarController.selectedViewController?.navigationController != nil {
+                        print(#line, #function)
+                    }
+//                    tabBarController.selectedViewController?.navigationController?.popToRootViewController(animated: true)
                     tabBarController.selectedIndex = 1
                 }
+            }
+        }
+        
+        if action == "Изменить" {
+            let index = ControlViewController.upcomingQueues.firstIndex(where: { $0.id == queue.id })!
+            if setCurrentDateSwitch.isOn {
+                ControlViewController.upcomingQueues.remove(at: index)
+            } else {
+                ControlViewController.upcomingQueues[index] = queue
+                completionHandler?(queue)
             }
         } else {
             ControlViewController.upcomingQueues.append(queue)

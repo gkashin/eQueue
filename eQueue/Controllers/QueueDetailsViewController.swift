@@ -47,14 +47,15 @@ class QueueDetailsViewController: UIViewController {
     }
     
     @objc private func actionButtonTapped() {
-        let createQueueVC = CreateQueueViewController()
+        var createQueueVC: CreateQueueViewController
+        var action = ""
         if queue.isOwnCreated {
             if queue.startDate > Date() {
                 // Change
-                present(createQueueVC, animated: true)
+                action = "Изменить"
             } else {
                 // Start again
-                
+                action = "Повторить"
             }
         } else {
             if queue.startDate > Date() {
@@ -63,15 +64,19 @@ class QueueDetailsViewController: UIViewController {
                 // Delete
             }
         }
+        createQueueVC = CreateQueueViewController(queue: queue, action: action)
+        createQueueVC.completionHandler = { queue in
+            self.queue = queue
+            self.updateUI()
+        }
+        present(createQueueVC, animated: true)
     }
 }
 
 // MARK: - UI
 extension QueueDetailsViewController {
     private func setupUI() {
-        nameTextField.text = queue.name
-        descriptionTextField.text = queue.description
-        startDateTextField.text = DateFormatter().getString(from: queue.startDate)
+        updateUI()
         setTextFields(enabled: false)
         
         let nameTextFieldFormView = TextFieldFormView(label: nameLabel, textField: nameTextField)
@@ -119,6 +124,12 @@ extension QueueDetailsViewController {
             actionButton.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
             actionButton.widthAnchor.constraint(equalToConstant: 200),
         ])
+    }
+    
+    private func updateUI() {
+        nameTextField.text = queue.name
+        descriptionTextField.text = queue.description
+        startDateTextField.text = DateFormatter().getString(from: queue.startDate)
     }
     
     private func setupActionButton() {
