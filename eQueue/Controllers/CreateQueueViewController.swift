@@ -115,7 +115,7 @@ class CreateQueueViewController: UIViewController {
                     if tabBarController.selectedViewController?.navigationController != nil {
                         print(#line, #function)
                     }
-//                    tabBarController.selectedViewController?.navigationController?.popToRootViewController(animated: true)
+                    //                    tabBarController.selectedViewController?.navigationController?.popToRootViewController(animated: true)
                     tabBarController.selectedIndex = 1
                 }
             }
@@ -125,11 +125,19 @@ class CreateQueueViewController: UIViewController {
             let index = ControlViewController.upcomingQueues.firstIndex(where: { $0.id == queue.id })!
             if setCurrentDateSwitch.isOn {
                 ControlViewController.upcomingQueues.remove(at: index)
+                dismiss(animated: true)
             } else {
                 ControlViewController.upcomingQueues[index] = queue
                 completionHandler?(queue)
+                dismiss(animated: true)
             }
-        } else {
+        } else if action == "Повторить" {
+            if !setCurrentDateSwitch.isOn {
+                ControlViewController.upcomingQueues.append(queue)
+                dismiss(animated: true)
+                completionHandler?(queue)
+            }
+        } else if !setCurrentDateSwitch.isOn {
             ControlViewController.upcomingQueues.append(queue)
             dismiss(animated: true) {
                 tabBarController.selectedIndex = 2

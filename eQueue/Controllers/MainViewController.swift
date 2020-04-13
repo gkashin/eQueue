@@ -55,8 +55,10 @@ class MainViewController: UIViewController {
                 }
             } else {
                 DispatchQueue.main.async {
-                    let authVC = AuthViewController()
-                    self.present(authVC, animated: true)
+//                    let authVC = AuthViewController()
+//                    self.present(authVC, animated: true)
+                    let scanQrVC = ScanQRViewController()
+                    self.present(scanQrVC, animated: true)
                 }
             }
         }

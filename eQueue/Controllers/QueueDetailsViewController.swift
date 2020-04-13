@@ -60,8 +60,15 @@ class QueueDetailsViewController: UIViewController {
         } else {
             if queue.startDate > Date() {
                 // Leave
+                let index = ControlViewController.upcomingQueues.firstIndex(where: { $0.id == queue.id })!
+                ControlViewController.upcomingQueues.remove(at: index)
+                navigationController?.popToRootViewController(animated: true)
+                return
             } else {
                 // Delete
+                let index = ControlViewController.completedQueues.firstIndex(where: { $0.id == queue.id })!
+                ControlViewController.completedQueues.remove(at: index)
+                navigationController?.popToRootViewController(animated: true)
             }
         }
         createQueueVC = CreateQueueViewController(queue: queue, action: action)

@@ -64,13 +64,19 @@ class ScanQRViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                     queue.people.append(User(username: "Егор1", password: "pass", email: "email1", firstName: "Ivan", lastName: "Kuznetsov"))
                     queue.people.append(User(username: "Егор", password: "pass", email: "email", firstName: "George", lastName: "Kashin"))
                     
-                    QueueViewController.currentQueue = queue
-                    self.view.layer.sublayers?.removeLast()
+                    let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController
+                    
+                    if queue.startDate > Date() {
+                        ControlViewController.upcomingQueues.append(queue)
+                        tabBarController?.selectedIndex = 2
+                    } else {
+                        QueueViewController.currentQueue = queue
+                        self.view.layer.sublayers?.removeLast()
+                        
+                        tabBarController?.selectedIndex = 1
+                    }
                     
                     self.dismiss(animated: true, completion: nil)
-                    
-                    let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController
-                    tabBarController?.selectedIndex = 1
                 }))
                 present(alert, animated: true, completion: nil)
             }
