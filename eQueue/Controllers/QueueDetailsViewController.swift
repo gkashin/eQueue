@@ -19,6 +19,8 @@ class QueueDetailsViewController: UIViewController {
     
     let actionButton = UIButton(title: "Повторить", backgroundColor: .buttonDark(), titleColor: .white, font: .avenir20(), isShadow: false)
     
+    let removeButton = UIButton()
+    
     var queue = Queue()
     
     var tableView: UITableView!
@@ -44,6 +46,7 @@ class QueueDetailsViewController: UIViewController {
         tableView.dataSource = self
         
         actionButton.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
+        removeButton.addTarget(self, action: #selector(removeButtonTapped), for: .touchUpInside)
     }
     
     @objc private func actionButtonTapped() {
@@ -77,6 +80,12 @@ class QueueDetailsViewController: UIViewController {
             self.updateUI()
         }
         present(createQueueVC, animated: true)
+    }
+    
+    @objc private func removeButtonTapped() {
+        let index = ControlViewController.upcomingQueues.firstIndex(where: { $0.id == queue.id })!
+        ControlViewController.upcomingQueues.remove(at: index)
+        navigationController?.popToRootViewController(animated: true)
     }
 }
 
@@ -131,7 +140,24 @@ extension QueueDetailsViewController {
             actionButton.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
             actionButton.widthAnchor.constraint(equalToConstant: 200),
         ])
+        
+        if queue.isOwnCreated && queue.startDate > Date() {
+            view.addSubview(removeButton)
+            
+            removeButton.translatesAutoresizingMaskIntoConstraints = false
+            removeButton.setBackgroundImage(UIImage(systemName: "bin.xmark"), for: .normal)
+            
+            NSLayoutConstraint.activate([
+                actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -20),
+                
+                removeButton.bottomAnchor.constraint(equalTo: actionButton.bottomAnchor, constant: 5),
+                removeButton.leadingAnchor.constraint(equalTo: actionButton.trailingAnchor, constant: 30),
+                removeButton.widthAnchor.constraint(equalToConstant: 50),
+                removeButton.heightAnchor.constraint(equalToConstant: 50),
+            ])
+        }
     }
+    
     
     private func updateUI() {
         nameTextField.text = queue.name

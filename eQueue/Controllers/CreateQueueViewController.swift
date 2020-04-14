@@ -186,7 +186,6 @@ extension CreateQueueViewController {
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stackView)
-        view.addSubview(actionButton)
         
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 50),
@@ -208,12 +207,14 @@ extension CreateQueueViewController {
             setCurrentDateSwitch.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 0)
         ])
         
-        actionButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(actionButton)
         
+        actionButton.translatesAutoresizingMaskIntoConstraints = false
+
         NSLayoutConstraint.activate([
             actionButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
             actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            actionButton.widthAnchor.constraint(equalToConstant: 200)
+            actionButton.widthAnchor.constraint(equalToConstant: 200),
         ])
     }
     
