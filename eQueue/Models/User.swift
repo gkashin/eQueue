@@ -6,13 +6,14 @@
 //  Copyright © 2020 Georgii Kashin. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 struct User: Codable {
     var id = Int()
     var username = String()
     var password: String?
     var email = String()
+    var avatarData = Data()
 //    var group = String()
     var firstName = String()
     var lastName = String()
@@ -22,6 +23,7 @@ struct User: Codable {
         case password = "password"
         case email = "email"
 //        case group = "group"
+        case avatarData = "avatar"
         case id = "id"
         case firstName = "first_name"
         case lastName = "last_name"

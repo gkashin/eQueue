@@ -17,6 +17,18 @@ class MainViewController: UIViewController {
         return imageView
     }()
     
+    let profileButton: UIButton = {
+        let button = UIButton()
+        var image = #imageLiteral(resourceName: "circle")
+        if let user = SceneDelegate.user {
+            if let avatarImage = UIImage(data: user.avatarData) {
+                image = avatarImage
+            }
+        }
+        button.setImage(image, for: .normal)
+        return button
+    }()
+    
     let logoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = #imageLiteral(resourceName: "logo")
@@ -35,10 +47,16 @@ class MainViewController: UIViewController {
         title = "Главная"
         navigationController?.navigationBar.prefersLargeTitles = true
         
-        setupConstraints()
+        setupUI()
         
         scanQrButton.addTarget(self, action: #selector(scanQrButtonTapped), for: .touchUpInside)
         createQueueButton.addTarget(self, action: #selector(createQueueButtonTapped), for: .touchUpInside)
+        profileButton.addTarget(self, action: #selector(profileButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func profileButtonTapped() {
+        let setupProfileVC = SetupProfileViewController()
+        present(setupProfileVC, animated: true)
     }
     
     @objc private func scanQrButtonTapped() {
@@ -91,11 +109,12 @@ class MainViewController: UIViewController {
 
 // MARK: - UI
 extension MainViewController {
-    private func setupConstraints() {
-        avatarImageView.translatesAutoresizingMaskIntoConstraints = false
+    private func setupUI() {
+        profileButton.translatesAutoresizingMaskIntoConstraints = false
         logoImageView.translatesAutoresizingMaskIntoConstraints = false
         
-        view.addSubview(avatarImageView)
+//        navigationController.addSubview(profileButton)
+        navigationController?.navigationBar.addSubview(profileButton)
         view.addSubview(logoImageView)
         let buttonStackView = UIStackView(arrangedSubviews: [scanQrButton, findQueueButton, createQueueButton], axis: .vertical, spacing: 10)
         
@@ -104,13 +123,13 @@ extension MainViewController {
         buttonStackView.distribution = .fillEqually
         view.addSubview(buttonStackView)
         
-        avatarImageView.layer.cornerRadius = 45
-        avatarImageView.clipsToBounds = true
+        profileButton.layer.cornerRadius = 45
+        profileButton.clipsToBounds = true
         NSLayoutConstraint.activate([
-            avatarImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 30),
-            avatarImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            avatarImageView.heightAnchor.constraint(equalToConstant: 90),
-            avatarImageView.widthAnchor.constraint(equalToConstant: 90)
+            profileButton.topAnchor.constraint(equalTo: navigationController!.navigationBar.topAnchor, constant: 20),
+            profileButton.trailingAnchor.constraint(equalTo: navigationController!.navigationBar.trailingAnchor, constant: -20),
+            profileButton.heightAnchor.constraint(equalToConstant: 90),
+            profileButton.widthAnchor.constraint(equalToConstant: 90)
         ])
         
         NSLayoutConstraint.activate([

@@ -10,42 +10,47 @@ import UIKit
 
 class SetupProfileViewController: UIViewController {
     
-    let welcomeLabel = UILabel(text: "Set up profile", font: .avenir26())
+    let welcomeLabel = UILabel(text: "Настроить профиль", font: .avenir26())
     
-    let nameLabel = UILabel(text: "Name")
-    let surnameLabel = UILabel(text: "Surname")
+    let nameLabel = UILabel(text: "Имя")
+    let surnameLabel = UILabel(text: "Фамилия")
+    let emailLabel = UILabel(text: "Email")
+    let passwordLabel = UILabel(text: "Пароль")
     
-    let fullNameTextField = OneLineTextField(font: .avenir20())
+    let nameTextField = OneLineTextField(font: .avenir20())
     let surnameTextField = OneLineTextField(font: .avenir20())
+    let emailTextField = OneLineTextField(font: .avenir20())
+    let phoneNumberTextField = OneLineTextField(font: .avenir20())
+    let passwordTextField = OneLineTextField(font: .avenir20())
     
     let setupProfileButton = UIButton(title: "Setup profile!", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false, cornerRadius: 4)
     
     let fullImageView = AddPhotoView()
     
-//    private var currentUser: User
+    //    private var currentUser: User
     
-//    init() {
-//        self.currentUser = currentUser
-//        super.init(nibName: nil, bundle: nil)
-        
-//        if let username = currentUser.displayName {
-//            fullNameTextField.text = username
-//        }
-//
-//        if let photoURL = currentUser.photoURL {
-//            fullImageView.circleImageView.sd_setImage(with: photoURL, completed: nil)
-//        }
-//    }
+    //    init() {
+    //        self.currentUser = currentUser
+    //        super.init(nibName: nil, bundle: nil)
     
-//    required init?(coder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
+    //        if let username = currentUser.displayName {
+    //            fullNameTextField.text = username
+    //        }
+    //
+    //        if let photoURL = currentUser.photoURL {
+    //            fullImageView.circleImageView.sd_setImage(with: photoURL, completed: nil)
+    //        }
+    //    }
+    
+    //    required init?(coder: NSCoder) {
+    //        fatalError("init(coder:) has not been implemented")
+    //    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .white
-        setupConstraints()
+        setupUI()
         
         setupProfileButton.addTarget(self, action: #selector(setupProfileButtonTapped), for: .touchUpInside)
         fullImageView.plusButton.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
@@ -65,38 +70,64 @@ class SetupProfileViewController: UIViewController {
 
 // MARK: - Setup Constraints
 extension SetupProfileViewController {
-    private func setupConstraints() {
+    private func setupUI() {
+        let dataStackView = UIStackView(arrangedSubviews: [nameLabel, nameTextField, surnameLabel, surnameTextField], axis: .vertical, spacing: 20)
         
-        let nameStackView = UIStackView(arrangedSubviews: [nameLabel, fullNameTextField, surnameLabel, surnameTextField], axis: .vertical, spacing: 20)
+        if let user = SceneDelegate.user {
+            nameTextField.text = user.firstName
+            surnameTextField.text = user.lastName
+            emailTextField.text = user.email
+            
+            dataStackView.addArrangedSubview(emailLabel)
+            dataStackView.addArrangedSubview(emailTextField)
+            dataStackView.addArrangedSubview(passwordLabel)
+            dataStackView.addArrangedSubview(passwordTextField)
+        }
         
         setupProfileButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
         let stackView = UIStackView(arrangedSubviews: [
-            nameStackView,
+            dataStackView,
             setupProfileButton
-        ], axis: .vertical, spacing: 40)
+        ], axis: .vertical, spacing: 30)
         
         welcomeLabel.translatesAutoresizingMaskIntoConstraints = false
         fullImageView.translatesAutoresizingMaskIntoConstraints = false
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
-        view.addSubview(welcomeLabel)
-        view.addSubview(fullImageView)
-        view.addSubview(stackView)
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scrollView)
+        
+        scrollView.addSubview(welcomeLabel)
+        scrollView.addSubview(fullImageView)
+        scrollView.addSubview(dataStackView)
+        scrollView.addSubview(stackView)
         
         NSLayoutConstraint.activate([
-            welcomeLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
-            welcomeLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            welcomeLabel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 100),
+            welcomeLabel.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor)
         ])
         
         NSLayoutConstraint.activate([
             fullImageView.topAnchor.constraint(equalTo: welcomeLabel.bottomAnchor, constant: 40),
-            fullImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            fullImageView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor)
         ])
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: fullImageView.bottomAnchor, constant: 40),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40)
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            scrollView.rightAnchor.constraint(equalTo: view.rightAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            dataStackView.topAnchor.constraint(equalTo: fullImageView.bottomAnchor, constant: 40),
+            dataStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 40),
+            dataStackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -40),
+            dataStackView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -80),
+            
+            stackView.topAnchor.constraint(equalTo: dataStackView.bottomAnchor, constant: 40),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 40),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -40),
+            stackView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -80),
         ])
     }
 }
