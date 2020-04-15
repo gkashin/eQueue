@@ -45,8 +45,15 @@ class MainViewController: UIViewController {
     }
     
     @objc private func profileButtonTapped() {
-        let setupProfileVC = SetupProfileViewController()
-        present(setupProfileVC, animated: true)
+        if SceneDelegate.user != nil {
+            let setupProfileVC = SetupProfileViewController()
+            present(setupProfileVC, animated: true)
+        } else {
+            let setupProfileVC = SetupProfileViewController()
+            present(setupProfileVC, animated: true)
+//            let authVC = AuthViewController()
+//            present(authVC, animated: true)
+        }
     }
     
     @objc private func scanQrButtonTapped() {

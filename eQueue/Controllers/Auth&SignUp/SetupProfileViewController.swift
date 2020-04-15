@@ -111,7 +111,12 @@ class SetupProfileViewController: UIViewController {
 // MARK: - Setup Constraints
 extension SetupProfileViewController {
     private func setupUI() {
-        let dataStackView = UIStackView(arrangedSubviews: [nameLabel, nameTextField, surnameLabel, surnameTextField], axis: .vertical, spacing: 10)
+        var welcomeLabelDistance: CGFloat = 60
+        var fullImageViewDistance: CGFloat = 30
+        var stackViewSpacing: CGFloat = 60
+        var stackViewDistance: CGFloat = 60
+    
+        let dataStackView = UIStackView(arrangedSubviews: [nameLabel, nameTextField, surnameLabel, surnameTextField], axis: .vertical, spacing: 20)
         
         if let user = SceneDelegate.user {
             nameTextField.text = user.firstName
@@ -124,13 +129,20 @@ extension SetupProfileViewController {
             dataStackView.addArrangedSubview(emailTextField)
             dataStackView.addArrangedSubview(passwordLabel)
             dataStackView.addArrangedSubview(passwordTextField)
+            
+            welcomeLabelDistance = 30
+            fullImageViewDistance = 20
+            stackViewSpacing = 30
+            stackViewDistance = 30
+            
+            dataStackView.spacing = 10
         }
         
         saveButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
         let stackView = UIStackView(arrangedSubviews: [
             dataStackView,
             saveButton
-        ], axis: .vertical, spacing: 30)
+        ], axis: .vertical, spacing: stackViewSpacing)
         
         welcomeLabel.translatesAutoresizingMaskIntoConstraints = false
         fullImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -141,17 +153,17 @@ extension SetupProfileViewController {
         view.addSubview(stackView)
         
         NSLayoutConstraint.activate([
-            welcomeLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 30),
+            welcomeLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: welcomeLabelDistance),
             welcomeLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
         
         NSLayoutConstraint.activate([
-            fullImageView.topAnchor.constraint(equalTo: welcomeLabel.bottomAnchor, constant: 20),
+            fullImageView.topAnchor.constraint(equalTo: welcomeLabel.bottomAnchor, constant: fullImageViewDistance),
             fullImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: fullImageView.bottomAnchor, constant: 30),
+            stackView.topAnchor.constraint(equalTo: fullImageView.bottomAnchor, constant: stackViewDistance),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
             stackView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -80),
