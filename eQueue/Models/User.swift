@@ -11,12 +11,12 @@ import UIKit
 struct User: Codable {
     var id = Int()
     var username = String()
-    var password: String?
-    var email = String()
-    var avatarData = Data()
+    var password = "Password"
+    var email = "Email"
+    var avatarData = #imageLiteral(resourceName: "circle").pngData()!
 //    var group = String()
-    var firstName = String()
-    var lastName = String()
+    var firstName = "Name"
+    var lastName = "Surname"
     
     enum CodingKeys: String, CodingKey {
         case username = "username"

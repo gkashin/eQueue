@@ -17,17 +17,7 @@ class MainViewController: UIViewController {
         return imageView
     }()
     
-    let profileButton: UIButton = {
-        let button = UIButton()
-        var image = #imageLiteral(resourceName: "circle")
-        if let user = SceneDelegate.user {
-            if let avatarImage = UIImage(data: user.avatarData) {
-                image = avatarImage
-            }
-        }
-        button.setImage(image, for: .normal)
-        return button
-    }()
+    let profileButton = UIButton()
     
     let logoImageView: UIImageView = {
         let imageView = UIImageView()
@@ -83,7 +73,6 @@ class MainViewController: UIViewController {
     }
     
     @objc private func createQueueButtonTapped() {
-        
         let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
 
         NetworkManager.shared.verifyToken(token: token) { statusCode in
@@ -105,11 +94,24 @@ class MainViewController: UIViewController {
 //        let createQueueVC = CreateQueueViewController()
 //        present(createQueueVC, animated: true)
     }
+    
+    public func updateProfileButton() {
+        var image: UIImage
+        if let user = SceneDelegate.user {
+            guard let avatarImage = UIImage(data: user.avatarData) else { return }
+            image = avatarImage
+        } else {
+            image = #imageLiteral(resourceName: "circle")
+        }
+        profileButton.setBackgroundImage(image, for: .normal)
+    }
 }
 
 // MARK: - UI
 extension MainViewController {
     private func setupUI() {
+        updateProfileButton()
+        
         profileButton.translatesAutoresizingMaskIntoConstraints = false
         logoImageView.translatesAutoresizingMaskIntoConstraints = false
         

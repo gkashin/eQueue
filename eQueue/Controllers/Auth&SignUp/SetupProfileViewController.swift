@@ -23,7 +23,7 @@ class SetupProfileViewController: UIViewController {
     let phoneNumberTextField = OneLineTextField(font: .avenir20())
     let passwordTextField = OneLineTextField(font: .avenir20())
     
-    let setupProfileButton = UIButton(title: "Setup profile!", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false, cornerRadius: 4)
+    let saveButton = UIButton(title: "Сохранить", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false, cornerRadius: 4)
     
     let fullImageView = AddPhotoView()
     
@@ -52,12 +52,39 @@ class SetupProfileViewController: UIViewController {
         view.backgroundColor = .white
         setupUI()
         
-        setupProfileButton.addTarget(self, action: #selector(setupProfileButtonTapped), for: .touchUpInside)
+        saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
         fullImageView.plusButton.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    @objc private func setupProfileButtonTapped() {
+    @objc private func saveButtonTapped() {
+        guard let name = nameTextField.text,
+            let surname = surnameTextField.text,
+            let email = emailTextField.text,
+            let password = passwordTextField.text,
+            let avatarImage = fullImageView.circleImageView.image,
+            name != "",
+            surname != "",
+            email != "",
+            password != "" else {
+                return
+        }
         
+        SceneDelegate.user?.firstName = name
+        SceneDelegate.user?.lastName = surname
+        SceneDelegate.user?.avatarData = avatarImage.pngData()!
+        SceneDelegate.user?.email = email
+        SceneDelegate.user?.password = password
+        
+        dismiss(animated: true) {
+            let tabBarVC = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
+            let navigationVC = tabBarVC.viewControllers?.first! as! UINavigationController
+            let rootVC = navigationVC.viewControllers.first as! MainViewController
+            rootVC.updateProfileButton()
+        }
     }
     
     @objc private func plusButtonTapped() {
@@ -66,17 +93,32 @@ class SetupProfileViewController: UIViewController {
         imagePickerController.sourceType = .photoLibrary
         present(imagePickerController, animated: true)
     }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
+        view.frame.origin.y = 0 - 0.6 * keyboardSize.height
+    }
+    
+    @objc func keyboardWillHide() {
+        view.frame.origin.y = .zero
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
 }
 
 // MARK: - Setup Constraints
 extension SetupProfileViewController {
     private func setupUI() {
-        let dataStackView = UIStackView(arrangedSubviews: [nameLabel, nameTextField, surnameLabel, surnameTextField], axis: .vertical, spacing: 20)
+        let dataStackView = UIStackView(arrangedSubviews: [nameLabel, nameTextField, surnameLabel, surnameTextField], axis: .vertical, spacing: 10)
         
         if let user = SceneDelegate.user {
             nameTextField.text = user.firstName
             surnameTextField.text = user.lastName
+            fullImageView.circleImageView.image = UIImage(data: user.avatarData)
             emailTextField.text = user.email
+            passwordTextField.text = user.password
             
             dataStackView.addArrangedSubview(emailLabel)
             dataStackView.addArrangedSubview(emailTextField)
@@ -84,49 +126,34 @@ extension SetupProfileViewController {
             dataStackView.addArrangedSubview(passwordTextField)
         }
         
-        setupProfileButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        saveButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
         let stackView = UIStackView(arrangedSubviews: [
             dataStackView,
-            setupProfileButton
+            saveButton
         ], axis: .vertical, spacing: 30)
         
         welcomeLabel.translatesAutoresizingMaskIntoConstraints = false
         fullImageView.translatesAutoresizingMaskIntoConstraints = false
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
-        let scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(scrollView)
-        
-        scrollView.addSubview(welcomeLabel)
-        scrollView.addSubview(fullImageView)
-        scrollView.addSubview(dataStackView)
-        scrollView.addSubview(stackView)
+        view.addSubview(welcomeLabel)
+        view.addSubview(fullImageView)
+        view.addSubview(stackView)
         
         NSLayoutConstraint.activate([
-            welcomeLabel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 100),
-            welcomeLabel.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor)
+            welcomeLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 30),
+            welcomeLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
         
         NSLayoutConstraint.activate([
-            fullImageView.topAnchor.constraint(equalTo: welcomeLabel.bottomAnchor, constant: 40),
-            fullImageView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor)
+            fullImageView.topAnchor.constraint(equalTo: welcomeLabel.bottomAnchor, constant: 20),
+            fullImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
         
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.leftAnchor.constraint(equalTo: view.leftAnchor),
-            scrollView.rightAnchor.constraint(equalTo: view.rightAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            dataStackView.topAnchor.constraint(equalTo: fullImageView.bottomAnchor, constant: 40),
-            dataStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 40),
-            dataStackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -40),
-            dataStackView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -80),
-            
-            stackView.topAnchor.constraint(equalTo: dataStackView.bottomAnchor, constant: 40),
-            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 40),
-            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -40),
+            stackView.topAnchor.constraint(equalTo: fullImageView.bottomAnchor, constant: 30),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
             stackView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -80),
         ])
     }
