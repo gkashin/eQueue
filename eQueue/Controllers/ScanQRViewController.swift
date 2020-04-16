@@ -51,6 +51,14 @@ class ScanQRViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             if object.type == AVMetadataObject.ObjectType.qr {
                 self.session.stopRunning()
                 
+                var queue = Queue()
+                guard let queueId = Int(object.stringValue!) else { return }
+                
+                NetworkManager.shared.findQueue(id: queueId) { found in
+                    guard let found = found else { return }
+                    queue = found
+                }
+                
                 let alert = UIAlertController(title: "Обнаружена очередь", message: object.stringValue, preferredStyle: .alert)
                 let cancelAction = UIAlertAction(title: "Отменить", style: .cancel) { _ in
                     self.session.startRunning()
@@ -58,7 +66,7 @@ class ScanQRViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                 alert.addAction(cancelAction)
                 
                 alert.addAction(UIAlertAction(title: "Встать в очередь", style: .default, handler: { _ in
-                    var queue = Queue(name: object.stringValue!, description: "", startDate: Date().addingTimeInterval(2000), people: [], isOwnCreated: false)
+//                    var queue = Queue(name: object.stringValue!, description: "", startDate: Date().addingTimeInterval(2000))
                     
                     queue.people.append(User(username: "Егор2", password: "pass", email: "email2", firstName: "Dmitry", lastName: "Chuchin"))
                     queue.people.append(User(username: "Егор1", password: "pass", email: "email1", firstName: "Ivan", lastName: "Kuznetsov"))

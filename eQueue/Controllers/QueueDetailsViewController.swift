@@ -36,8 +36,8 @@ class QueueDetailsViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: nil)
         
         tableView = UITableView()
-        let cellType = queue.isOwnCreated ? OwnCreatedQueueItemTableViewCell.self : QueueItemTableViewCell.self
-        let cellId = queue.isOwnCreated ? OwnCreatedQueueItemTableViewCell.id : QueueItemTableViewCell.id
+        let cellType = queue.ownerId == SceneDelegate.user?.id ? OwnCreatedQueueItemTableViewCell.self : QueueItemTableViewCell.self
+        let cellId = queue.ownerId == SceneDelegate.user?.id ? OwnCreatedQueueItemTableViewCell.id : QueueItemTableViewCell.id
         tableView.register(cellType, forCellReuseIdentifier: cellId)
         
         setupUI()
@@ -52,7 +52,7 @@ class QueueDetailsViewController: UIViewController {
     @objc private func actionButtonTapped() {
         var createQueueVC: CreateQueueViewController
         var action = ""
-        if queue.isOwnCreated {
+        if queue.ownerId == SceneDelegate.user?.id {
             if queue.startDate > Date() {
                 // Change
                 action = "Изменить"
@@ -141,7 +141,7 @@ extension QueueDetailsViewController {
             actionButton.widthAnchor.constraint(equalToConstant: 200),
         ])
         
-        if queue.isOwnCreated && queue.startDate > Date() {
+        if queue.ownerId == SceneDelegate.user?.id && queue.startDate > Date() {
             view.addSubview(removeButton)
             
             removeButton.translatesAutoresizingMaskIntoConstraints = false
@@ -167,7 +167,7 @@ extension QueueDetailsViewController {
     
     private func setupActionButton() {
         var buttonTitle = ""
-        if queue.isOwnCreated {
+        if queue.ownerId == SceneDelegate.user?.id {
             if queue.startDate > Date() {
                 buttonTitle = "Изменить"
             } else {
@@ -201,14 +201,14 @@ extension QueueDetailsViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let id = queue.isOwnCreated ? OwnCreatedQueueItemTableViewCell.id : QueueItemTableViewCell.id
+        let id = queue.ownerId == SceneDelegate.user?.id ? OwnCreatedQueueItemTableViewCell.id : QueueItemTableViewCell.id
         
         let cell = tableView.dequeueReusableCell(withIdentifier: id, for: indexPath)
         var user = User()
         
         user = queue.people[indexPath.row]
         
-        if queue.isOwnCreated {
+        if queue.ownerId == SceneDelegate.user?.id {
             let ownCreatedQueueItemTableViewCell = cell as! OwnCreatedQueueItemTableViewCell
             ownCreatedQueueItemTableViewCell.setup(with: user, at: indexPath)
         } else {
@@ -226,7 +226,7 @@ extension QueueDetailsViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         guard QueueViewController.currentQueue != nil else { return .none }
         
-        if QueueViewController.currentQueue!.isOwnCreated {
+        if QueueViewController.currentQueue!.ownerId == SceneDelegate.user?.id {
             return .delete
         } else {
             return .none

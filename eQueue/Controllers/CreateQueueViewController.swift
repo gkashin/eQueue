@@ -93,7 +93,7 @@ class CreateQueueViewController: UIViewController {
         queue.name = name
         queue.description = description
         queue.startDate = date
-        queue.isOwnCreated = true
+//        queue.isOwnCreated = true
         
         queue.people.append(User(username: "Егор", password: "pass", email: "email", firstName: "George", lastName: "Kashin"))
         queue.people.append(User(username: "Егор1", password: "pass", email: "email1", firstName: "Ivan", lastName: "Kuznetsov"))
@@ -105,7 +105,7 @@ class CreateQueueViewController: UIViewController {
         let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
         if setCurrentDateSwitch.isOn {
             if QueueViewController.currentQueue != nil {
-                if QueueViewController.currentQueue!.isOwnCreated {
+                if QueueViewController.currentQueue!.ownerId == SceneDelegate.user?.id {
                     let alert = createAlert(withTitle: "У вас уже есть текущая очередь", andMessage: "")
                     present(alert, animated: true, completion: nil)
                 }

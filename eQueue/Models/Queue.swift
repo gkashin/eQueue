@@ -8,22 +8,35 @@
 
 import UIKit
 
-struct Queue {
+struct Queue: Codable {
     static var id = Int()
     var id = Int()
     var name = "Только спросить"
     var description = ""
     var startDate = Date()
     var people = [User]()
-    var isOwnCreated = Bool()
+//    var isOwnCreated = Bool()
+    var ownerId = Int()
+    var isCompleted = Bool()
     
-    init(name: String = "", description: String = "", startDate: Date = Date(), people: [User] = [], isOwnCreated: Bool = Bool()) {
+    init(name: String = "", description: String = "", startDate: Date = Date(), people: [User] = [], isCompleted: Bool = false) {
         Queue.id += 1
         self.id = Queue.id
         self.name = name
         self.description = description
         self.startDate = startDate
         self.people = people
-        self.isOwnCreated = isOwnCreated
+//        self.isOwnCreated = isOwnCreated
+        self.ownerId = SceneDelegate.user!.id
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case name = "name"
+        case description = "description"
+        case startDate = "startDate"
+        case people = "people"
+        case ownerId = "ownerId"
+        case isCompleted = "isCompleted"
     }
 }

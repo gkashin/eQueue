@@ -146,7 +146,7 @@ extension QueueViewController {
         }
         
         stubLabel.isHidden = true
-        if QueueViewController.currentQueue!.isOwnCreated {
+        if QueueViewController.currentQueue!.ownerId == SceneDelegate.user?.id {
             queueInfoStackView.isHidden = true
             totalPeopleLabel.isHidden = false
             terminateQueueButton.isHidden = false
@@ -171,14 +171,14 @@ extension QueueViewController {
 extension QueueViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         guard QueueViewController.currentQueue != nil else { return 1 }
-        return QueueViewController.currentQueue!.isOwnCreated ? 2 : 1
+        return QueueViewController.currentQueue!.ownerId == SceneDelegate.user?.id ? 2 : 1
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0:
             guard QueueViewController.currentQueue != nil else { return "" }
-            return QueueViewController.currentQueue!.isOwnCreated ? "Следующий" : ""
+            return QueueViewController.currentQueue!.ownerId == SceneDelegate.user?.id ? "Следующий" : ""
         case 1:
             return "Остальные"
         default:
@@ -192,7 +192,7 @@ extension QueueViewController: UITableViewDelegate, UITableViewDataSource {
         
         switch section {
         case 0:
-            if QueueViewController.currentQueue!.isOwnCreated {
+            if QueueViewController.currentQueue!.ownerId == SceneDelegate.user?.id {
                 return 1
             } else {
                 return QueueViewController.currentQueue!.people.count
@@ -208,14 +208,14 @@ extension QueueViewController: UITableViewDelegate, UITableViewDataSource {
         guard QueueViewController.currentQueue != nil else { return UITableViewCell() }
         
         
-        let id = QueueViewController.currentQueue!.isOwnCreated ? OwnCreatedQueueItemTableViewCell.id : QueueItemTableViewCell.id
+        let id = QueueViewController.currentQueue!.ownerId == SceneDelegate.user?.id ? OwnCreatedQueueItemTableViewCell.id : QueueItemTableViewCell.id
         
         let cell = tableView.dequeueReusableCell(withIdentifier: id, for: indexPath)
         var user = User()
         
         switch indexPath.section {
         case 0:
-            if QueueViewController.currentQueue!.isOwnCreated {
+            if QueueViewController.currentQueue!.ownerId == SceneDelegate.user?.id {
                 user = QueueViewController.currentQueue!.people.first!
             } else {
                 user = QueueViewController.currentQueue!.people[indexPath.row]
@@ -226,7 +226,7 @@ extension QueueViewController: UITableViewDelegate, UITableViewDataSource {
             break
         }
         
-        if QueueViewController.currentQueue!.isOwnCreated {
+        if QueueViewController.currentQueue!.ownerId == SceneDelegate.user?.id {
             let ownCreatedQueueItemTableViewCell = cell as! OwnCreatedQueueItemTableViewCell
             ownCreatedQueueItemTableViewCell.setup(with: user, at: indexPath)
         } else {
@@ -240,13 +240,13 @@ extension QueueViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard QueueViewController.currentQueue != nil else { return 0 }
-        return QueueViewController.currentQueue!.isOwnCreated ? 80 : 120
+        return QueueViewController.currentQueue!.ownerId == SceneDelegate.user?.id ? 80 : 120
     }
     
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         guard QueueViewController.currentQueue != nil else { return .none }
         
-        if QueueViewController.currentQueue!.isOwnCreated {
+        if QueueViewController.currentQueue!.ownerId == SceneDelegate.user?.id {
             return .delete
         } else {
             return .none
@@ -258,7 +258,7 @@ extension QueueViewController: UITableViewDelegate, UITableViewDataSource {
         case .delete:
             QueueViewController.currentQueue?.people.remove(at: indexPath.row)
             updateTotalPeopleLabel()
-            tableView.reloadData()
+            UITableView.transition(with: tableView, duration: 0.5, options: .transitionCrossDissolve, animations: { self.tableView.reloadData() }, completion: nil)
         case .insert:
             break
         case .none:

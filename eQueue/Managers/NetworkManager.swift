@@ -63,7 +63,7 @@ class NetworkManager {
                 print("Couldn't get data, \(error!.localizedDescription)")
                 return completion(nil)
             }
-//            let jsonDecoder = JSONDecoder()
+            //            let jsonDecoder = JSONDecoder()
             guard let jsonDictionary = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
                 print("Couldn't decode data from \(data)")
                 return completion(nil)
@@ -83,50 +83,69 @@ class NetworkManager {
         var request = URLRequest(url: verifyURL)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
+        
         let data = ["token": token]
-
+        
         let jsonEncoder = JSONEncoder()
         let jsonData = try! jsonEncoder.encode(data)
-
+        
         request.httpBody = jsonData
-
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+        
+        let _ = URLSession.shared.dataTask(with: request) { data, response, error in
             let httpResponse = response as? HTTPURLResponse
             completion(httpResponse?.statusCode)
         }.resume()
     }
     
-    //    func checkLogin(for username: String, with password: String, completion: @escaping (User?) -> Void) {
-    //        let loginURL = baseURL.appendingPathComponent("login/basic")
-    //
-    //        var request = URLRequest(url: loginURL)
-    //
-    //        request.httpMethod = "GET"
-    //
-    //        let loginString = String(format: "\(username):\(password)")
-    //        guard let loginData = loginString.data(using: .utf8) else {
-    //            print(#line, #function, "Can't encode login string to data using utf8")
-    //            return completion(nil)
-    //        }
-    //        let base64LoginString = loginData.base64EncodedString()
-    //        request.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
-    //
-    //        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-    //            guard let data = data else {
-    //                print(#line, #function, "Couldn't get data")
-    //                return completion(nil)
-    //            }
-    //
-    //            let jsonDecoder = JSONDecoder()
-    //            guard let user = try? jsonDecoder.decode(User.self, from: data) else {
-    //                print(#line, #function, "Can't decode data from \(data)")
-    //                return completion(nil)
-    //            }
-    //
-    //            completion(user)
-    //        }
-    //
-    //        task.resume()
-    //    }
+    func createQueue(queue: Queue, completion: @escaping (Int?) -> Void) {
+        let createQueueURL = baseURL.appendingPathComponent("create")
+        var request = URLRequest(url: createQueueURL)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let data = ["queue": queue]
+        
+        let jsonEncoder = JSONEncoder()
+        let jsonData = try! jsonEncoder.encode(data)
+        
+        request.httpBody = jsonData
+        
+        let _ = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data else {
+                print("Couldn't get data, \(error!.localizedDescription)")
+                return completion(nil)
+            }
+            let jsonDecoder = JSONDecoder()
+            
+            //            completion(user)
+        }.resume()
+    }
+    
+    func findQueue(id: Int, completion: @escaping (Queue?) -> Void) {
+        let findQueueURL = baseURL.appendingPathComponent("find")
+        var request = URLRequest(url: findQueueURL)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let data = ["id": id]
+        
+        let jsonEncoder = JSONEncoder()
+        let jsonData = try! jsonEncoder.encode(data)
+        
+        request.httpBody = jsonData
+        
+        let _ = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data else {
+                print("Couldn't get data, \(error!.localizedDescription)")
+                return completion(nil)
+            }
+            let jsonDecoder = JSONDecoder()
+            
+            guard let queue = try? jsonDecoder.decode(Queue.self, from: data) else {
+                print("Couldn't decode data from \(data)")
+                return completion(nil)
+            }
+            completion(queue)
+        }.resume()
+    }
 }
