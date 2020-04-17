@@ -36,7 +36,14 @@ struct Queue: Codable {
         case description = "description"
         case startDate = "startDate"
         case people = "people"
-        case ownerId = "ownerId"
-        case isCompleted = "isCompleted"
+        case ownerId = "owner"
+        case isCompleted = "status"
     }
+}
+
+struct Data: Codable {
+    var id: Int
+    var name: String
+    var owner: Int
+    var expected_time: Int
 }

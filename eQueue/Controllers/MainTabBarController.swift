@@ -41,13 +41,14 @@ class MainTabBarController: UITabBarController {
         
         let boldConfig = UIImage.SymbolConfiguration(weight: .medium)
          
-        let peopleImage = UIImage(systemName: "person.2", withConfiguration: boldConfig)!
-        let conversationImage = UIImage(systemName: "bubble.left.and.bubble.right", withConfiguration: boldConfig)!
+        let mainImage = UIImage(systemName: "house", withConfiguration: boldConfig)!
+        let queueImage = UIImage(systemName: "list.bullet", withConfiguration: boldConfig)!
+        let controlImage = UIImage(systemName: "rectangle.grid.3x2", withConfiguration: boldConfig)!
         
         viewControllers = [
-            generateNavigationController(rootViewController: mainViewController, title: "Главная", image: peopleImage),
-            generateNavigationController(rootViewController: queueViewController, title: "Моя очередь", image: conversationImage),
-            generateNavigationController(rootViewController: controlViewController, title: "Управление", image: conversationImage),
+            generateNavigationController(rootViewController: mainViewController, title: "Главная", image: mainImage),
+            generateNavigationController(rootViewController: queueViewController, title: "Моя очередь", image: queueImage),
+            generateNavigationController(rootViewController: controlViewController, title: "Управление", image: controlImage),
         ]
     }
     

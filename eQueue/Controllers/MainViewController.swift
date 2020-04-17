@@ -90,10 +90,10 @@ class MainViewController: UIViewController {
                 }
             } else {
                 DispatchQueue.main.async {
-                    let createQueueVC = CreateQueueViewController()
-                    self.present(createQueueVC, animated: true)
-//                    let authVC = AuthViewController()
-//                    self.present(authVC, animated: true)
+//                    let createQueueVC = CreateQueueViewController()
+//                    self.present(createQueueVC, animated: true)
+                    let authVC = AuthViewController()
+                    self.present(authVC, animated: true)
                 }
             }
         }

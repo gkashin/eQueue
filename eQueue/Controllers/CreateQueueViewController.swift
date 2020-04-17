@@ -24,7 +24,7 @@ class CreateQueueViewController: UIViewController {
     let setCurrentDateSwitch = UISwitch()
     
     var queue = Queue()
-    var action = String()
+    var action = "Создать"
     
     let actionButton = UIButton(title: "Создать", backgroundColor: .buttonDark(), titleColor: .white, font: .avenir20(), isShadow: false)
     
@@ -89,8 +89,15 @@ class CreateQueueViewController: UIViewController {
         let dateFormatter = DateFormatter()
         let date = dateFormatter.getDate(from: startDate)
         
-        //        queue = Queue(name: name, description: description, startDate: date, people: [], isOwnCreated: true)
         queue.name = name
+        
+        if action == "Создать" {
+            NetworkManager.shared.createQueue(queue: queue) { data in
+                print(#line, #function, data)
+            }
+        }
+        
+        //        queue = Queue(name: name, description: description, startDate: date, people: [], isOwnCreated: true)
         queue.description = description
         queue.startDate = date
 //        queue.isOwnCreated = true

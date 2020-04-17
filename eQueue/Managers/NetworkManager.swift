@@ -69,6 +69,7 @@ class NetworkManager {
                 return completion(nil)
             }
             guard let token = jsonDictionary["access"] as? String else {
+                print("Couldn't get access token from \(jsonDictionary)")
                 return completion(nil)
             }
             
@@ -98,12 +99,15 @@ class NetworkManager {
     }
     
     func createQueue(queue: Queue, completion: @escaping (Int?) -> Void) {
-        let createQueueURL = baseURL.appendingPathComponent("create")
+        let createQueueURL = baseURL.appendingPathComponent("create/")
         var request = URLRequest(url: createQueueURL)
         request.httpMethod = "POST"
+    
+        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("JWT \(token)", forHTTPHeaderField: "Authorization")
         
-        let data = ["queue": queue]
+        let data = ["name": queue.name]
         
         let jsonEncoder = JSONEncoder()
         let jsonData = try! jsonEncoder.encode(data)
@@ -116,6 +120,20 @@ class NetworkManager {
                 return completion(nil)
             }
             let jsonDecoder = JSONDecoder()
+            
+            guard let jsonDictionary = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                print("Couldn't decode data from \(data)")
+                return completion(nil)
+            }
+            print(jsonDictionary)
+//            guard let jsonData = jsonDictionary["data"] as? [String : Any] else {
+//                print("Couldn't get data from \(jsonDictionary)")
+//                return completion(nil)
+//            }
+//            print(#line, #function, jsonData)
+            
+            let httpResponse = response as? HTTPURLResponse
+            print(#line, #function, httpResponse?.statusCode)
             
             //            completion(user)
         }.resume()
