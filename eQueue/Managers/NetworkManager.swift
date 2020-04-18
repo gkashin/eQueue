@@ -98,7 +98,7 @@ class NetworkManager {
         }.resume()
     }
     
-    func createQueue(queue: Queue, completion: @escaping (Int?) -> Void) {
+    func createQueue(queue: Queue, completion: @escaping (Queue?) -> Void) {
         let createQueueURL = baseURL.appendingPathComponent("create/")
         var request = URLRequest(url: createQueueURL)
         request.httpMethod = "POST"
@@ -121,36 +121,24 @@ class NetworkManager {
             }
             let jsonDecoder = JSONDecoder()
             
-            guard let jsonDictionary = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            guard let dataQueue = try? jsonDecoder.decode(DataQueue.self, from: data) else {
                 print("Couldn't decode data from \(data)")
                 return completion(nil)
             }
-            print(jsonDictionary)
-//            guard let jsonData = jsonDictionary["data"] as? [String : Any] else {
-//                print("Couldn't get data from \(jsonDictionary)")
-//                return completion(nil)
-//            }
-//            print(#line, #function, jsonData)
             
-            let httpResponse = response as? HTTPURLResponse
-            print(#line, #function, httpResponse?.statusCode)
-            
-            //            completion(user)
+            completion(dataQueue.queue)
+//            let httpResponse = response as? HTTPURLResponse
+//            print(#line, #function, httpResponse?.statusCode)
         }.resume()
     }
     
     func findQueue(id: Int, completion: @escaping (Queue?) -> Void) {
-        let findQueueURL = baseURL.appendingPathComponent("find")
+        let findQueueURL = baseURL.appendingPathComponent("enqueue/\(id)")
         var request = URLRequest(url: findQueueURL)
         request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let data = ["id": id]
-        
-        let jsonEncoder = JSONEncoder()
-        let jsonData = try! jsonEncoder.encode(data)
-        
-        request.httpBody = jsonData
+        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
+        request.setValue("JWT \(token)", forHTTPHeaderField: "Authorization")
         
         let _ = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data else {
@@ -159,11 +147,12 @@ class NetworkManager {
             }
             let jsonDecoder = JSONDecoder()
             
-            guard let queue = try? jsonDecoder.decode(Queue.self, from: data) else {
+            guard let dataQueue = try? jsonDecoder.decode(DataQueue.self, from: data) else {
                 print("Couldn't decode data from \(data)")
                 return completion(nil)
             }
-            completion(queue)
+            
+            completion(dataQueue.queue)
         }.resume()
     }
 }

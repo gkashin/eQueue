@@ -92,8 +92,9 @@ class CreateQueueViewController: UIViewController {
         queue.name = name
         
         if action == "Создать" {
-            NetworkManager.shared.createQueue(queue: queue) { data in
-                print(#line, #function, data)
+            NetworkManager.shared.createQueue(queue: queue) { queue in
+                guard let queue = queue else { return }
+                self.queue = queue
             }
         }
         

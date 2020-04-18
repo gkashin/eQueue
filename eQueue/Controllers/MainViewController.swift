@@ -37,11 +37,17 @@ class MainViewController: UIViewController {
         title = "Главная"
         navigationController?.navigationBar.prefersLargeTitles = true
         
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(exitBarButtonTapped))
+        
         setupUI()
         
         scanQrButton.addTarget(self, action: #selector(scanQrButtonTapped), for: .touchUpInside)
         createQueueButton.addTarget(self, action: #selector(createQueueButtonTapped), for: .touchUpInside)
         profileButton.addTarget(self, action: #selector(profileButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func exitBarButtonTapped() {
+        SceneDelegate.defaults.set("", forKey: "token")
     }
     
     @objc private func profileButtonTapped() {
@@ -70,10 +76,10 @@ class MainViewController: UIViewController {
                 }
             } else {
                 DispatchQueue.main.async {
-//                    let authVC = AuthViewController()
-//                    self.present(authVC, animated: true)
-                    let scanQrVC = ScanQRViewController()
-                    self.present(scanQrVC, animated: true)
+                    let authVC = AuthViewController()
+                    self.present(authVC, animated: true)
+//                    let scanQrVC = ScanQRViewController()
+//                    self.present(scanQrVC, animated: true)
                 }
             }
         }

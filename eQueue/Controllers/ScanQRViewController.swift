@@ -22,7 +22,7 @@ class ScanQRViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     
     func setupVideo() {
         let captureDevice = AVCaptureDevice.default(for: AVMediaType.video)
-    
+        
         do {
             let input = try AVCaptureDeviceInput(device: captureDevice!)
             session.addInput(input)
@@ -49,9 +49,8 @@ class ScanQRViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         guard metadataObjects.count > 0 else { return }
         if let object = metadataObjects.first as? AVMetadataMachineReadableCodeObject {
             if object.type == AVMetadataObject.ObjectType.qr {
-                self.session.stopRunning()
                 
-                var queue = Queue()
+                var queue: Queue!
                 guard let queueId = Int(object.stringValue!) else { return }
                 
                 NetworkManager.shared.findQueue(id: queueId) { found in
@@ -59,34 +58,43 @@ class ScanQRViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                     queue = found
                 }
                 
-                let alert = UIAlertController(title: "Обнаружена очередь", message: object.stringValue, preferredStyle: .alert)
-                let cancelAction = UIAlertAction(title: "Отменить", style: .cancel) { _ in
-                    self.session.startRunning()
-                }
-                alert.addAction(cancelAction)
-                
-                alert.addAction(UIAlertAction(title: "Встать в очередь", style: .default, handler: { _ in
-//                    var queue = Queue(name: object.stringValue!, description: "", startDate: Date().addingTimeInterval(2000))
+                if queue != nil {
+                    self.session.stopRunning()
                     
-                    queue.people.append(User(username: "Егор2", password: "pass", email: "email2", firstName: "Dmitry", lastName: "Chuchin"))
-                    queue.people.append(User(username: "Егор1", password: "pass", email: "email1", firstName: "Ivan", lastName: "Kuznetsov"))
-                    queue.people.append(User(username: "Егор", password: "pass", email: "email", firstName: "George", lastName: "Kashin"))
-                    
-                    let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController
-                    
-                    if queue.startDate > Date() {
-                        ControlViewController.upcomingQueues.append(queue)
-                        tabBarController?.selectedIndex = 2
-                    } else {
-                        QueueViewController.currentQueue = queue
-                        self.view.layer.sublayers?.removeLast()
-                        
-                        tabBarController?.selectedIndex = 1
+                    let alert = UIAlertController(title: "Обнаружена очередь", message: object.stringValue, preferredStyle: .alert)
+                    let cancelAction = UIAlertAction(title: "Отменить", style: .cancel) { _ in
+                        self.session.startRunning()
                     }
+                    alert.addAction(cancelAction)
                     
-                    self.dismiss(animated: true, completion: nil)
-                }))
-                present(alert, animated: true, completion: nil)
+                    alert.addAction(UIAlertAction(title: "Встать в очередь", style: .default, handler: { _ in
+                        //                    var queue = Queue(name: object.stringValue!, description: "", startDate: Date().addingTimeInterval(2000))
+                        
+                        queue.people = [User()]
+                        queue.startDate = Date()
+                        queue.description = ""
+                        queue.isCompleted = false
+                        
+                        queue.people.append(User(username: "Егор2", password: "pass", email: "email2", firstName: "Dmitry", lastName: "Chuchin"))
+                        queue.people.append(User(username: "Егор1", password: "pass", email: "email1", firstName: "Ivan", lastName: "Kuznetsov"))
+                        queue.people.append(User(username: "Егор", password: "pass", email: "email", firstName: "George", lastName: "Kashin"))
+                        
+                        let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController
+                        
+                        if queue.startDate > Date() {
+                            ControlViewController.upcomingQueues.append(queue)
+                            tabBarController?.selectedIndex = 2
+                        } else {
+                            QueueViewController.currentQueue = queue
+                            self.view.layer.sublayers?.removeLast()
+                            
+                            tabBarController?.selectedIndex = 1
+                        }
+                        
+                        self.dismiss(animated: true, completion: nil)
+                    }))
+                    present(alert, animated: true, completion: nil)
+                }
             }
         }
     }

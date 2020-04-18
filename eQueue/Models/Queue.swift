@@ -9,19 +9,22 @@
 import UIKit
 
 struct Queue: Codable {
-    static var id = Int()
+//    static var id = Int()
     var id = Int()
-    var name = "Только спросить"
-    var description = ""
-    var startDate = Date()
-    var people = [User]()
+    var name = String()
+    var description: String!
+    var startDate: Date!
+    var people: [User]!
+    var queue = [Int]()
 //    var isOwnCreated = Bool()
     var ownerId = Int()
-    var isCompleted = Bool()
+    var isCompleted: Bool!
+    var expectedTime = Int()
+//    var status = String()
     
     init(name: String = "", description: String = "", startDate: Date = Date(), people: [User] = [], isCompleted: Bool = false) {
-        Queue.id += 1
-        self.id = Queue.id
+//        Queue.id += 1
+//        self.id = Queue.id
         self.name = name
         self.description = description
         self.startDate = startDate
@@ -36,14 +39,17 @@ struct Queue: Codable {
         case description = "description"
         case startDate = "startDate"
         case people = "people"
-        case ownerId = "owner"
-        case isCompleted = "status"
+        case queue = "queue"
+        case ownerId = "owner_id"
+        case isCompleted = "is_completed"
+        case expectedTime = "expected_time"
     }
 }
 
-struct Data: Codable {
-    var id: Int
-    var name: String
-    var owner: Int
-    var expected_time: Int
+struct DataQueue: Codable {
+    var queue = Queue()
+    
+    enum CodingKeys: String, CodingKey {
+        case queue = "data"
+    }
 }
