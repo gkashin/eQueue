@@ -66,6 +66,11 @@ class MainViewController: UIViewController {
 //        let scanQrVC = ScanQRViewController()
 //        present(scanQrVC, animated: true)
         
+        guard QueueViewController.currentQueue == nil else {
+            present(createAlert(withTitle: "Вы уже стоите в очереди", andMessage: ""), animated: true)
+            return
+        }
+        
         let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
 
         NetworkManager.shared.verifyToken(token: token) { statusCode in

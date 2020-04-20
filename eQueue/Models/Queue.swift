@@ -20,7 +20,7 @@ struct Queue: Codable {
     var ownerId = Int()
     var isCompleted: Bool!
     var expectedTime = Int()
-//    var status = String()
+    var status: String!
     
     init(name: String = "", description: String = "", startDate: Date = Date(), people: [User] = [], isCompleted: Bool = false) {
 //        Queue.id += 1
@@ -40,9 +40,10 @@ struct Queue: Codable {
         case startDate = "startDate"
         case people = "people"
         case queue = "queue"
-        case ownerId = "owner_id"
+        case ownerId = "owner"
         case isCompleted = "is_completed"
         case expectedTime = "expected_time"
+        case status = "status"
     }
 }
 

@@ -68,9 +68,14 @@ class QueueViewController: UIViewController {
     }
     
     @objc private func quitQueueButtonTapped() {
-        ControlViewController.completedQueues.append(QueueViewController.currentQueue!)
-        QueueViewController.currentQueue = nil
-        updateUI()
+        NetworkManager.shared.leaveQueue(id: QueueViewController.currentQueue!.id) { code in
+            guard code == 204 else { return }
+            ControlViewController.completedQueues.append(QueueViewController.currentQueue!)
+            QueueViewController.currentQueue = nil
+            DispatchQueue.main.async {
+                self.updateUI()
+            }
+        }
     }
 }
 

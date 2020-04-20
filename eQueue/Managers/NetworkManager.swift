@@ -92,7 +92,7 @@ class NetworkManager {
         
         request.httpBody = jsonData
         
-        let _ = URLSession.shared.dataTask(with: request) { data, response, error in
+        let _ = URLSession.shared.dataTask(with: request) { _, response, error in
             let httpResponse = response as? HTTPURLResponse
             completion(httpResponse?.statusCode)
         }.resume()
@@ -127,13 +127,12 @@ class NetworkManager {
             }
             
             completion(dataQueue.queue)
-//            let httpResponse = response as? HTTPURLResponse
-//            print(#line, #function, httpResponse?.statusCode)
         }.resume()
     }
     
     func findQueue(id: Int, completion: @escaping (Queue?) -> Void) {
         let findQueueURL = baseURL.appendingPathComponent("enqueue/\(id)")
+        
         var request = URLRequest(url: findQueueURL)
         request.httpMethod = "POST"
         
@@ -147,12 +146,32 @@ class NetworkManager {
             }
             let jsonDecoder = JSONDecoder()
             
+            let httpResponse = response as? HTTPURLResponse
+            
+            guard httpResponse?.statusCode == 200 else {
+                return completion(nil)
+            }
+            
             guard let dataQueue = try? jsonDecoder.decode(DataQueue.self, from: data) else {
                 print("Couldn't decode data from \(data)")
                 return completion(nil)
             }
             
             completion(dataQueue.queue)
+        }.resume()
+    }
+    
+    func leaveQueue(id: Int, completion: @escaping (Int?) -> Void) {
+        let leaveQueueURL = baseURL.appendingPathComponent("leave_queue/\(id)")
+        var request = URLRequest(url: leaveQueueURL)
+        request.httpMethod = "POST"
+        
+        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
+        request.setValue("JWT \(token)", forHTTPHeaderField: "Authorization")
+        
+        let _ = URLSession.shared.dataTask(with: request) { _, response, error in
+            let httpResponse = response as? HTTPURLResponse
+            completion(httpResponse?.statusCode)
         }.resume()
     }
 }
