@@ -141,7 +141,7 @@ extension QueueDetailsViewController {
             actionButton.widthAnchor.constraint(equalToConstant: 200),
         ])
         
-        if queue.ownerId == SceneDelegate.user?.id && queue.startDate > Date() {
+        if queue.ownerId == SceneDelegate.user?.id && queue.startDate ?? Date() > Date() {
             view.addSubview(removeButton)
             
             removeButton.translatesAutoresizingMaskIntoConstraints = false
@@ -168,7 +168,7 @@ extension QueueDetailsViewController {
     private func setupActionButton() {
         var buttonTitle = ""
         if queue.ownerId == SceneDelegate.user?.id {
-            if queue.startDate > Date() {
+            if queue.startDate ?? Date() > Date() {
                 buttonTitle = "Изменить"
             } else {
                 buttonTitle = "Повторить"

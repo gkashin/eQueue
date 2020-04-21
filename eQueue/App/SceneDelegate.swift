@@ -26,10 +26,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = MainTabBarController()
 
 //        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
-//
+        
+        NetworkManager.shared.getCurrentUser { user in
+            guard let user = user else { return }
+            SceneDelegate.user = user
+        }
 //        NetworkManager.shared.verifyToken(token: token) { statusCode in
 //            if statusCode == 200 {
-//                SceneDelegate.user
+//                NetworkManager.shared.getCurrentUser { user in
+//                    guard let user = user else { return }
+//                    SceneDelegate.user = user
+//                }
 //            } else {
 //                DispatchQueue.main.async {
 //                    self.window?.rootViewController = AuthViewController()

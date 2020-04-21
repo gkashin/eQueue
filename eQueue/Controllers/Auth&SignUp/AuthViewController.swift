@@ -88,6 +88,10 @@ extension AuthViewController: AuthNavigatingDelegate {
     func toSignUpVC() {
         present(signUpVC, animated: true)
     }
+    
+    func dismiss() {
+        dismiss(animated: true, completion: nil)
+    }
 }
 
 // MARK: - SwiftUI

@@ -38,10 +38,20 @@ class ControlViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
+        guard SceneDelegate.user != nil else {
+            ControlViewController.upcomingQueues = []
+            ControlViewController.completedQueues = []
+            tableView.reloadData()
+            return
+        }
+        
         NetworkManager.shared.myQueues { queues in
             guard let queues = queues else {
                 ControlViewController.upcomingQueues = []
                 ControlViewController.completedQueues = []
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
                 return
             }
             ControlViewController.upcomingQueues = queues.filter({ $0.status == "upcoming" })

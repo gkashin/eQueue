@@ -49,8 +49,6 @@ class MainViewController: UIViewController {
             let setupProfileVC = SetupProfileViewController()
             present(setupProfileVC, animated: true)
         } else {
-//            let setupProfileVC = SetupProfileViewController()
-//            present(setupProfileVC, animated: true)
             let authVC = AuthViewController()
             present(authVC, animated: true)
         }
@@ -110,7 +108,8 @@ class MainViewController: UIViewController {
     public func updateProfileButton() {
         var image: UIImage
         if let user = SceneDelegate.user {
-            guard let avatarImage = UIImage(data: user.avatarData) else { return }
+            guard let avatarData = user.avatarData else { return }
+            guard let avatarImage = UIImage(data: avatarData) else { return }
             image = avatarImage
         } else {
             image = #imageLiteral(resourceName: "circle")
@@ -127,7 +126,6 @@ extension MainViewController {
         profileButton.translatesAutoresizingMaskIntoConstraints = false
         logoImageView.translatesAutoresizingMaskIntoConstraints = false
         
-//        navigationController.addSubview(profileButton)
         navigationController?.navigationBar.addSubview(profileButton)
         view.addSubview(logoImageView)
         let buttonStackView = UIStackView(arrangedSubviews: [scanQrButton, findQueueButton, createQueueButton], axis: .vertical, spacing: 10)

@@ -59,6 +59,12 @@ class LoginViewController: UIViewController {
             if statusCode == 200 {
                 DispatchQueue.main.async {
                     self.dismiss(animated: true, completion: nil)
+                    self.delegate?.dismiss()
+                }
+                
+                NetworkManager.shared.getCurrentUser { user in
+                    guard let user = user else { return }
+                    SceneDelegate.user = user
                 }
             } else {
                 print(statusCode)
@@ -82,6 +88,10 @@ class LoginViewController: UIViewController {
     
     @objc func keyboardWillHide() {
         view.frame.origin.y = .zero
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
     }
 }
 

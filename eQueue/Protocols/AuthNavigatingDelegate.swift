@@ -9,4 +9,5 @@
 protocol AuthNavigatingDelegate: class {
     func toLoginVC()
     func toSignUpVC()
+    func dismiss()
 }

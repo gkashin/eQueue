@@ -33,25 +33,6 @@ class SetupProfileViewController: UIViewController {
     
     let fullImageView = AddPhotoView()
     
-    //    private var currentUser: User
-    
-    //    init() {
-    //        self.currentUser = currentUser
-    //        super.init(nibName: nil, bundle: nil)
-    
-    //        if let username = currentUser.displayName {
-    //            fullNameTextField.text = username
-    //        }
-    //
-    //        if let photoURL = currentUser.photoURL {
-    //            fullImageView.circleImageView.sd_setImage(with: photoURL, completed: nil)
-    //        }
-    //    }
-    
-    //    required init?(coder: NSCoder) {
-    //        fatalError("init(coder:) has not been implemented")
-    //    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -70,7 +51,9 @@ class SetupProfileViewController: UIViewController {
     
     @objc private func exitButtonTapped() {
         SceneDelegate.defaults.set("", forKey: "token")
-        dismiss(animated: true, completion: nil)
+        SceneDelegate.user = nil
+        
+        updateProfileButton()
     }
     
     @objc private func saveButtonTapped() {
@@ -81,8 +64,7 @@ class SetupProfileViewController: UIViewController {
             let avatarImage = fullImageView.circleImageView.image,
             name != "",
             surname != "",
-            email != "",
-            password != "" else {
+            email != "" else {
                 return
         }
         
@@ -90,8 +72,14 @@ class SetupProfileViewController: UIViewController {
         SceneDelegate.user?.lastName = surname
         SceneDelegate.user?.avatarData = avatarImage.pngData()!
         SceneDelegate.user?.email = email
-        SceneDelegate.user?.password = password
+        if !password.isEmpty {
+            SceneDelegate.user?.password = password
+        }
         
+        updateProfileButton()
+    }
+    
+    private func updateProfileButton() {
         dismiss(animated: true) {
             let tabBarVC = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
             let navigationVC = tabBarVC.viewControllers?.first! as! UINavigationController
@@ -121,7 +109,7 @@ class SetupProfileViewController: UIViewController {
     }
 }
 
-// MARK: - Setup Constraints
+// MARK: - UI
 extension SetupProfileViewController {
     private func setupUI() {
         var welcomeLabelDistance: CGFloat = 60
@@ -134,7 +122,9 @@ extension SetupProfileViewController {
         if let user = SceneDelegate.user {
             nameTextField.text = user.firstName
             surnameTextField.text = user.lastName
-            fullImageView.circleImageView.image = UIImage(data: user.avatarData)
+            if let avatarData = user.avatarData {
+                fullImageView.circleImageView.image = UIImage(data: avatarData)
+            }
             emailTextField.text = user.email
             passwordTextField.text = user.password
             

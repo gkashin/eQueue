@@ -11,9 +11,9 @@ import UIKit
 struct User: Codable {
     var id = Int()
     var username = String()
-    var password = "Password"
+    var password: String!
     var email = "Email"
-    var avatarData = #imageLiteral(resourceName: "circle").pngData()!
+    var avatarData: Data? = #imageLiteral(resourceName: "circle").pngData()
 //    var group = String()
     var firstName = "Name"
     var lastName = "Surname"

@@ -57,16 +57,20 @@ class SignUpViewController: UIViewController {
         guard let email = emailTextField.text else { return }
         guard let password = passwordTextField.text else { return }
         
-        let user = User(username: "User17", password: password, email: email, firstName: "First", lastName: "Last")
+        let user = User(username: "User62", password: password, email: email, firstName: "First", lastName: "Last")
         
         NetworkManager.shared.register(user: user) { user in
             guard let user = user else { return }
             DispatchQueue.main.async {
 //                let alert = self.createAlert(withTitle: "Well done", andMessage: "You have successfully registered!")
 //                self.present(alert, animated: true) {
-                    let setupProfileVC = SetupProfileViewController()
-                    self.present(setupProfileVC, animated: true)
+//                    let setupProfileVC = SetupProfileViewController()
+//                    self.present(setupProfileVC, animated: true)
+//                    self.dismiss(animated: true, completion: nil)
 //                }
+                self.dismiss(animated: true) {
+                    self.delegate?.dismiss()
+                }
             }
         }
     }
@@ -79,14 +83,18 @@ class SignUpViewController: UIViewController {
     @objc func keyboardWillHide() {
         view.frame.origin.y = .zero
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
 }
 
 // MARK: - UI
 extension SignUpViewController {
     private func setupConstraints() {
-        let emailStackView = UIStackView(arrangedSubviews: [emailLabel, emailTextField], axis: .vertical, spacing: 0)
-        let passwordStackView = UIStackView(arrangedSubviews: [passwordLabel, passwordTextField], axis: .vertical, spacing: 0)
-        let confirmPasswordStackView = UIStackView(arrangedSubviews: [confirmPasswordLabel, confirmPasswordTextField], axis: .vertical, spacing: 0)
+        let emailStackView = UIStackView(arrangedSubviews: [emailLabel, emailTextField], axis: .vertical, spacing: 10)
+        let passwordStackView = UIStackView(arrangedSubviews: [passwordLabel, passwordTextField], axis: .vertical, spacing: 10)
+        let confirmPasswordStackView = UIStackView(arrangedSubviews: [confirmPasswordLabel, confirmPasswordTextField], axis: .vertical, spacing: 10)
         
         signUpButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
         let stackView = UIStackView(arrangedSubviews: [emailStackView,
@@ -111,7 +119,7 @@ extension SignUpViewController {
         view.addSubview(bottomStackView)
         
         NSLayoutConstraint.activate([
-            welcomeLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 90),
+            welcomeLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 80),
             welcomeLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
         
@@ -122,7 +130,7 @@ extension SignUpViewController {
         ])
         
         NSLayoutConstraint.activate([
-            bottomStackView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 50),
+            bottomStackView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 40),
             bottomStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
             bottomStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40)
         ])
