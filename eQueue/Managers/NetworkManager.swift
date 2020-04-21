@@ -131,9 +131,40 @@ class NetworkManager {
     }
     
     func findQueue(id: Int, completion: @escaping (Queue?) -> Void) {
-        let findQueueURL = baseURL.appendingPathComponent("enqueue/\(id)")
+        let findQueueURL = baseURL.appendingPathComponent("get_queue_info/\(id)")
         
         var request = URLRequest(url: findQueueURL)
+        request.httpMethod = "GET"
+        
+        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
+        request.setValue("JWT \(token)", forHTTPHeaderField: "Authorization")
+        
+        let _ = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data else {
+                print("Couldn't get data, \(error!.localizedDescription)")
+                return completion(nil)
+            }
+            let jsonDecoder = JSONDecoder()
+            
+            let httpResponse = response as? HTTPURLResponse
+            
+            guard httpResponse?.statusCode == 200 else {
+                return completion(nil)
+            }
+            
+            guard let dataQueue = try? jsonDecoder.decode(DataQueue.self, from: data) else {
+                print("Couldn't decode data from \(data)")
+                return completion(nil)
+            }
+            
+            completion(dataQueue.queue)
+        }.resume()
+    }
+    
+    func enterQueue(id: Int, completion: @escaping (Queue?) -> Void) {
+        let enterQueueURL = baseURL.appendingPathComponent("enqueue/\(id)")
+        
+        var request = URLRequest(url: enterQueueURL)
         request.httpMethod = "POST"
         
         let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
@@ -173,5 +204,29 @@ class NetworkManager {
             let httpResponse = response as? HTTPURLResponse
             completion(httpResponse?.statusCode)
         }.resume()
+    }
+    
+    func myQueues(completion: @escaping ([Queue]?) -> Void) {
+        let myQueuesURL = baseURL.appendingPathComponent("my_queues/")
+            var request = URLRequest(url: myQueuesURL)
+            request.httpMethod = "GET"
+        
+            let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
+            request.setValue("JWT \(token)", forHTTPHeaderField: "Authorization")
+            
+            let _ = URLSession.shared.dataTask(with: request) { data, response, error in
+                guard let data = data else {
+                    print("Couldn't get data, \(error!.localizedDescription)")
+                    return completion(nil)
+                }
+                let jsonDecoder = JSONDecoder()
+                
+                guard let dataQueues = try? jsonDecoder.decode(DataQueues.self, from: data) else {
+                    print("Couldn't decode data from \(data)")
+                    return completion(nil)
+                }
+                
+                completion(dataQueues.queues)
+            }.resume()
     }
 }

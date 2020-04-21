@@ -38,9 +38,19 @@ class ControlViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
-        
-        
-        tableView.reloadData()
+        NetworkManager.shared.myQueues { queues in
+            guard let queues = queues else {
+                ControlViewController.upcomingQueues = []
+                ControlViewController.completedQueues = []
+                return
+            }
+            ControlViewController.upcomingQueues = queues.filter({ $0.status == "upcoming" })
+            ControlViewController.completedQueues = queues.filter({ $0.status == "completed" })
+            
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
     }
 }
 

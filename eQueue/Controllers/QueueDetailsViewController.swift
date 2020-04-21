@@ -53,7 +53,7 @@ class QueueDetailsViewController: UIViewController {
         var createQueueVC: CreateQueueViewController
         var action = ""
         if queue.ownerId == SceneDelegate.user?.id {
-            if queue.startDate > Date() {
+            if queue.startDate ?? Date() > Date() {
                 // Change
                 action = "Изменить"
             } else {
@@ -61,7 +61,7 @@ class QueueDetailsViewController: UIViewController {
                 action = "Повторить"
             }
         } else {
-            if queue.startDate > Date() {
+            if queue.startDate ?? Date() > Date() {
                 // Leave
                 let index = ControlViewController.upcomingQueues.firstIndex(where: { $0.id == queue.id })!
                 ControlViewController.upcomingQueues.remove(at: index)
@@ -162,7 +162,7 @@ extension QueueDetailsViewController {
     private func updateUI() {
         nameTextField.text = queue.name
         descriptionTextField.text = queue.description
-        startDateTextField.text = DateFormatter().getString(from: queue.startDate)
+        startDateTextField.text = DateFormatter().getString(from: queue.startDate ?? Date())
     }
     
     private func setupActionButton() {
@@ -174,7 +174,7 @@ extension QueueDetailsViewController {
                 buttonTitle = "Повторить"
             }
         } else {
-            if queue.startDate > Date() {
+            if queue.startDate ?? Date() > Date() {
                 buttonTitle = "Покинуть"
             } else {
                 buttonTitle = "Удалить"
@@ -197,7 +197,7 @@ extension QueueDetailsViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return queue.people.count
+        return queue.people?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

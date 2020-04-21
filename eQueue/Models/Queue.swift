@@ -20,7 +20,7 @@ struct Queue: Codable {
     var ownerId = Int()
     var isCompleted: Bool!
     var expectedTime = Int()
-    var status: String!
+    var status = String()
     
     init(name: String = "", description: String = "", startDate: Date = Date(), people: [User] = [], isCompleted: Bool = false) {
 //        Queue.id += 1
@@ -30,7 +30,7 @@ struct Queue: Codable {
         self.startDate = startDate
         self.people = people
 //        self.isOwnCreated = isOwnCreated
-        self.ownerId = SceneDelegate.user!.id
+        self.ownerId = SceneDelegate.user?.id ?? 0
     }
     
     enum CodingKeys: String, CodingKey {
@@ -52,5 +52,13 @@ struct DataQueue: Codable {
     
     enum CodingKeys: String, CodingKey {
         case queue = "data"
+    }
+}
+
+struct DataQueues: Codable {
+    var queues = [Queue]()
+    
+    enum CodingKeys: String, CodingKey {
+        case queues = "data"
     }
 }

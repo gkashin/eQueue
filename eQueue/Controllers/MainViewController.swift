@@ -37,8 +37,6 @@ class MainViewController: UIViewController {
         title = "Главная"
         navigationController?.navigationBar.prefersLargeTitles = true
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(exitBarButtonTapped))
-        
         setupUI()
         
         scanQrButton.addTarget(self, action: #selector(scanQrButtonTapped), for: .touchUpInside)
@@ -46,19 +44,15 @@ class MainViewController: UIViewController {
         profileButton.addTarget(self, action: #selector(profileButtonTapped), for: .touchUpInside)
     }
     
-    @objc private func exitBarButtonTapped() {
-        SceneDelegate.defaults.set("", forKey: "token")
-    }
-    
     @objc private func profileButtonTapped() {
         if SceneDelegate.user != nil {
             let setupProfileVC = SetupProfileViewController()
             present(setupProfileVC, animated: true)
         } else {
-            let setupProfileVC = SetupProfileViewController()
-            present(setupProfileVC, animated: true)
-//            let authVC = AuthViewController()
-//            present(authVC, animated: true)
+//            let setupProfileVC = SetupProfileViewController()
+//            present(setupProfileVC, animated: true)
+            let authVC = AuthViewController()
+            present(authVC, animated: true)
         }
     }
     

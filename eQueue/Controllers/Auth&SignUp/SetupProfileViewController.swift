@@ -23,6 +23,12 @@ class SetupProfileViewController: UIViewController {
     let phoneNumberTextField = OneLineTextField(font: .avenir20())
     let passwordTextField = OneLineTextField(font: .avenir20())
     
+    var exitButton: UIButton = {
+        let button = UIButton()
+        button.setImage(#imageLiteral(resourceName: "exit"), for: .normal)
+        return button
+    }()
+    
     let saveButton = UIButton(title: "Сохранить", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false, cornerRadius: 4)
     
     let fullImageView = AddPhotoView()
@@ -55,9 +61,16 @@ class SetupProfileViewController: UIViewController {
         saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
         fullImageView.plusButton.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
         
+        exitButton.addTarget(self, action: #selector(exitButtonTapped), for: .touchUpInside)
+        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc private func exitButtonTapped() {
+        SceneDelegate.defaults.set("", forKey: "token")
+        dismiss(animated: true, completion: nil)
     }
     
     @objc private func saveButtonTapped() {
@@ -147,10 +160,19 @@ extension SetupProfileViewController {
         welcomeLabel.translatesAutoresizingMaskIntoConstraints = false
         fullImageView.translatesAutoresizingMaskIntoConstraints = false
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        exitButton.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(welcomeLabel)
         view.addSubview(fullImageView)
         view.addSubview(stackView)
+        
+        if SceneDelegate.user != nil {
+            view.addSubview(exitButton)
+            NSLayoutConstraint.activate([
+                exitButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 15),
+                exitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+            ])
+        }
         
         NSLayoutConstraint.activate([
             welcomeLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: welcomeLabelDistance),

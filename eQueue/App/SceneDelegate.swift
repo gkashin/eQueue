@@ -13,7 +13,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
     static let defaults = UserDefaults.standard
-    static var user: User? = User()
+    static var user: User? 
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -24,21 +24,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
         window?.rootViewController = MainTabBarController()
+
 //        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
 //
 //        NetworkManager.shared.verifyToken(token: token) { statusCode in
 //            if statusCode == 200 {
-//                DispatchQueue.main.async {
-//                    let mainTabBar = MainTabBarController()
-//                    mainTabBar.modalPresentationStyle = .fullScreen
-//                    self.window?.rootViewController = mainTabBar
-//                }
+//                SceneDelegate.user
 //            } else {
 //                DispatchQueue.main.async {
 //                    self.window?.rootViewController = AuthViewController()
 //                }
 //            }
 //        }
+
         window?.makeKeyAndVisible()
     }
 
