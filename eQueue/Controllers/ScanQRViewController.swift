@@ -66,6 +66,13 @@ class ScanQRViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                 NetworkManager.shared.findQueue(id: queueId) { found in
                     queue = found
                     
+                    guard queue.ownerId != SceneDelegate.user?.id else {
+                        DispatchQueue.main.async {
+                            self.present(self.createAlert(withTitle: "Вы не можете встать в свою очередь", andMessage: ""), animated: true)
+                        }
+                        return
+                    }
+                    
                     if queue != nil {
                         let enterAlert = UIAlertController(title: "Обнаружена очередь", message: object.stringValue, preferredStyle: .alert)
                         let cancelAction = UIAlertAction(title: "Отменить", style: .cancel) { _ in
@@ -81,7 +88,7 @@ class ScanQRViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                                 queue.people = [User()]
                                 queue.startDate = Date()
                                 queue.description = ""
-                                queue.isCompleted = false
+                                queue.status = "current"
                                 
                                 queue.people.append(User(username: "Егор2", password: "pass", email: "email2", firstName: "Dmitry", lastName: "Chuchin"))
                                 queue.people.append(User(username: "Егор1", password: "pass", email: "email1", firstName: "Ivan", lastName: "Kuznetsov"))
@@ -92,12 +99,12 @@ class ScanQRViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                                     tabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController
                                 }
                                 
-                                let index: Int
-                                if queue.startDate > Date() {
+                                var index: Int!
+                                if queue.status == "upcoming" {
                                     ControlViewController.upcomingQueues.append(queue)
     
                                     index = 2
-                                } else {
+                                } else if queue.status == "current" {
                                     QueueViewController.currentQueue = queue
                                     DispatchQueue.main.async {
                                         self.view.layer.sublayers?.removeLast()

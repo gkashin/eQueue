@@ -43,7 +43,7 @@ class CreateQueueViewController: UIViewController {
         actionButton.setTitle(action, for: .normal)
         nameTextField.text = queue.name
         descriptionTextField.text = queue.description
-        startDateTextField.text = queue.startDate > Date() ? DateFormatter().getString(from: queue.startDate) : nil
+        startDateTextField.text = queue.status == "upcoming" ? DateFormatter().getString(from: queue.startDate) : nil
         titleLabel.text = "\(action) очередь"
     }
     

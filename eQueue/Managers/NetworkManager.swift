@@ -180,6 +180,7 @@ class NetworkManager {
             let httpResponse = response as? HTTPURLResponse
             
             guard httpResponse?.statusCode == 200 else {
+                print(#line, #function, "Response with status code \(httpResponse?.statusCode)")
                 return completion(nil)
             }
             

@@ -151,6 +151,7 @@ extension QueueViewController {
         }
         
         stubLabel.isHidden = true
+        
         if QueueViewController.currentQueue!.ownerId == SceneDelegate.user?.id {
             queueInfoStackView.isHidden = true
             totalPeopleLabel.isHidden = false

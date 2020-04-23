@@ -53,21 +53,21 @@ class QueueDetailsViewController: UIViewController {
         var createQueueVC: CreateQueueViewController
         var action = ""
         if queue.ownerId == SceneDelegate.user?.id {
-            if queue.startDate ?? Date() > Date() {
+            if queue.status == "upcoming" {
                 // Change
                 action = "Изменить"
-            } else {
+            } else if queue.status == "completed" {
                 // Start again
                 action = "Повторить"
             }
         } else {
-            if queue.startDate ?? Date() > Date() {
+            if queue.status == "upcoming" {
                 // Leave
                 let index = ControlViewController.upcomingQueues.firstIndex(where: { $0.id == queue.id })!
                 ControlViewController.upcomingQueues.remove(at: index)
                 navigationController?.popToRootViewController(animated: true)
                 return
-            } else {
+            } else if queue.status == "completed" {
                 // Delete
                 let index = ControlViewController.completedQueues.firstIndex(where: { $0.id == queue.id })!
                 ControlViewController.completedQueues.remove(at: index)
@@ -141,7 +141,7 @@ extension QueueDetailsViewController {
             actionButton.widthAnchor.constraint(equalToConstant: 200),
         ])
         
-        if queue.ownerId == SceneDelegate.user?.id && queue.startDate ?? Date() > Date() {
+        if queue.ownerId == SceneDelegate.user?.id && queue.status == "upcoming" {
             view.addSubview(removeButton)
             
             removeButton.translatesAutoresizingMaskIntoConstraints = false
@@ -168,15 +168,15 @@ extension QueueDetailsViewController {
     private func setupActionButton() {
         var buttonTitle = ""
         if queue.ownerId == SceneDelegate.user?.id {
-            if queue.startDate ?? Date() > Date() {
+            if queue.status == "upcoming" {
                 buttonTitle = "Изменить"
-            } else {
+            } else if queue.status == "completed" {
                 buttonTitle = "Повторить"
             }
         } else {
-            if queue.startDate ?? Date() > Date() {
+            if queue.status == "upcoming" {
                 buttonTitle = "Покинуть"
-            } else {
+            } else if queue.status == "completed" {
                 buttonTitle = "Удалить"
             }
         }
