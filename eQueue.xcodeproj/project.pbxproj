@@ -40,6 +40,8 @@
 		5BB7ADC824194CF4008C21DD /* CreateQueueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB7ADC724194CF4008C21DD /* CreateQueueViewController.swift */; };
 		5BB7ADCA24194ED8008C21DD /* TextFieldFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB7ADC924194ED8008C21DD /* TextFieldFormView.swift */; };
 		5BD60929242275440050CB47 /* DateFormatter+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD60928242275440050CB47 /* DateFormatter+Extension.swift */; };
+		5BE54320245320B000B0A02A /* QueueActionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE5431F245320B000B0A02A /* QueueActionsViewController.swift */; };
+		5BE543232453366900B0A02A /* PanelTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE543222453366900B0A02A /* PanelTransition.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +80,8 @@
 		5BB7ADC724194CF4008C21DD /* CreateQueueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateQueueViewController.swift; sourceTree = "<group>"; };
 		5BB7ADC924194ED8008C21DD /* TextFieldFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFormView.swift; sourceTree = "<group>"; };
 		5BD60928242275440050CB47 /* DateFormatter+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+Extension.swift"; sourceTree = "<group>"; };
+		5BE5431F245320B000B0A02A /* QueueActionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueActionsViewController.swift; sourceTree = "<group>"; };
+		5BE543222453366900B0A02A /* PanelTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelTransition.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -195,6 +199,8 @@
 				5BB7ADC724194CF4008C21DD /* CreateQueueViewController.swift */,
 				5B861796241696AE0031B776 /* QueueViewController.swift */,
 				5B861798241697980031B776 /* ControlViewController.swift */,
+				5BE5431F245320B000B0A02A /* QueueActionsViewController.swift */,
+				5BE543212453364700B0A02A /* Transition */,
 				5B861792241695820031B776 /* MainTabBarController.swift */,
 				5B1173B7243F614400B3108A /* QueueDetailsViewController.swift */,
 			);
@@ -234,6 +240,14 @@
 				5B67226D242BCB980038749C /* UIViewController+Extension.swift */,
 			);
 			path = UIKit;
+			sourceTree = "<group>";
+		};
+		5BE543212453364700B0A02A /* Transition */ = {
+			isa = PBXGroup;
+			children = (
+				5BE543222453366900B0A02A /* PanelTransition.swift */,
+			);
+			path = Transition;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -310,6 +324,8 @@
 				5B91A8B024116AAC005A23DB /* AppDelegate.swift in Sources */,
 				5B91A8DA24116AF2005A23DB /* AuthNavigatingDelegate.swift in Sources */,
 				5B67226E242BCB980038749C /* UIViewController+Extension.swift in Sources */,
+				5BE543232453366900B0A02A /* PanelTransition.swift in Sources */,
+				5BE54320245320B000B0A02A /* QueueActionsViewController.swift in Sources */,
 				5B91A8DF24116AF2005A23DB /* LoginViewController.swift in Sources */,
 				5B8617A22417F1460031B776 /* QueueTableViewCell.swift in Sources */,
 				5B91A8D424116AF2005A23DB /* UIImageView+Extension.swift in Sources */,

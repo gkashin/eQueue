@@ -13,6 +13,8 @@ class ControlViewController: UIViewController {
     static var upcomingQueues = [Queue]()
     static var completedQueues = [Queue]()
     
+    private let transition = PanelTransition()
+    
     var tableView: UITableView!
     
     override func viewDidLoad() {
@@ -93,6 +95,8 @@ extension ControlViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
         var queue: Queue!
         
         switch indexPath.section {
@@ -103,6 +107,13 @@ extension ControlViewController: UITableViewDelegate, UITableViewDataSource {
         default:
             break
         }
+        
+        // ========================
+//        let queueActionsVC = QueueActionsViewController()
+//        queueActionsVC.transitioningDelegate = transition
+//        queueActionsVC.modalPresentationStyle = .custom
+        
+//        present(queueActionsVC, animated: true)
         
         let queueDetailsVC = QueueDetailsViewController()
         queueDetailsVC.queue = queue
