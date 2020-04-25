@@ -14,6 +14,11 @@ class ControlViewController: UIViewController {
     static var completedQueues = [Queue]()
     
     private let transition = PanelTransition()
+    private lazy var popupView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .gray
+        return view
+    }()
     
     var tableView: UITableView!
     
@@ -64,6 +69,15 @@ class ControlViewController: UIViewController {
             }
         }
     }
+    
+    private func popupViewlayout() {
+        popupView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(popupView)
+        popupView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        popupView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        popupView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        popupView.heightAnchor.constraint(equalToConstant: 0.5 * view.frame.width).isActive = true
+    }
 }
 
 // MARK: - UITableViewDelegate, UITableViewDataSource
@@ -109,15 +123,18 @@ extension ControlViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         // ========================
-//        let queueActionsVC = QueueActionsViewController()
-//        queueActionsVC.transitioningDelegate = transition
-//        queueActionsVC.modalPresentationStyle = .custom
+        let queueActionsVC = QueueActionsViewController(queue: queue)
+        queueActionsVC.transitioningDelegate = transition
+        queueActionsVC.modalPresentationStyle = .custom
+
+        present(queueActionsVC, animated: true)
+            
+//        popupViewlayout()
         
-//        present(queueActionsVC, animated: true)
         
-        let queueDetailsVC = QueueDetailsViewController()
-        queueDetailsVC.queue = queue
-        navigationController?.pushViewController(queueDetailsVC, animated: true)
+//        let queueDetailsVC = QueueDetailsViewController()
+//        queueDetailsVC.queue = queue
+//        navigationController?.pushViewController(queueDetailsVC, animated: true)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
