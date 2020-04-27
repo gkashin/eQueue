@@ -59,24 +59,56 @@ class SetupProfileViewController: UIViewController {
     @objc private func saveButtonTapped() {
         guard let name = nameTextField.text,
             let surname = surnameTextField.text,
-            let email = emailTextField.text,
+            //            let email = emailTextField.text,
             let password = passwordTextField.text,
             let avatarImage = fullImageView.circleImageView.image,
             name != "",
             surname != "",
-            email != "" else {
+            //            email != "",
+            password != "" else {
                 return
         }
         
-        SceneDelegate.user?.firstName = name
-        SceneDelegate.user?.lastName = surname
-        SceneDelegate.user?.avatarData = avatarImage.pngData()!
-        SceneDelegate.user?.email = email
-        if !password.isEmpty {
-            SceneDelegate.user?.password = password
+        let confirmAlert = UIAlertController(title: "Введите текущий пароль", message: "", preferredStyle: .alert)
+        confirmAlert.addTextField { textField in
+            
         }
         
-        updateProfileButton()
+        let confirmAction = UIAlertAction(title: "Подтвердить", style: .default) { _ in
+            let oldPassword = confirmAlert.textFields!.first?.text
+            guard oldPassword != nil && oldPassword != "" else { return }
+            
+            NetworkManager.shared.updateName(name: name, password: oldPassword!) { statusCode in
+                guard statusCode == 204 else { return }
+                
+                SceneDelegate.user?.firstName = name
+                
+                NetworkManager.shared.updateSurname(surname: surname, password: oldPassword!) { statusCode in
+                    guard statusCode == 204 else { return }
+                    
+                    SceneDelegate.user?.lastName = surname
+                    
+                    NetworkManager.shared.updatePassword(newPassword: password, password: oldPassword!) { statusCode in
+                        guard statusCode == 204 else { return }
+                     
+                        SceneDelegate.user?.avatarData = avatarImage.pngData()!
+                        SceneDelegate.user?.password = password
+                        //        SceneDelegate.user?.email = email
+                        //        if !password.isEmpty {
+                        //            SceneDelegate.user?.password = password
+                        //        }
+                        
+                        DispatchQueue.main.async {
+                            self.updateProfileButton()
+                        }
+                    }
+                }
+            }
+        }
+        
+        confirmAlert.addAction(confirmAction)
+        
+        present(confirmAlert, animated: true)
     }
     
     private func updateProfileButton() {
@@ -116,7 +148,7 @@ extension SetupProfileViewController {
         var fullImageViewDistance: CGFloat = 30
         var stackViewSpacing: CGFloat = 60
         var stackViewDistance: CGFloat = 60
-    
+        
         let dataStackView = UIStackView(arrangedSubviews: [nameLabel, nameTextField, surnameLabel, surnameTextField], axis: .vertical, spacing: 20)
         
         if let user = SceneDelegate.user {
@@ -126,6 +158,7 @@ extension SetupProfileViewController {
                 fullImageView.circleImageView.image = UIImage(data: avatarData)
             }
             emailTextField.text = user.email
+            emailTextField.isEnabled = false
             passwordTextField.text = user.password
             
             dataStackView.addArrangedSubview(emailLabel)

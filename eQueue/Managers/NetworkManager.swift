@@ -255,3 +255,75 @@ class NetworkManager {
         }.resume()
     }
 }
+
+// MARK: - Update Info
+extension NetworkManager {
+    func updateName(name: String, password: String, completion: @escaping (Int?) -> Void) {
+        let updateNameURL = baseURL.appendingPathComponent("set_first_name/")
+        var request = URLRequest(url: updateNameURL)
+        request.httpMethod = "POST"
+            
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
+        request.setValue("JWT \(token)", forHTTPHeaderField: "Authorization")
+        
+        let data = ["new_first_name": name, "current_password": password]
+        
+        let jsonEncoder = JSONEncoder()
+        let jsonData = try! jsonEncoder.encode(data)
+        
+        request.httpBody = jsonData
+        
+        let _ = URLSession.shared.dataTask(with: request) { _, response, error in
+            let httpResponse = response as? HTTPURLResponse
+            completion(httpResponse?.statusCode)
+        }.resume()
+    }
+    
+    func updateSurname(surname: String, password: String, completion: @escaping (Int?) -> Void) {
+        let updateSurnameURL = baseURL.appendingPathComponent("set_last_name/")
+        var request = URLRequest(url: updateSurnameURL)
+        request.httpMethod = "POST"
+            
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
+        request.setValue("JWT \(token)", forHTTPHeaderField: "Authorization")
+        
+        let data = ["new_last_name": surname, "current_password": password]
+        
+        let jsonEncoder = JSONEncoder()
+        let jsonData = try! jsonEncoder.encode(data)
+        
+        request.httpBody = jsonData        
+        
+        let _ = URLSession.shared.dataTask(with: request) { _, response, error in
+            let httpResponse = response as? HTTPURLResponse
+            completion(httpResponse?.statusCode)
+        }.resume()
+    }
+    
+    func updatePassword(newPassword: String, password: String, completion: @escaping (Int?) -> Void) {
+        let updatePasswordURL = baseURL.appendingPathComponent("auth/users/set_password/")
+        var request = URLRequest(url: updatePasswordURL)
+        request.httpMethod = "POST"
+            
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
+        request.setValue("JWT \(token)", forHTTPHeaderField: "Authorization")
+
+        let data = ["new_password": newPassword, "re_new_password": newPassword, "current_password": password]
+        
+        let jsonEncoder = JSONEncoder()
+        let jsonData = try! jsonEncoder.encode(data)
+        
+        request.httpBody = jsonData
+        
+        let _ = URLSession.shared.dataTask(with: request) { _, response, error in
+            let httpResponse = response as? HTTPURLResponse
+            completion(httpResponse?.statusCode)
+        }.resume()
+    }
+}
