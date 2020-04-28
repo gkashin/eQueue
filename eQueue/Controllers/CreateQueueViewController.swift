@@ -43,7 +43,7 @@ class CreateQueueViewController: UIViewController {
         actionButton.setTitle(action, for: .normal)
         nameTextField.text = queue.name
         descriptionTextField.text = queue.description
-        startDateTextField.text = queue.status == "upcoming" ? DateFormatter().getString(from: queue.startDate) : nil
+        startDateTextField.text = queue.status == "upcoming" ? queue.startDate : nil
         titleLabel.text = "\(action) очередь"
     }
     
@@ -90,17 +90,28 @@ class CreateQueueViewController: UIViewController {
         let date = dateFormatter.getDate(from: startDate)
         
         queue.name = name
+        queue.description = description
+        queue.startDate = DateFormatter().getString(from: date)
+        queue.expectedTime = 10
+
+        let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
         
         if action == "Создать" {
             NetworkManager.shared.createQueue(queue: queue) { queue in
                 guard let queue = queue else { return }
                 self.queue = queue
+                
+                ControlViewController.upcomingQueues.append(queue)
+                
+                DispatchQueue.main.async {
+                    self.dismiss(animated: true) {
+                        tabBarController.selectedIndex = 2
+                    }
+                }
             }
         }
         
         //        queue = Queue(name: name, description: description, startDate: date, people: [], isOwnCreated: true)
-        queue.description = description
-        queue.startDate = date
 //        queue.isOwnCreated = true
         
         queue.people.append(User(username: "Егор", password: "pass", email: "email", firstName: "George", lastName: "Kashin"))
@@ -109,25 +120,24 @@ class CreateQueueViewController: UIViewController {
         queue.people.append(User(username: "Егор", password: "pass", email: "email", firstName: "George", lastName: "Kashin"))
         queue.people.append(User(username: "Егор1", password: "pass", email: "email1", firstName: "Ivan", lastName: "Kuznetsov"))
         queue.people.append(User(username: "Егор2", password: "pass", email: "email2", firstName: "Dmitry", lastName: "Chuchin"))
-        
-        let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
-        if setCurrentDateSwitch.isOn {
-            if QueueViewController.currentQueue != nil {
-                if QueueViewController.currentQueue!.ownerId == SceneDelegate.user?.id {
-                    let alert = createAlert(withTitle: "У вас уже есть текущая очередь", andMessage: "")
-                    present(alert, animated: true, completion: nil)
-                }
-            } else {
-                QueueViewController.currentQueue = queue
-                dismiss(animated: true) {
-                    if tabBarController.selectedViewController?.navigationController != nil {
-                        print(#line, #function)
-                    }
-                    //                    tabBarController.selectedViewController?.navigationController?.popToRootViewController(animated: true)
-                    tabBarController.selectedIndex = 1
-                }
-            }
-        }
+
+//        if setCurrentDateSwitch.isOn {
+//            if QueueViewController.currentQueue != nil {
+//                if QueueViewController.currentQueue!.ownerId == SceneDelegate.user?.id {
+//                    let alert = createAlert(withTitle: "У вас уже есть текущая очередь", andMessage: "")
+//                    present(alert, animated: true, completion: nil)
+//                }
+//            } else {
+//                QueueViewController.currentQueue = queue
+//                dismiss(animated: true) {
+//                    if tabBarController.selectedViewController?.navigationController != nil {
+//                        print(#line, #function)
+//                    }
+//                    //                    tabBarController.selectedViewController?.navigationController?.popToRootViewController(animated: true)
+//                    tabBarController.selectedIndex = 1
+//                }
+//            }
+//        }
         
         if action == "Изменить" {
             let index = ControlViewController.upcomingQueues.firstIndex(where: { $0.id == queue.id })!

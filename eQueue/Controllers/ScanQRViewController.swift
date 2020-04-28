@@ -86,7 +86,7 @@ class ScanQRViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                                 queue = found
                                 
                                 queue.people = [User()]
-                                queue.startDate = Date()
+                                queue.startDate = DateFormatter().getString(from: Date())
                                 queue.description = ""
                                 queue.status = "current"
                                 

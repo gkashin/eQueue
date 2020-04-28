@@ -151,7 +151,7 @@ extension QueueActionsViewController {
     private func setupLabels() {
         nameLabel.text = queue.name
         descriptionLabel.text = queue.description
-        startDateLabel.text = DateFormatter().getString(from: queue.startDate ?? Date())
+        startDateLabel.text = queue.startDate
         peopleCountLabel.text = "Участников: \(queue.people?.count ?? 10)"
     }
 }

@@ -83,7 +83,7 @@ extension QueueTableViewCell {
         peopleCountLabel.text = "Участники: \(String(describing: queue.people?.count))"
         
         let dateFormatter = DateFormatter()
-        let dateTime = dateFormatter.getString(from: queue.startDate ?? Date()).split(separator: " ")
+        let dateTime = queue.startDate.split(separator: " ")
         dateLabel.text = "\(dateTime.first!)\n\(dateTime.last!)"
         
         imageView?.image = queue.ownerId == SceneDelegate.user?.id ? #imageLiteral(resourceName: "crown") : #imageLiteral(resourceName: "circle")

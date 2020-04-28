@@ -52,20 +52,35 @@ class ControlViewController: UIViewController {
             return
         }
         
+        var allQueues = [Queue]()
+        
         NetworkManager.shared.myQueues { queues in
-            guard let queues = queues else {
-                ControlViewController.upcomingQueues = []
-                ControlViewController.completedQueues = []
+//            guard let queues = queues else {
+//                ControlViewController.upcomingQueues = []
+//                ControlViewController.completedQueues = []
+//                DispatchQueue.main.async {
+//                    self.tableView.reloadData()
+//                }
+//                return
+//            }
+            
+            if queues != nil {
+                allQueues.append(contentsOf: queues!)
+            }
+            
+            NetworkManager.shared.myQueuesOwner { queues in
+                if queues != nil {
+                    allQueues.append(contentsOf: queues!)
+                }
+                
+                if !allQueues.isEmpty {
+                    ControlViewController.upcomingQueues = allQueues.filter({ $0.status == "upcoming" })
+                    ControlViewController.completedQueues = allQueues.filter({ $0.status == "completed" })
+                }
+    
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
-                return
-            }
-            ControlViewController.upcomingQueues = queues.filter({ $0.status == "upcoming" })
-            ControlViewController.completedQueues = queues.filter({ $0.status == "completed" })
-            
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
             }
         }
     }

@@ -162,7 +162,7 @@ extension QueueDetailsViewController {
     private func updateUI() {
         nameTextField.text = queue.name
         descriptionTextField.text = queue.description
-        startDateTextField.text = DateFormatter().getString(from: queue.startDate ?? Date())
+        startDateTextField.text = queue.startDate
     }
     
     private func setupActionButton() {
