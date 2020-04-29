@@ -12,20 +12,20 @@ struct Queue: Codable {
     var id = Int()
     var name = String()
     var description = String()
-    var startDate = String()
+    var startDate: String? = String()
     var ownerId = Int()
     var expectedTime = Int()
     
-    var people: [User]!
-    var queue = [User]()
+    var queue: [User]!
+//    var queue = [User]()
     
-    var status = String()
+    var status: String!
     
     init(name: String = "", description: String = "", startDate: String = DateFormatter().getString(from: Date()), people: [User] = [], isCompleted: Bool = false) {
         self.name = name
         self.description = description
         self.startDate = startDate
-        self.people = people
+//        self.queue = people
         self.ownerId = SceneDelegate.user?.id ?? 0
     }
     
@@ -37,7 +37,7 @@ struct Queue: Codable {
         case ownerId = "owner"
         case expectedTime = "expected_time"
         
-        case people = "people"
+//        case people = "people"
         case queue = "queue"
         
         case status = "status"

@@ -80,11 +80,11 @@ extension QueueTableViewCell {
     func setupUI(with queue: Queue) {
         nameLabel.text = queue.name
         extraInfoLabel.text = queue.description
-        peopleCountLabel.text = "Участники: \(String(describing: queue.people?.count))"
+        peopleCountLabel.text = "Участники: \(String(describing: queue.queue.count))"
         
         let dateFormatter = DateFormatter()
-        let dateTime = queue.startDate.split(separator: " ")
-        dateLabel.text = "\(dateTime.first!)\n\(dateTime.last!)"
+        let dateTime = queue.startDate?.split(separator: " ")
+        dateLabel.text = "\(dateTime?.first!)\n\(dateTime?.last!)"
         
         imageView?.image = queue.ownerId == SceneDelegate.user?.id ? #imageLiteral(resourceName: "crown") : #imageLiteral(resourceName: "circle")
     }

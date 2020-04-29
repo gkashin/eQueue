@@ -66,9 +66,14 @@ class ScanQRViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                 NetworkManager.shared.findQueue(id: queueId) { found in
                     queue = found
                     
-                    guard queue.ownerId != SceneDelegate.user?.id else {
+                    guard queue?.ownerId != SceneDelegate.user?.id else {
                         DispatchQueue.main.async {
-                            self.present(self.createAlert(withTitle: "Вы не можете встать в свою очередь", andMessage: ""), animated: true)
+                            let infoAlert = UIAlertController(title: "Вы не можете встать в свою очередь", message: "", preferredStyle: .alert)
+                            let okAction = UIAlertAction(title: "Ок", style: .cancel) { _ in
+                                self.session.startRunning()
+                            }
+                            infoAlert.addAction(okAction)
+                            self.present(infoAlert, animated: true)
                         }
                         return
                     }
@@ -85,14 +90,14 @@ class ScanQRViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                                 guard let found = found else { return }
                                 queue = found
                                 
-                                queue.people = [User()]
-                                queue.startDate = DateFormatter().getString(from: Date())
-                                queue.description = ""
-                                queue.status = "current"
+//                                queue.queue = [User()]
+//                                queue.startDate = DateFormatter().getString(from: Date())
+//                                queue.description = ""
+//                                queue.status = "current"
                                 
-                                queue.people.append(User(username: "Егор2", password: "pass", email: "email2", firstName: "Dmitry", lastName: "Chuchin"))
-                                queue.people.append(User(username: "Егор1", password: "pass", email: "email1", firstName: "Ivan", lastName: "Kuznetsov"))
-                                queue.people.append(User(username: "Егор", password: "pass", email: "email", firstName: "George", lastName: "Kashin"))
+//                                queue.queue.append(User(username: "Егор2", password: "pass", email: "email2", firstName: "Dmitry", lastName: "Chuchin"))
+//                                queue.queue.append(User(username: "Егор1", password: "pass", email: "email1", firstName: "Ivan", lastName: "Kuznetsov"))
+//                                queue.queue.append(User(username: "Егор", password: "pass", email: "email", firstName: "George", lastName: "Kashin"))
                                 
                                 var tabBarController: UITabBarController?
                                 DispatchQueue.main.async {

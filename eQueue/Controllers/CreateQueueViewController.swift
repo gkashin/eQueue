@@ -98,8 +98,10 @@ class CreateQueueViewController: UIViewController {
         
         if action == "Создать" {
             NetworkManager.shared.createQueue(queue: queue) { queue in
-                guard let queue = queue else { return }
+                guard var queue = queue else { return }
                 self.queue = queue
+                queue.status = "upcoming"
+                queue.queue = [User]()
                 
                 ControlViewController.upcomingQueues.append(queue)
                 
@@ -114,12 +116,12 @@ class CreateQueueViewController: UIViewController {
         //        queue = Queue(name: name, description: description, startDate: date, people: [], isOwnCreated: true)
 //        queue.isOwnCreated = true
         
-        queue.people.append(User(username: "Егор", password: "pass", email: "email", firstName: "George", lastName: "Kashin"))
-        queue.people.append(User(username: "Егор1", password: "pass", email: "email1", firstName: "Ivan", lastName: "Kuznetsov"))
-        queue.people.append(User(username: "Егор2", password: "pass", email: "email2", firstName: "Dmitry", lastName: "Chuchin"))
-        queue.people.append(User(username: "Егор", password: "pass", email: "email", firstName: "George", lastName: "Kashin"))
-        queue.people.append(User(username: "Егор1", password: "pass", email: "email1", firstName: "Ivan", lastName: "Kuznetsov"))
-        queue.people.append(User(username: "Егор2", password: "pass", email: "email2", firstName: "Dmitry", lastName: "Chuchin"))
+//        queue.queue.append(User(username: "Егор", password: "pass", email: "email", firstName: "George", lastName: "Kashin"))
+//        queue.queue.append(User(username: "Егор1", password: "pass", email: "email1", firstName: "Ivan", lastName: "Kuznetsov"))
+//        queue.queue.append(User(username: "Егор2", password: "pass", email: "email2", firstName: "Dmitry", lastName: "Chuchin"))
+//        queue.queue.append(User(username: "Егор", password: "pass", email: "email", firstName: "George", lastName: "Kashin"))
+//        queue.queue.append(User(username: "Егор1", password: "pass", email: "email1", firstName: "Ivan", lastName: "Kuznetsov"))
+//        queue.queue.append(User(username: "Егор2", password: "pass", email: "email2", firstName: "Dmitry", lastName: "Chuchin"))
 
 //        if setCurrentDateSwitch.isOn {
 //            if QueueViewController.currentQueue != nil {

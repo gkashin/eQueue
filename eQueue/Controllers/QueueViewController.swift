@@ -58,19 +58,27 @@ class QueueViewController: UIViewController {
         super.viewWillAppear(true)
         
         navigationItem.title = QueueViewController.currentQueue?.name ?? "Моя очередь"
+        
+        
+        
         updateUI()
     }
     
     @objc private func terminateQueueButtonTapped() {
-        ControlViewController.completedQueues.append(QueueViewController.currentQueue!)
-        QueueViewController.currentQueue = nil
-        updateUI()
+        NetworkManager.shared.finishQueue(id: QueueViewController.currentQueue!.id) { statusCode in
+            guard statusCode == 204 else { return }
+//            ControlViewController.completedQueues.append(QueueViewController.currentQueue!)
+            QueueViewController.currentQueue = nil
+            DispatchQueue.main.async {
+                self.updateUI()
+            }
+        }
     }
     
     @objc private func quitQueueButtonTapped() {
-        NetworkManager.shared.leaveQueue(id: QueueViewController.currentQueue!.id) { code in
-            guard code == 204 else { return }
-            ControlViewController.completedQueues.append(QueueViewController.currentQueue!)
+        NetworkManager.shared.leaveQueue(id: QueueViewController.currentQueue!.id) { statusCode in
+            guard statusCode == 204 else { return }
+//            ControlViewController.completedQueues.append(QueueViewController.currentQueue!)
             QueueViewController.currentQueue = nil
             DispatchQueue.main.async {
                 self.updateUI()
@@ -129,13 +137,13 @@ extension QueueViewController {
     }
     
     private func updateTotalPeopleLabel() {
-        if let peopleCount = QueueViewController.currentQueue?.people.count {
+        if let peopleCount = QueueViewController.currentQueue?.queue.count {
             totalPeopleLabel.text = "Всего человек: \(peopleCount)"
         }
     }
     
     private func updateLineNumberLabel() {
-        if let peopleCount = QueueViewController.currentQueue?.people.count {
+        if let peopleCount = QueueViewController.currentQueue?.queue.count {
             lineNumberLabel.text = "Вы \(peopleCount) в очереди!"
         }
     }
@@ -194,19 +202,19 @@ extension QueueViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard QueueViewController.currentQueue != nil else { return 0 }
-        guard QueueViewController.currentQueue?.people.count != 0 else { return 0 }
+        guard QueueViewController.currentQueue?.queue.count != 0 else { return 0 }
         
         switch section {
         case 0:
             if QueueViewController.currentQueue!.ownerId == SceneDelegate.user?.id {
                 return 1
             } else {
-                return QueueViewController.currentQueue!.people.count
+                return QueueViewController.currentQueue!.queue.count
             }
         case 1:
-            return QueueViewController.currentQueue!.people.count - 1
+            return QueueViewController.currentQueue!.queue.count - 1
         default:
-            return QueueViewController.currentQueue!.people.count - 1
+            return QueueViewController.currentQueue!.queue.count - 1
         }
     }
     
@@ -222,12 +230,12 @@ extension QueueViewController: UITableViewDelegate, UITableViewDataSource {
         switch indexPath.section {
         case 0:
             if QueueViewController.currentQueue!.ownerId == SceneDelegate.user?.id {
-                user = QueueViewController.currentQueue!.people.first!
+                user = QueueViewController.currentQueue!.queue.first!
             } else {
-                user = QueueViewController.currentQueue!.people[indexPath.row]
+                user = QueueViewController.currentQueue!.queue[indexPath.row]
             }
         case 1:
-            user = QueueViewController.currentQueue!.people[indexPath.row + 1]
+            user = QueueViewController.currentQueue!.queue[indexPath.row + 1]
         default:
             break
         }
@@ -237,7 +245,7 @@ extension QueueViewController: UITableViewDelegate, UITableViewDataSource {
             ownCreatedQueueItemTableViewCell.setup(with: user, at: indexPath)
         } else {
             let queueItemTableViewCell = cell as! QueueItemTableViewCell
-            let isLast = QueueViewController.currentQueue!.people.count - 1 == indexPath.row
+            let isLast = QueueViewController.currentQueue!.queue.count - 1 == indexPath.row
             queueItemTableViewCell.setup(with: user, at: indexPath, isLast: isLast)
         }
         
@@ -262,7 +270,7 @@ extension QueueViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         switch editingStyle {
         case .delete:
-            QueueViewController.currentQueue?.people.remove(at: indexPath.row)
+            QueueViewController.currentQueue?.queue.remove(at: indexPath.row)
             updateTotalPeopleLabel()
             UITableView.transition(with: tableView, duration: 0.5, options: .transitionCrossDissolve, animations: { self.tableView.reloadData() }, completion: nil)
         case .insert:

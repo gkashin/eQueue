@@ -67,6 +67,7 @@ class QueueActionsViewController: UIViewController {
         setupUI()
         hideButton.addTarget(self, action: #selector(hideButtonTapped), for: .touchUpInside)
         showPeopleButton.addTarget(self, action: #selector(showPeopleButtonTapped), for: .touchUpInside)
+        actionButton.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
     }
     
     @objc private func hideButtonTapped() {
@@ -79,6 +80,20 @@ class QueueActionsViewController: UIViewController {
 //            view.heightAnchor.constraint(equalToConstant: 500)
 //        ])
         
+    }
+    
+    @objc private func actionButtonTapped() {
+        NetworkManager.shared.callNext(id: queue.id) { statusCode in
+            guard statusCode == 204 else { return }
+            
+            DispatchQueue.main.async {
+                self.dismiss(animated: true) {
+                    QueueViewController.currentQueue = self.queue
+                    let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
+                    tabBarController.selectedIndex = 1
+                }
+            }
+        }
     }
 }
 
@@ -152,7 +167,7 @@ extension QueueActionsViewController {
         nameLabel.text = queue.name
         descriptionLabel.text = queue.description
         startDateLabel.text = queue.startDate
-        peopleCountLabel.text = "Участников: \(queue.people?.count ?? 10)"
+        peopleCountLabel.text = "Участников: \(queue.queue.count ?? 10)"
     }
 }
 
@@ -163,7 +178,7 @@ extension QueueActionsViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return queue.people?.count ?? 0
+        return queue.queue.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -172,7 +187,7 @@ extension QueueActionsViewController: UITableViewDelegate, UITableViewDataSource
         let cell = tableView.dequeueReusableCell(withIdentifier: id, for: indexPath)
         var user = User()
         
-        user = queue.people[indexPath.row]
+        user = queue.queue[indexPath.row]
         
         if queue.ownerId == SceneDelegate.user?.id {
             let ownCreatedQueueItemTableViewCell = cell as! OwnCreatedQueueItemTableViewCell

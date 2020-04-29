@@ -197,7 +197,7 @@ extension QueueDetailsViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return queue.people?.count ?? 0
+        return queue.queue.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -206,7 +206,7 @@ extension QueueDetailsViewController: UITableViewDelegate, UITableViewDataSource
         let cell = tableView.dequeueReusableCell(withIdentifier: id, for: indexPath)
         var user = User()
         
-        user = queue.people[indexPath.row]
+        user = queue.queue[indexPath.row]
         
         if queue.ownerId == SceneDelegate.user?.id {
             let ownCreatedQueueItemTableViewCell = cell as! OwnCreatedQueueItemTableViewCell
@@ -236,7 +236,7 @@ extension QueueDetailsViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         switch editingStyle {
         case .delete:
-            queue.people.remove(at: indexPath.row)
+            queue.queue.remove(at: indexPath.row)
             tableView.reloadData()
         case .insert:
             break
