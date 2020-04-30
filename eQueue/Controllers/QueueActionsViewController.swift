@@ -66,7 +66,7 @@ class QueueActionsViewController: UIViewController {
         
         setupUI()
         hideButton.addTarget(self, action: #selector(hideButtonTapped), for: .touchUpInside)
-        showPeopleButton.addTarget(self, action: #selector(showPeopleButtonTapped), for: .touchUpInside)
+//        showPeopleButton.addTarget(self, action: #selector(showPeopleButtonTapped), for: .touchUpInside)
         actionButton.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
     }
     
@@ -75,11 +75,10 @@ class QueueActionsViewController: UIViewController {
     }
     
     @objc private func showPeopleButtonTapped() {
-        view.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            view.heightAnchor.constraint(equalToConstant: 500)
-//        ])
-        
+//        if let presetation = navigationController?.presentationController as? PresentationController {
+//            print(#line, #function)
+//            presetation.changeScale(to: .adjustedOnce)
+//        }
     }
     
     @objc private func actionButtonTapped() {
@@ -151,16 +150,16 @@ extension QueueActionsViewController {
         ])
         
         // Table view
-//        tableView.translatesAutoresizingMaskIntoConstraints = false
-//        view.addSubview(tableView)
-//        
-//        NSLayoutConstraint.activate([
-//            tableView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 20),
-//            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-//            tableView.bottomAnchor.constraint(equalTo: actionButton.topAnchor, constant: -80),
-//            tableView.heightAnchor.constraint(equalToConstant: 340)
-//        ])
+        //        tableView.translatesAutoresizingMaskIntoConstraints = false
+        //        view.addSubview(tableView)
+        //
+        //        NSLayoutConstraint.activate([
+        //            tableView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 20),
+        //            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+        //            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        //            tableView.bottomAnchor.constraint(equalTo: actionButton.topAnchor, constant: -80),
+        //            tableView.heightAnchor.constraint(equalToConstant: 340)
+        //        ])
     }
     
     private func setupLabels() {
@@ -217,7 +216,7 @@ extension QueueActionsViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         switch editingStyle {
         case .delete:
-//            queue.people.remove(at: indexPath.row)
+            //            queue.people.remove(at: indexPath.row)
             tableView.reloadData()
         case .insert:
             break
@@ -239,7 +238,7 @@ struct QueueActionsVCProvider: PreviewProvider {
     
     struct ContainerView: UIViewControllerRepresentable {
         let queueActionsVC = QueueActionsViewController(queue: Queue())
-
+        
         func makeUIViewController(context: UIViewControllerRepresentableContext<QueueActionsVCProvider.ContainerView>) -> QueueActionsViewController  {
             return queueActionsVC
         }

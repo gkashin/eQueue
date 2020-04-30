@@ -9,6 +9,11 @@
 import UIKit
 
 class PanelTransition: NSObject, UIViewControllerTransitioningDelegate {
+    
+    init(from presented: UIViewController, to presenting: UIViewController) {
+        super.init()
+    }
+    
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         let presentationController = DimmPresentationController(presentedViewController: presented, presenting: presenting ?? source)
         return presentationController
@@ -94,11 +99,27 @@ extension DismissAnimation: UIViewControllerAnimatedTransitioning {
     }
 }
 
+enum ModalScaleState {
+    case expanded
+    case normal
+}
+
 class PresentationController: UIPresentationController {
+    
+    private var state: ModalScaleState = .normal
+    
     override var frameOfPresentedViewInContainerView: CGRect {
         let bounds = containerView!.bounds
-        let halfHeight = 0.5 * bounds.height
-        return CGRect(x: 0, y: halfHeight, width: bounds.width, height: halfHeight)
+        var height: CGFloat
+    
+        switch state {
+        case .expanded:
+            height = 0.8 * bounds.height
+        case .normal:
+            height = 0.5 * bounds.height
+        }
+        
+        return CGRect(x: 0, y: bounds.height - height, width: bounds.width, height: height)
     }
     
     override func presentationTransitionWillBegin() {
@@ -110,6 +131,32 @@ class PresentationController: UIPresentationController {
         super.containerViewDidLayoutSubviews()
         presentedView?.frame = frameOfPresentedViewInContainerView
     }
+    
+    @objc func showPeopleButtonTapped() {
+        var newState: ModalScaleState
+        
+        switch state {
+        case .normal:
+            newState = .expanded
+        default:
+            newState = .normal
+        }
+        
+        changeScale(to: newState)
+    }
+    
+    func changeScale(to state: ModalScaleState) {
+        guard let presented = presentedView else { return }
+        
+        UIView.animate(withDuration: 0.8, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations: { [weak self] in
+            guard let `self` = self else { return }
+            
+            presented.frame = self.frameOfPresentedViewInContainerView
+            
+            }, completion: { (isFinished) in
+                self.state = state
+        })
+    }
 }
 
 class DimmPresentationController: PresentationController {
@@ -119,6 +166,14 @@ class DimmPresentationController: PresentationController {
         view.alpha = 0
         return view
     }()
+    
+    override init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?) {
+        super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
+        
+        if let presentedVC = presentedViewController as? QueueActionsViewController {
+            presentedVC.showPeopleButton.addTarget(self, action: #selector(showPeopleButtonTapped), for: .touchUpInside)
+        }
+    }
     
     override func presentationTransitionWillBegin() {
         super.presentationTransitionWillBegin()

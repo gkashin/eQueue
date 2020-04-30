@@ -13,12 +13,7 @@ class ControlViewController: UIViewController {
     static var upcomingQueues = [Queue]()
     static var completedQueues = [Queue]()
     
-    private let transition = PanelTransition()
-    private lazy var popupView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .gray
-        return view
-    }()
+    private var transition: PanelTransition!
     
     var tableView: UITableView!
     
@@ -75,7 +70,7 @@ class ControlViewController: UIViewController {
                 
                 if !allQueues.isEmpty {
                     ControlViewController.upcomingQueues = allQueues.filter({ $0.status == "upcoming" })
-                    ControlViewController.completedQueues = allQueues.filter({ $0.status == "completed" })
+                    ControlViewController.completedQueues = allQueues.filter({ $0.status == "past" })
                 }
     
                 DispatchQueue.main.async {
@@ -83,15 +78,6 @@ class ControlViewController: UIViewController {
                 }
             }
         }
-    }
-    
-    private func popupViewlayout() {
-        popupView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(popupView)
-        popupView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        popupView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        popupView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-        popupView.heightAnchor.constraint(equalToConstant: 0.5 * view.frame.width).isActive = true
     }
 }
 
@@ -139,12 +125,13 @@ extension ControlViewController: UITableViewDelegate, UITableViewDataSource {
         
         // ========================
         let queueActionsVC = QueueActionsViewController(queue: queue)
+        
+        transition = PanelTransition(from: self, to: queueActionsVC)
+        
         queueActionsVC.transitioningDelegate = transition
         queueActionsVC.modalPresentationStyle = .custom
 
         present(queueActionsVC, animated: true)
-            
-//        popupViewlayout()
         
         
 //        let queueDetailsVC = QueueDetailsViewController()
