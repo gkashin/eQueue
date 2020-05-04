@@ -8,10 +8,42 @@
 
 import UIKit
 
+enum QueueStatus {
+    case ownUpcoming
+    case ownCompleted
+    case upcoming
+    case completed
+}
+
 class QueueActionsViewController: UIViewController {
     
     let queue: Queue!
+    let selectedRow: Int
+    
+    var delegate: ControlQueueDelegate
+    
     var tableView: UITableView!
+    
+    lazy var queueStatus: QueueStatus = {
+        let isOwnQueue = SceneDelegate.user?.id == queue.ownerId
+        var status: QueueStatus = .completed
+        
+        if isOwnQueue {
+            if queue.status == "upcoming" {
+                status = .ownUpcoming
+            } else if queue.status == "completed" {
+                status = .ownCompleted
+            }
+        } else {
+            if queue.status == "upcoming" {
+                status = .upcoming
+            } else if queue.status == "completed" {
+                status = .completed
+            }
+        }
+        
+        return status
+    }()
     
     let hideButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -24,8 +56,27 @@ class QueueActionsViewController: UIViewController {
     let startDateLabel = UILabel(text: "Дата", font: .avenir20())
     let peopleCountLabel = UILabel(text: "Участников", font: .avenir20())
     
-    let actionButton = UIButton(title: "Начать", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false)
-    let changeButton = UIButton(title: "Изменить", backgroundColor: .white, titleColor: .darkText, font: .avenir16(), isShadow: true)
+    lazy var actionButton: UIButton = {
+        let button = UIButton(title: "Начать", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false)
+        
+        var title = ""
+        
+        switch queueStatus {
+        case .ownUpcoming:
+            title = "Начать"
+        case .ownCompleted:
+            title = "Повторить"
+        case .upcoming:
+            title = "Покинуть"
+        case .completed:
+            title = "Удалить"
+        }
+        
+        button.setTitle(title, for: .normal)
+        return button
+    }()
+    
+    let changeButton = UIButton(title: "Изменить", backgroundColor: .white, titleColor: .darkText, font: .avenir16(), isShadow: false)
     let showPeopleButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Показать участников", for: .normal)
@@ -33,13 +84,16 @@ class QueueActionsViewController: UIViewController {
         return button
     }()
     let removeButton: UIButton = {
-        let button = UIButton(type: .custom)
+        let button = UIButton(type: .system)
         button.setImage(#imageLiteral(resourceName: "bin"), for: .normal)
+        button.tintColor = .buttonDark()
         return button
     }()
     
-    init(queue: Queue) {
+    init(queue: Queue, controlQueueDelegate: ControlQueueDelegate, selectedRow: Int) {
         self.queue = queue
+        self.delegate = controlQueueDelegate
+        self.selectedRow = selectedRow
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -64,32 +118,65 @@ class QueueActionsViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         
-        setupUI()
+        updateUI()
         hideButton.addTarget(self, action: #selector(hideButtonTapped), for: .touchUpInside)
-//        showPeopleButton.addTarget(self, action: #selector(showPeopleButtonTapped), for: .touchUpInside)
         actionButton.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        updateUI()
     }
     
     @objc private func hideButtonTapped() {
         self.dismiss(animated: true, completion: nil)
     }
     
-    @objc private func showPeopleButtonTapped() {
-//        if let presetation = navigationController?.presentationController as? PresentationController {
-//            print(#line, #function)
-//            presetation.changeScale(to: .adjustedOnce)
-//        }
-    }
-    
     @objc private func actionButtonTapped() {
-        NetworkManager.shared.callNext(id: queue.id) { statusCode in
-            guard statusCode == 204 else { return }
+        switch queueStatus {
+        case .ownUpcoming:
+            NetworkManager.shared.callNext(id: queue.id) { statusCode in
+                guard statusCode == 204 else { return }
+                
+                DispatchQueue.main.async {
+                    self.dismiss(animated: true) {
+                        QueueViewController.currentQueue = self.queue
+                        let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
+                        tabBarController.selectedIndex = 1
+                    }
+                }
+            }
+        case .ownCompleted:
+            NetworkManager.shared.createQueue(queue: queue) { queue in
+                guard var queue = queue else { return }
+                
+                queue.status = "upcoming"
+                queue.queue = [User]()
+                
+                ControlViewController.upcomingQueues.append(queue)
+                
+                DispatchQueue.main.async {
+                    self.dismiss(animated: true) {
+                        self.delegate.updateUI()
+                    }
+                }
+            }
+        case .upcoming:
+            NetworkManager.shared.leaveQueue(id: queue.id) { statusCode in
+                guard statusCode == 204 else { return }
+                
+                DispatchQueue.main.async {
+                    self.dismiss(animated: true) {
+                        self.delegate.updateUI()
+                    }
+                }
+            }
+        case .completed:
+            // TODO: - Implement queue removal 
+            ControlViewController.completedQueues.remove(at: selectedRow)
             
             DispatchQueue.main.async {
                 self.dismiss(animated: true) {
-                    QueueViewController.currentQueue = self.queue
-                    let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
-                    tabBarController.selectedIndex = 1
+                    self.delegate.updateUI()
                 }
             }
         }
@@ -98,7 +185,7 @@ class QueueActionsViewController: UIViewController {
 
 // MARK: - UI
 extension QueueActionsViewController {
-    private func setupUI() {
+    private func updateUI() {
         setupLabels()
         
         // Hide button
@@ -149,17 +236,25 @@ extension QueueActionsViewController {
             actionButton.widthAnchor.constraint(equalToConstant: 200),
         ])
         
+        
         // Table view
-        //        tableView.translatesAutoresizingMaskIntoConstraints = false
-        //        view.addSubview(tableView)
-        //
-        //        NSLayoutConstraint.activate([
-        //            tableView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 20),
-        //            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-        //            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        //            tableView.bottomAnchor.constraint(equalTo: actionButton.topAnchor, constant: -80),
-        //            tableView.heightAnchor.constraint(equalToConstant: 340)
-        //        ])
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        
+        if view.bounds.size.height > 500 {
+            view.addSubview(tableView)
+            
+            NSLayoutConstraint.activate([
+                tableView.topAnchor.constraint(equalTo: showPeopleButton.bottomAnchor, constant: 20),
+                tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                tableView.bottomAnchor.constraint(equalTo: actionButton.topAnchor, constant: -20)
+            ])
+            
+            showPeopleButton.setTitle("Скрыть участников", for: .normal)
+        } else {
+            tableView.removeFromSuperview()
+            showPeopleButton.setTitle("Показать участников", for: .normal)
+        }
     }
     
     private func setupLabels() {
@@ -172,12 +267,12 @@ extension QueueActionsViewController {
 
 // MARK: - UITableViewDelegate, UITableViewDataSource
 extension QueueActionsViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "Участники"
-    }
+    //    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    //        return "Участники"
+    //    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return queue.queue.count ?? 0
+        return queue.queue.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -228,23 +323,3 @@ extension QueueActionsViewController: UITableViewDelegate, UITableViewDataSource
     }
 }
 
-// MARK: - SwiftUI
-import SwiftUI
-
-struct QueueActionsVCProvider: PreviewProvider {
-    static var previews: some View {
-        ContainerView().edgesIgnoringSafeArea(.all)
-    }
-    
-    struct ContainerView: UIViewControllerRepresentable {
-        let queueActionsVC = QueueActionsViewController(queue: Queue())
-        
-        func makeUIViewController(context: UIViewControllerRepresentableContext<QueueActionsVCProvider.ContainerView>) -> QueueActionsViewController  {
-            return queueActionsVC
-        }
-        
-        func updateUIViewController(_ uiViewController: QueueActionsVCProvider.ContainerView.UIViewControllerType, context: UIViewControllerRepresentableContext<QueueActionsVCProvider.ContainerView>) {
-            
-        }
-    }
-}

@@ -9,7 +9,6 @@
 import UIKit
 
 class ControlViewController: UIViewController {
-    
     static var upcomingQueues = [Queue]()
     static var completedQueues = [Queue]()
     
@@ -39,7 +38,13 @@ class ControlViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        
+        updateUI()
+    }
+}
+
+// MARK: - UI, ControlQueueDelegate
+extension ControlViewController: ControlQueueDelegate {    
+    func updateUI() {
         guard SceneDelegate.user != nil else {
             ControlViewController.upcomingQueues = []
             ControlViewController.completedQueues = []
@@ -50,14 +55,14 @@ class ControlViewController: UIViewController {
         var allQueues = [Queue]()
         
         NetworkManager.shared.myQueues { queues in
-//            guard let queues = queues else {
-//                ControlViewController.upcomingQueues = []
-//                ControlViewController.completedQueues = []
-//                DispatchQueue.main.async {
-//                    self.tableView.reloadData()
-//                }
-//                return
-//            }
+            //            guard let queues = queues else {
+            //                ControlViewController.upcomingQueues = []
+            //                ControlViewController.completedQueues = []
+            //                DispatchQueue.main.async {
+            //                    self.tableView.reloadData()
+            //                }
+            //                return
+            //            }
             
             if queues != nil {
                 allQueues.append(contentsOf: queues!)
@@ -72,7 +77,7 @@ class ControlViewController: UIViewController {
                     ControlViewController.upcomingQueues = allQueues.filter({ $0.status == "upcoming" })
                     ControlViewController.completedQueues = allQueues.filter({ $0.status == "past" })
                 }
-    
+                
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
@@ -110,7 +115,6 @@ extension ControlViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
         
         var queue: Queue!
         
@@ -124,19 +128,15 @@ extension ControlViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         // ========================
-        let queueActionsVC = QueueActionsViewController(queue: queue)
+        let queueActionsVC = QueueActionsViewController(queue: queue, controlQueueDelegate: self, selectedRow: tableView.indexPathForSelectedRow!.row)
+        tableView.deselectRow(at: indexPath, animated: true)
         
         transition = PanelTransition(from: self, to: queueActionsVC)
         
         queueActionsVC.transitioningDelegate = transition
         queueActionsVC.modalPresentationStyle = .custom
-
+        
         present(queueActionsVC, animated: true)
-        
-        
-//        let queueDetailsVC = QueueDetailsViewController()
-//        queueDetailsVC.queue = queue
-//        navigationController?.pushViewController(queueDetailsVC, animated: true)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -183,7 +183,7 @@ struct ControlVCProvider: PreviewProvider {
     
     struct ContainerView: UIViewControllerRepresentable {
         let tabBarVC = MainTabBarController()
-
+        
         func makeUIViewController(context: UIViewControllerRepresentableContext<ControlVCProvider.ContainerView>) -> MainTabBarController  {
             return tabBarVC
         }

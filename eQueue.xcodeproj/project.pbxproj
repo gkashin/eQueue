@@ -14,6 +14,7 @@
 		5B38FF592412C12B009F3B0A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B38FF582412C12B009F3B0A /* User.swift */; };
 		5B67226E242BCB980038749C /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B67226D242BCB980038749C /* UIViewController+Extension.swift */; };
 		5B740F3E241BD85E008E093E /* ScanQRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B740F3D241BD85E008E093E /* ScanQRViewController.swift */; };
+		5B7F943924607E51002EAF20 /* ControlQueueDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7F943824607E51002EAF20 /* ControlQueueDelegate.swift */; };
 		5B861793241695820031B776 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B861792241695820031B776 /* MainTabBarController.swift */; };
 		5B861795241695CB0031B776 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B861794241695CB0031B776 /* MainViewController.swift */; };
 		5B861797241696AE0031B776 /* QueueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B861796241696AE0031B776 /* QueueViewController.swift */; };
@@ -52,6 +53,7 @@
 		5B38FF582412C12B009F3B0A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		5B67226D242BCB980038749C /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		5B740F3D241BD85E008E093E /* ScanQRViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanQRViewController.swift; sourceTree = "<group>"; };
+		5B7F943824607E51002EAF20 /* ControlQueueDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlQueueDelegate.swift; sourceTree = "<group>"; };
 		5B861792241695820031B776 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		5B861794241695CB0031B776 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		5B861796241696AE0031B776 /* QueueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueViewController.swift; sourceTree = "<group>"; };
@@ -174,6 +176,7 @@
 			isa = PBXGroup;
 			children = (
 				5B91A8CB24116AF2005A23DB /* AuthNavigatingDelegate.swift */,
+				5B7F943824607E51002EAF20 /* ControlQueueDelegate.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -341,6 +344,7 @@
 				5B91A8D824116AF2005A23DB /* UIButton+Extension.swift in Sources */,
 				5B91A8DE24116AF2005A23DB /* AuthViewController.swift in Sources */,
 				5B11738E243E334300B3108A /* SetupProfileViewController.swift in Sources */,
+				5B7F943924607E51002EAF20 /* ControlQueueDelegate.swift in Sources */,
 				5B91A8D524116AF2005A23DB /* UIFont+Extension.swift in Sources */,
 				5B38FF562412BE42009F3B0A /* NetworkManager.swift in Sources */,
 				5B91A8DD24116AF2005A23DB /* SignUpViewController.swift in Sources */,

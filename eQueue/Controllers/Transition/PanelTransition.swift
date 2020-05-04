@@ -111,7 +111,7 @@ class PresentationController: UIPresentationController {
     override var frameOfPresentedViewInContainerView: CGRect {
         let bounds = containerView!.bounds
         var height: CGFloat
-    
+        
         switch state {
         case .expanded:
             height = 0.8 * bounds.height
@@ -151,9 +151,11 @@ class PresentationController: UIPresentationController {
         UIView.animate(withDuration: 0.8, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations: { [weak self] in
             guard let `self` = self else { return }
             
+            // TODO: - FIX IT!!
+            self.state = state
             presented.frame = self.frameOfPresentedViewInContainerView
             
-            }, completion: { (isFinished) in
+            }, completion: { isFinished in
                 self.state = state
         })
     }
