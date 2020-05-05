@@ -17,7 +17,7 @@ enum QueueStatus {
 
 class QueueActionsViewController: UIViewController {
     
-    let queue: Queue!
+    var queue: Queue!
     let selectedRow: Int
     
     var delegate: ControlQueueDelegate
@@ -31,13 +31,13 @@ class QueueActionsViewController: UIViewController {
         if isOwnQueue {
             if queue.status == "upcoming" {
                 status = .ownUpcoming
-            } else if queue.status == "completed" {
+            } else if queue.status == "past" {
                 status = .ownCompleted
             }
         } else {
             if queue.status == "upcoming" {
                 status = .upcoming
-            } else if queue.status == "completed" {
+            } else if queue.status == "past" {
                 status = .completed
             }
         }
@@ -56,27 +56,9 @@ class QueueActionsViewController: UIViewController {
     let startDateLabel = UILabel(text: "Дата", font: .avenir20())
     let peopleCountLabel = UILabel(text: "Участников", font: .avenir20())
     
-    lazy var actionButton: UIButton = {
-        let button = UIButton(title: "Начать", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false)
-        
-        var title = ""
-        
-        switch queueStatus {
-        case .ownUpcoming:
-            title = "Начать"
-        case .ownCompleted:
-            title = "Повторить"
-        case .upcoming:
-            title = "Покинуть"
-        case .completed:
-            title = "Удалить"
-        }
-        
-        button.setTitle(title, for: .normal)
-        return button
-    }()
-    
+    var actionButton = UIButton(title: "Начать", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false)
     let changeButton = UIButton(title: "Изменить", backgroundColor: .white, titleColor: .darkText, font: .avenir16(), isShadow: false)
+    
     let showPeopleButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Показать участников", for: .normal)
@@ -89,6 +71,8 @@ class QueueActionsViewController: UIViewController {
         button.tintColor = .buttonDark()
         return button
     }()
+    
+    let repeatQueueAlert = UIAlertController(title: "", message: "", preferredStyle: .alert)
     
     init(queue: Queue, controlQueueDelegate: ControlQueueDelegate, selectedRow: Int) {
         self.queue = queue
@@ -119,8 +103,11 @@ class QueueActionsViewController: UIViewController {
         tableView.dataSource = self
         
         updateUI()
+        setupAlert()
+        
         hideButton.addTarget(self, action: #selector(hideButtonTapped), for: .touchUpInside)
         actionButton.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
+        changeButton.addTarget(self, action: #selector(changeButtonTapped), for: .touchUpInside)
     }
     
     override func viewDidLayoutSubviews() {
@@ -129,6 +116,10 @@ class QueueActionsViewController: UIViewController {
     
     @objc private func hideButtonTapped() {
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    @objc private func changeButtonTapped() {
+        present(repeatQueueAlert, animated: true)
     }
     
     @objc private func actionButtonTapped() {
@@ -146,20 +137,7 @@ class QueueActionsViewController: UIViewController {
                 }
             }
         case .ownCompleted:
-            NetworkManager.shared.createQueue(queue: queue) { queue in
-                guard var queue = queue else { return }
-                
-                queue.status = "upcoming"
-                queue.queue = [User]()
-                
-                ControlViewController.upcomingQueues.append(queue)
-                
-                DispatchQueue.main.async {
-                    self.dismiss(animated: true) {
-                        self.delegate.updateUI()
-                    }
-                }
-            }
+            present(repeatQueueAlert, animated: true)
         case .upcoming:
             NetworkManager.shared.leaveQueue(id: queue.id) { statusCode in
                 guard statusCode == 204 else { return }
@@ -181,12 +159,18 @@ class QueueActionsViewController: UIViewController {
             }
         }
     }
+    
+    @objc private func handleDatePicker(sender: UIDatePicker) {
+        let dateFormatter = DateFormatter()
+        repeatQueueAlert.textFields?.last?.text = dateFormatter.getString(from: sender.date)
+    }
 }
 
 // MARK: - UI
 extension QueueActionsViewController {
     private func updateUI() {
         setupLabels()
+        setupButtons()
         
         // Hide button
         hideButton.translatesAutoresizingMaskIntoConstraints = false
@@ -262,6 +246,99 @@ extension QueueActionsViewController {
         descriptionLabel.text = queue.description
         startDateLabel.text = queue.startDate
         peopleCountLabel.text = "Участников: \(queue.queue.count ?? 10)"
+    }
+    
+    private func setupButtons() {
+        switch queueStatus {
+        case .ownUpcoming:
+            actionButton.setTitle("Начать", for: .normal)
+            changeButton.isHidden = false
+            removeButton.isHidden = false
+        case .ownCompleted:
+            actionButton.setTitle("Повторить", for: .normal)
+            changeButton.isHidden = true
+            removeButton.isHidden = false
+        case .upcoming:
+            actionButton.setTitle("Покинуть", for: .normal)
+            changeButton.isHidden = true
+            removeButton.isHidden = true
+        case .completed:
+            actionButton.setTitle("Удалить", for: .normal)
+            changeButton.isHidden = true
+            removeButton.isHidden = true
+        }
+    }
+    
+    private func setupAlert() {
+        repeatQueueAlert.addTextField { textField in
+            textField.text = self.nameLabel.text
+        }
+        
+        repeatQueueAlert.addTextField { textField in
+            textField.text = self.descriptionLabel.text
+        }
+        
+        repeatQueueAlert.addTextField { textField in
+            textField.text = self.startDateLabel.text
+            
+            let datePicker = UIDatePicker()
+            datePicker.datePickerMode = .dateAndTime
+            datePicker.backgroundColor = .white
+            datePicker.minimumDate = Date()
+            datePicker.addTarget(self, action: #selector(self.handleDatePicker), for: .valueChanged)
+            
+            textField.inputView = datePicker
+        }
+        let cancelAction = UIAlertAction(title: "Отменить", style: .cancel, handler: nil)
+        
+        var alertTitle = ""
+        var actionTitle = ""
+        if queueStatus == .ownUpcoming {
+            alertTitle = "Изменить очередь"
+            actionTitle = "Изменить"
+        } else if queueStatus == .ownCompleted {
+            alertTitle = "Повторить очередь"
+            actionTitle = "Повторить"
+        }
+        
+        repeatQueueAlert.title = alertTitle
+        
+        let okAction = UIAlertAction(title: actionTitle, style: .default) { _ in
+            self.queue.name = self.repeatQueueAlert.textFields![0].text!
+            self.queue.description = self.repeatQueueAlert.textFields![1].text!
+            self.queue.startDate = self.repeatQueueAlert.textFields![2].text!
+            
+            if self.queueStatus == .ownUpcoming {
+                NetworkManager.shared.updateQueue(queue: self.queue) { statusCode in
+                    guard statusCode == 200 else { return }
+                    
+                    DispatchQueue.main.async {
+//                        self.dismiss(animated: true) {
+                        self.delegate.updateUI()
+                        self.nameLabel.text = self.repeatQueueAlert.textFields![0].text!
+                        self.descriptionLabel.text = self.repeatQueueAlert.textFields![1].text!
+                        self.startDateLabel.text = self.repeatQueueAlert.textFields![2].text!
+//                        }
+                    }
+                }
+            } else if self.queueStatus == .ownCompleted {
+                NetworkManager.shared.createQueue(queue: self.queue) { queue in
+                    guard var queue = queue else { return }
+                    
+                    queue.status = "upcoming"
+                    queue.queue = [User]()
+                    
+                    DispatchQueue.main.async {
+                        self.dismiss(animated: true) {
+                            self.delegate.updateUI()
+                        }
+                    }
+                }
+            }
+        }
+        
+        repeatQueueAlert.addAction(okAction)
+        repeatQueueAlert.addAction(cancelAction)
     }
 }
 

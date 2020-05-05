@@ -130,12 +130,12 @@ extension ControlViewController: UITableViewDelegate, UITableViewDataSource {
         // ========================
         let queueActionsVC = QueueActionsViewController(queue: queue, controlQueueDelegate: self, selectedRow: tableView.indexPathForSelectedRow!.row)
         tableView.deselectRow(at: indexPath, animated: true)
-        
+
         transition = PanelTransition(from: self, to: queueActionsVC)
-        
+
         queueActionsVC.transitioningDelegate = transition
         queueActionsVC.modalPresentationStyle = .custom
-        
+
         present(queueActionsVC, animated: true)
     }
     

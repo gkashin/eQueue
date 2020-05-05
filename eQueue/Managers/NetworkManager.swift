@@ -385,4 +385,27 @@ extension NetworkManager {
             completion(httpResponse?.statusCode)
         }.resume()
     }
+    
+    func updateQueue(queue: Queue, completion: @escaping (Int?) -> Void) {
+        let updateQueueURL = baseURL.appendingPathComponent("update_queue/\(queue.id)")
+        var request = URLRequest(url: updateQueueURL)
+        request.httpMethod = "PUT"
+        
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
+        request.setValue("JWT \(token)", forHTTPHeaderField: "Authorization")
+        
+//        let data = ["new_password": newPassword, "re_new_password": newPassword, "current_password": password]
+        
+        let jsonEncoder = JSONEncoder()
+        let jsonData = try! jsonEncoder.encode(queue)
+    
+        request.httpBody = jsonData
+        
+        let _ = URLSession.shared.dataTask(with: request) { _, response, error in
+            let httpResponse = response as? HTTPURLResponse
+            completion(httpResponse?.statusCode)
+        }.resume()
+    }
 }
