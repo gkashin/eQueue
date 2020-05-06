@@ -80,7 +80,7 @@ extension QueueTableViewCell {
     func setupUI(with queue: Queue) {
         nameLabel.text = queue.name
         extraInfoLabel.text = queue.description
-        peopleCountLabel.text = "Участники: \(String(describing: queue.queue.count))"
+        peopleCountLabel.text = "Участники: \(String(describing: queue.queue?.count ?? 0))"
         
         let dateFormatter = DateFormatter()
         let dateTime = queue.startDate?.split(separator: " ")

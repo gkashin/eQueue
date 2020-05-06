@@ -300,6 +300,20 @@ extension NetworkManager {
         }.resume()
     }
     
+    func deleteQueue(id: Int, completion: @escaping (Int?) -> Void) {
+        let deleteQueueURL = baseURL.appendingPathComponent("delete_queue/\(id)")
+        var request = URLRequest(url: deleteQueueURL)
+        request.httpMethod = "POST"
+        
+        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
+        request.setValue("JWT \(token)", forHTTPHeaderField: "Authorization")
+        
+        let _ = URLSession.shared.dataTask(with: request) { _, response, error in
+            let httpResponse = response as? HTTPURLResponse
+            completion(httpResponse?.statusCode)
+        }.resume()
+    }
+    
     func callNext(id: Int, completion: @escaping (Int?) -> Void) {
         let callNextURL = baseURL.appendingPathComponent("next/\(id)")
         var request = URLRequest(url: callNextURL)

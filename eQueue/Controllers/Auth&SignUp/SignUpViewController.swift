@@ -57,7 +57,7 @@ class SignUpViewController: UIViewController {
         guard let email = emailTextField.text else { return }
         guard let password = passwordTextField.text else { return }
         
-        let user = User(username: "User63", password: password, email: email, firstName: "First", lastName: "Last")
+        let user = User(username: "Test3", password: password, email: email, firstName: "First", lastName: "Last")
         
         NetworkManager.shared.register(user: user) { user in
             guard let user = user else { return }

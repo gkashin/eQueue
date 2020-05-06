@@ -100,67 +100,17 @@ class CreateQueueViewController: UIViewController {
             NetworkManager.shared.createQueue(queue: queue) { queue in
                 guard var queue = queue else { return }
                 self.queue = queue
+
                 queue.status = "upcoming"
                 queue.queue = [User]()
                 
-                ControlViewController.upcomingQueues.append(queue)
+//                ControlViewController.upcomingQueues.append(queue)
                 
                 DispatchQueue.main.async {
                     self.dismiss(animated: true) {
                         tabBarController.selectedIndex = 2
                     }
                 }
-            }
-        }
-        
-        //        queue = Queue(name: name, description: description, startDate: date, people: [], isOwnCreated: true)
-//        queue.isOwnCreated = true
-        
-//        queue.queue.append(User(username: "Егор", password: "pass", email: "email", firstName: "George", lastName: "Kashin"))
-//        queue.queue.append(User(username: "Егор1", password: "pass", email: "email1", firstName: "Ivan", lastName: "Kuznetsov"))
-//        queue.queue.append(User(username: "Егор2", password: "pass", email: "email2", firstName: "Dmitry", lastName: "Chuchin"))
-//        queue.queue.append(User(username: "Егор", password: "pass", email: "email", firstName: "George", lastName: "Kashin"))
-//        queue.queue.append(User(username: "Егор1", password: "pass", email: "email1", firstName: "Ivan", lastName: "Kuznetsov"))
-//        queue.queue.append(User(username: "Егор2", password: "pass", email: "email2", firstName: "Dmitry", lastName: "Chuchin"))
-
-//        if setCurrentDateSwitch.isOn {
-//            if QueueViewController.currentQueue != nil {
-//                if QueueViewController.currentQueue!.ownerId == SceneDelegate.user?.id {
-//                    let alert = createAlert(withTitle: "У вас уже есть текущая очередь", andMessage: "")
-//                    present(alert, animated: true, completion: nil)
-//                }
-//            } else {
-//                QueueViewController.currentQueue = queue
-//                dismiss(animated: true) {
-//                    if tabBarController.selectedViewController?.navigationController != nil {
-//                        print(#line, #function)
-//                    }
-//                    //                    tabBarController.selectedViewController?.navigationController?.popToRootViewController(animated: true)
-//                    tabBarController.selectedIndex = 1
-//                }
-//            }
-//        }
-        
-        if action == "Изменить" {
-            let index = ControlViewController.upcomingQueues.firstIndex(where: { $0.id == queue.id })!
-            if setCurrentDateSwitch.isOn {
-                ControlViewController.upcomingQueues.remove(at: index)
-                dismiss(animated: true)
-            } else {
-                ControlViewController.upcomingQueues[index] = queue
-                completionHandler?(queue)
-                dismiss(animated: true)
-            }
-        } else if action == "Повторить" {
-            if !setCurrentDateSwitch.isOn {
-                ControlViewController.upcomingQueues.append(queue)
-                dismiss(animated: true)
-                completionHandler?(queue)
-            }
-        } else if !setCurrentDateSwitch.isOn {
-            ControlViewController.upcomingQueues.append(queue)
-            dismiss(animated: true) {
-                tabBarController.selectedIndex = 2
             }
         }
     }

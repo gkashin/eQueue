@@ -90,15 +90,6 @@ class ScanQRViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                                 guard let found = found else { return }
                                 queue = found
                                 
-//                                queue.queue = [User()]
-//                                queue.startDate = DateFormatter().getString(from: Date())
-//                                queue.description = ""
-//                                queue.status = "current"
-                                
-//                                queue.queue.append(User(username: "Егор2", password: "pass", email: "email2", firstName: "Dmitry", lastName: "Chuchin"))
-//                                queue.queue.append(User(username: "Егор1", password: "pass", email: "email1", firstName: "Ivan", lastName: "Kuznetsov"))
-//                                queue.queue.append(User(username: "Егор", password: "pass", email: "email", firstName: "George", lastName: "Kashin"))
-                                
                                 var tabBarController: UITabBarController?
                                 DispatchQueue.main.async {
                                     tabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController
@@ -106,10 +97,8 @@ class ScanQRViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                                 
                                 var index: Int!
                                 if queue.status == "upcoming" {
-                                    ControlViewController.upcomingQueues.append(queue)
-    
                                     index = 2
-                                } else if queue.status == "current" {
+                                } else if queue.status == "active" {
                                     QueueViewController.currentQueue = queue
                                     DispatchQueue.main.async {
                                         self.view.layer.sublayers?.removeLast()

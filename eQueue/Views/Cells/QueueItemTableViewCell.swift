@@ -48,7 +48,6 @@ class QueueItemTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        
         setupConstraints()
     }
     
@@ -91,7 +90,6 @@ extension QueueItemTableViewCell {
     
     func setup(with user: User, at indexPath: IndexPath, isLast: Bool) {
         numberLabel.text = "\(indexPath.row)"
-//        extraInfoLabel.text = user.group
 
         if !isLast {
             fullNameLabel.text = "\(user.firstName) \(user.lastName)"

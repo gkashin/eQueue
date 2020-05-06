@@ -17,10 +17,12 @@ class QueueViewController: UIViewController {
     let lineNumberLabel = UILabel(text: "Вы 3-й в очереди!")
     let waitingTimeLabel = UILabel(text: "Среднее время ожидания: ∞")
     var queueInfoStackView: UIStackView!
-    let quitQueueButton = UIButton(title: "Покинуть очередь", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false)
     
     let totalPeopleLabel = UILabel(text: "Всего человек: 1024")
+    
     let terminateQueueButton = UIButton(title: "Завершить очередь", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false)
+    let quitQueueButton = UIButton(title: "Покинуть очередь", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false)
+    let callNextButton = UIButton(title: "Следующий", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false)
     
     let stubLabel = UILabel(text: "У вас нет текущей очереди")
     
@@ -52,6 +54,7 @@ class QueueViewController: UIViewController {
         
         terminateQueueButton.addTarget(self, action: #selector(terminateQueueButtonTapped), for: .touchUpInside)
         quitQueueButton.addTarget(self, action: #selector(quitQueueButtonTapped), for: .touchUpInside)
+        callNextButton.addTarget(self, action: #selector(callNextButtonTapped), for: .touchUpInside)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -67,7 +70,7 @@ class QueueViewController: UIViewController {
     @objc private func terminateQueueButtonTapped() {
         NetworkManager.shared.finishQueue(id: QueueViewController.currentQueue!.id) { statusCode in
             guard statusCode == 204 else { return }
-//            ControlViewController.completedQueues.append(QueueViewController.currentQueue!)
+
             QueueViewController.currentQueue = nil
             DispatchQueue.main.async {
                 self.updateUI()
@@ -75,14 +78,24 @@ class QueueViewController: UIViewController {
         }
     }
     
+    
+    
     @objc private func quitQueueButtonTapped() {
         NetworkManager.shared.leaveQueue(id: QueueViewController.currentQueue!.id) { statusCode in
+            print(#line, #function)
             guard statusCode == 204 else { return }
-//            ControlViewController.completedQueues.append(QueueViewController.currentQueue!)
+            print(#line, #function)
             QueueViewController.currentQueue = nil
             DispatchQueue.main.async {
                 self.updateUI()
             }
+        }
+    }
+    
+    @objc private func callNextButtonTapped() {
+        NetworkManager.shared.callNext(id: QueueViewController.currentQueue!.id) { statusCode in
+            guard statusCode == 204 else { return }
+            
         }
     }
 }
@@ -105,8 +118,10 @@ extension QueueViewController {
         
         view.addSubview(totalPeopleLabel)
         view.addSubview(terminateQueueButton)
+        view.addSubview(callNextButton)
         totalPeopleLabel.translatesAutoresizingMaskIntoConstraints = false
         terminateQueueButton.translatesAutoresizingMaskIntoConstraints = false
+        callNextButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             totalPeopleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
@@ -165,11 +180,15 @@ extension QueueViewController {
             totalPeopleLabel.isHidden = false
             terminateQueueButton.isHidden = false
             quitQueueButton.isHidden = true
+            
+            callNextButton.isHidden = false
         } else {
             queueInfoStackView.isHidden = false
             totalPeopleLabel.isHidden = true
             terminateQueueButton.isHidden = true
             quitQueueButton.isHidden = false
+            
+            callNextButton.isHidden = true
         }
     }
     

@@ -102,6 +102,5 @@ extension OwnCreatedQueueItemTableViewCell {
             numberLabel.text = "\(indexPath.row + 1)"
         }
         fullNameLabel.text = "\(user.firstName) \(user.lastName)"
-//        extraInfoLabel.text = user.group
     }
 }

@@ -108,6 +108,7 @@ class QueueActionsViewController: UIViewController {
         hideButton.addTarget(self, action: #selector(hideButtonTapped), for: .touchUpInside)
         actionButton.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
         changeButton.addTarget(self, action: #selector(changeButtonTapped), for: .touchUpInside)
+        removeButton.addTarget(self, action: #selector(removeButtonTapped), for: .touchUpInside)
     }
     
     override func viewDidLayoutSubviews() {
@@ -116,6 +117,18 @@ class QueueActionsViewController: UIViewController {
     
     @objc private func hideButtonTapped() {
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    @objc private func removeButtonTapped() {
+        NetworkManager.shared.deleteQueue(id: queue.id) { statusCode in
+            guard statusCode == 204 else { return }
+            
+            DispatchQueue.main.async {
+                self.dismiss(animated: true) {
+                    self.delegate.updateUI()
+                }
+            }
+        }
     }
     
     @objc private func changeButtonTapped() {
@@ -149,12 +162,13 @@ class QueueActionsViewController: UIViewController {
                 }
             }
         case .completed:
-            // TODO: - Implement queue removal 
-            ControlViewController.completedQueues.remove(at: selectedRow)
-            
-            DispatchQueue.main.async {
-                self.dismiss(animated: true) {
-                    self.delegate.updateUI()
+            NetworkManager.shared.deleteQueue(id: queue.id) { statusCode in
+                guard statusCode == 204 else { return }
+                
+                DispatchQueue.main.async {
+                    self.dismiss(animated: true) {
+                        self.delegate.updateUI()
+                    }
                 }
             }
         }
@@ -365,7 +379,7 @@ extension QueueActionsViewController: UITableViewDelegate, UITableViewDataSource
             ownCreatedQueueItemTableViewCell.setup(with: user, at: indexPath)
         } else {
             let queueItemTableViewCell = cell as! QueueItemTableViewCell
-            queueItemTableViewCell.setup(with: user, at: indexPath, isLast: false)
+            queueItemTableViewCell.setup(with: user, at: indexPath, isLast: indexPath.row == queue.queue.count - 1)
         }
         
         return cell
