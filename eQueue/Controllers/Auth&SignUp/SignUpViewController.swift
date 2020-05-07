@@ -10,21 +10,23 @@ import UIKit
 
 class SignUpViewController: UIViewController {
     
-    let welcomeLabel = UILabel(text: "Good to see you!", font: .avenir26())
+    let welcomeLabel = UILabel(text: "Рады видеть Вас!", font: .avenir26())
     
+    let usernameLabel = UILabel(text: "Имя")
     let emailLabel = UILabel(text: "Email")
-    let passwordLabel = UILabel(text: "Password")
-    let confirmPasswordLabel = UILabel(text: "Confirm password")
+    let passwordLabel = UILabel(text: "Пароль")
+    let confirmPasswordLabel = UILabel(text: "Подтвердите пароль")
     let alreadyOnBoardLabel = UILabel(text: "Already onboard?")
     
+    let usernameTextField = OneLineTextField(font: .avenir20())
     let emailTextField = OneLineTextField(font: .avenir20())
     let passwordTextField = OneLineTextField(font: .avenir20())
     let confirmPasswordTextField = OneLineTextField(font: .avenir20())
     
-    let signUpButton = UIButton(title: "Sign Up", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false)
+    let signUpButton = UIButton(title: "Зарегистрироваться", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false)
     let loginButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Login", for: .normal)
+        button.setTitle("Войти", for: .normal)
         button.setTitleColor(.buttonRed(), for: .normal)
         button.titleLabel?.font = .avenir20()
         
@@ -54,20 +56,23 @@ class SignUpViewController: UIViewController {
     }
     
     @objc private func signUpButtonTapped() {
+        guard let username = usernameTextField.text else { return }
         guard let email = emailTextField.text else { return }
         guard let password = passwordTextField.text else { return }
+        guard let confirmPassword = confirmPasswordTextField.text else { return }
+        guard password == confirmPassword else { return }
         
-        let user = User(username: "Test3", password: password, email: email, firstName: "First", lastName: "Last")
+        let user = User(username: username, email: email, password: password)
         
         NetworkManager.shared.register(user: user) { user in
             guard let user = user else { return }
             DispatchQueue.main.async {
-//                let alert = self.createAlert(withTitle: "Well done", andMessage: "You have successfully registered!")
-//                self.present(alert, animated: true) {
-//                    let setupProfileVC = SetupProfileViewController()
-//                    self.present(setupProfileVC, animated: true)
-//                    self.dismiss(animated: true, completion: nil)
-//                }
+                let alert = self.createAlert(withTitle: "Вы успешно зарегистрировались", andMessage: "Пройдите по ссылке в письме активации, отправленному на Ваш email!")
+                self.present(alert, animated: true) {
+                    let loginVC = LoginViewController()
+                    self.present(loginVC, animated: true)
+                    self.dismiss(animated: true, completion: nil)
+                }
                 self.dismiss(animated: true) {
                     self.delegate?.dismiss()
                 }
@@ -92,12 +97,15 @@ class SignUpViewController: UIViewController {
 // MARK: - UI
 extension SignUpViewController {
     private func setupConstraints() {
-        let emailStackView = UIStackView(arrangedSubviews: [emailLabel, emailTextField], axis: .vertical, spacing: 10)
-        let passwordStackView = UIStackView(arrangedSubviews: [passwordLabel, passwordTextField], axis: .vertical, spacing: 10)
-        let confirmPasswordStackView = UIStackView(arrangedSubviews: [confirmPasswordLabel, confirmPasswordTextField], axis: .vertical, spacing: 10)
+        let usernameStackView = UIStackView(arrangedSubviews: [usernameLabel, usernameTextField], axis: .vertical, spacing: 0)
+        let emailStackView = UIStackView(arrangedSubviews: [emailLabel, emailTextField], axis: .vertical, spacing: 0)
+        let passwordStackView = UIStackView(arrangedSubviews: [passwordLabel, passwordTextField], axis: .vertical, spacing: 0)
+        let confirmPasswordStackView = UIStackView(arrangedSubviews: [confirmPasswordLabel, confirmPasswordTextField], axis: .vertical, spacing: 0)
         
+        usernameTextField.placeholder = "Например, Иван Кузнецов"
         signUpButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        let stackView = UIStackView(arrangedSubviews: [emailStackView,
+        let stackView = UIStackView(arrangedSubviews: [usernameStackView,
+                                                       emailStackView,
                                                        passwordStackView,
                                                        confirmPasswordStackView,
                                                        signUpButton

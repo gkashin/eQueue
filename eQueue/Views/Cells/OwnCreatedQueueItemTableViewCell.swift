@@ -101,6 +101,6 @@ extension OwnCreatedQueueItemTableViewCell {
         } else {
             numberLabel.text = "\(indexPath.row + 1)"
         }
-        fullNameLabel.text = "\(user.firstName) \(user.lastName)"
+        fullNameLabel.text = "\(user.username)"
     }
 }

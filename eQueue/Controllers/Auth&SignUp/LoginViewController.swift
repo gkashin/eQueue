@@ -10,19 +10,19 @@ import UIKit
 
 class LoginViewController: UIViewController {
     
-    let welcomeLabel = UILabel(text: "Welcome back!", font: .avenir26())
+    let welcomeLabel = UILabel(text: "Добро пожаловать!", font: .avenir26())
     
-    let loginWithLabel = UILabel(text: "Login with")
-    let orLabel = UILabel(text: "or")
+    let loginWithLabel = UILabel(text: "Войти с помощью")
+    let orLabel = UILabel(text: "или")
     let emailLabel = UILabel(text: "Email")
-    let passwordLabel = UILabel(text: "Password")
-    let needAnAccountLabel = UILabel(text: "Need an account?", font: .avenir20())
+    let passwordLabel = UILabel(text: "Пароль")
+    let needAnAccountLabel = UILabel(text: "Нужен аккаунт?", font: .avenir20())
     
     let googleButton = UIButton(title: "Google", backgroundColor: .white, titleColor: .black, isShadow: true)
-    let loginButton = UIButton(title: "Login", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false)
+    let loginButton = UIButton(title: "Войти", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false)
     let signUpButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Sign Up ", for: .normal)
+        button.setTitle("Зарегистрироваться", for: .normal)
         button.setTitleColor(.buttonRed(), for: .normal)
         button.titleLabel?.font = .avenir20()
         
@@ -33,6 +33,15 @@ class LoginViewController: UIViewController {
     let passwordTextField = OneLineTextField(font: .avenir20())
     
     weak var delegate: AuthNavigatingDelegate?
+    
+    init(email: String = "") {
+        super.init(nibName: nil, bundle: nil)
+        emailTextField.text = email
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,10 +61,10 @@ class LoginViewController: UIViewController {
     }
     
     @objc private func loginButtonTapped() {
-        guard let username = emailTextField.text else { return }
+        guard let email = emailTextField.text else { return }
         guard let password = passwordTextField.text else { return }
         
-        NetworkManager.shared.login(username: username, password: password) { statusCode in
+        NetworkManager.shared.login(email: email, password: password) { statusCode in
             if statusCode == 200 {
                 DispatchQueue.main.async {
                     self.dismiss(animated: true, completion: nil)

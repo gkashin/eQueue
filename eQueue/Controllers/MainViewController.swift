@@ -83,23 +83,27 @@ class MainViewController: UIViewController {
     }
     
     @objc private func createQueueButtonTapped() {
-        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
-
-        NetworkManager.shared.verifyToken(token: token) { statusCode in
-            if statusCode == 200 {
-                DispatchQueue.main.async {
-                    let createQueueVC = CreateQueueViewController()
-                    self.present(createQueueVC, animated: true)
-                }
-            } else {
-                DispatchQueue.main.async {
+        
+        let qrCodeVC = QRCodeViewController(qrWithText: "adsf")
+        present(qrCodeVC, animated: true)
+        
+//        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
+//
+//        NetworkManager.shared.verifyToken(token: token) { statusCode in
+//            if statusCode == 200 {
+//                DispatchQueue.main.async {
 //                    let createQueueVC = CreateQueueViewController()
 //                    self.present(createQueueVC, animated: true)
-                    let authVC = AuthViewController()
-                    self.present(authVC, animated: true)
-                }
-            }
-        }
+//                }
+//            } else {
+//                DispatchQueue.main.async {
+////                    let createQueueVC = CreateQueueViewController()
+////                    self.present(createQueueVC, animated: true)
+//                    let authVC = AuthViewController()
+//                    self.present(authVC, animated: true)
+//                }
+//            }
+//        }
         
 //        let createQueueVC = CreateQueueViewController()
 //        present(createQueueVC, animated: true)
@@ -112,7 +116,7 @@ class MainViewController: UIViewController {
             guard let avatarImage = UIImage(data: avatarData) else { return }
             image = avatarImage
         } else {
-            image = #imageLiteral(resourceName: "circle")
+            image = #imageLiteral(resourceName: "avatar")
         }
         profileButton.setBackgroundImage(image, for: .normal)
     }

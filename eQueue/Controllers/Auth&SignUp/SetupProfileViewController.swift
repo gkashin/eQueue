@@ -13,12 +13,12 @@ class SetupProfileViewController: UIViewController {
     let welcomeLabel = UILabel(text: "Настроить профиль", font: .avenir26())
     
     let nameLabel = UILabel(text: "Имя")
-    let surnameLabel = UILabel(text: "Фамилия")
+//    let surnameLabel = UILabel(text: "Фамилия")
     let emailLabel = UILabel(text: "Email")
     let passwordLabel = UILabel(text: "Пароль")
     
     let nameTextField = OneLineTextField(font: .avenir20())
-    let surnameTextField = OneLineTextField(font: .avenir20())
+//    let surnameTextField = OneLineTextField(font: .avenir20())
     let emailTextField = OneLineTextField(font: .avenir20())
     let phoneNumberTextField = OneLineTextField(font: .avenir20())
     let passwordTextField = OneLineTextField(font: .avenir20())
@@ -58,12 +58,12 @@ class SetupProfileViewController: UIViewController {
     
     @objc private func saveButtonTapped() {
         guard let name = nameTextField.text,
-            let surname = surnameTextField.text,
+//            let surname = surnameTextField.text,
             //            let email = emailTextField.text,
             let password = passwordTextField.text,
             let avatarImage = fullImageView.circleImageView.image,
             name != "",
-            surname != "",
+//            surname != "",
             //            email != "",
             password != "" else {
                 return
@@ -81,12 +81,12 @@ class SetupProfileViewController: UIViewController {
             NetworkManager.shared.updateName(name: name, password: oldPassword!) { statusCode in
                 guard statusCode == 204 else { return }
                 
-                SceneDelegate.user?.firstName = name
+                SceneDelegate.user?.username = name
                 
-                NetworkManager.shared.updateSurname(surname: surname, password: oldPassword!) { statusCode in
-                    guard statusCode == 204 else { return }
-                    
-                    SceneDelegate.user?.lastName = surname
+//                NetworkManager.shared.updateSurname(surname: surname, password: oldPassword!) { statusCode in
+//                    guard statusCode == 204 else { return }
+//
+//                    SceneDelegate.user?.lastName = surname
                     
                     NetworkManager.shared.updatePassword(newPassword: password, password: oldPassword!) { statusCode in
                         guard statusCode == 204 else { return }
@@ -101,7 +101,7 @@ class SetupProfileViewController: UIViewController {
                         DispatchQueue.main.async {
                             self.updateProfileButton()
                         }
-                    }
+//                    }
                 }
             }
         }
@@ -149,11 +149,11 @@ extension SetupProfileViewController {
         var stackViewSpacing: CGFloat = 60
         var stackViewDistance: CGFloat = 60
         
-        let dataStackView = UIStackView(arrangedSubviews: [nameLabel, nameTextField, surnameLabel, surnameTextField], axis: .vertical, spacing: 20)
+        let dataStackView = UIStackView(arrangedSubviews: [nameLabel, nameTextField], axis: .vertical, spacing: 20)
         
         if let user = SceneDelegate.user {
-            nameTextField.text = user.firstName
-            surnameTextField.text = user.lastName
+            nameTextField.text = user.username
+//            surnameTextField.text = user.lastName
             if let avatarData = user.avatarData {
                 fullImageView.circleImageView.image = UIImage(data: avatarData)
             }

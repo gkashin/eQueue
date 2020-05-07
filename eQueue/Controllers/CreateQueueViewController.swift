@@ -24,27 +24,22 @@ class CreateQueueViewController: UIViewController {
     let setCurrentDateSwitch = UISwitch()
     
     var queue = Queue()
-    var action = "Создать"
     
-    let actionButton = UIButton(title: "Создать", backgroundColor: .buttonDark(), titleColor: .white, font: .avenir20(), isShadow: false)
+    let createQueueButton = UIButton(title: "Создать", backgroundColor: .buttonDark(), titleColor: .white, font: .avenir20(), isShadow: false)
     
     init() {
         super.init(nibName: nil, bundle: nil)
     }
     
-    init(queue: Queue?, action: String?) {
+    init(queue: Queue?) {
         super.init(nibName: nil, bundle: nil)
         
         guard let queue = queue else { return }
-        guard let action = action else { return }
         
         self.queue = queue
-        self.action = action
-        actionButton.setTitle(action, for: .normal)
         nameTextField.text = queue.name
         descriptionTextField.text = queue.description
         startDateTextField.text = queue.status == "upcoming" ? queue.startDate : nil
-        titleLabel.text = "\(action) очередь"
     }
     
     required init?(coder: NSCoder) {
@@ -64,7 +59,7 @@ class CreateQueueViewController: UIViewController {
         
         setCurrentDateSwitch.addTarget(self, action: #selector(setCurrentDateSwitchTapped), for: .touchUpInside)
         
-        actionButton.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
+        createQueueButton.addTarget(self, action: #selector(createQueueButtonTapped), for: .touchUpInside)
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
@@ -76,7 +71,7 @@ class CreateQueueViewController: UIViewController {
         view.frame.origin.y = .zero
     }
     
-    @objc private func actionButtonTapped() {
+    @objc private func createQueueButtonTapped() {
         guard let name = nameTextField.text,
             let description = descriptionTextField.text,
             let startDate = startDateTextField.text,
@@ -93,23 +88,21 @@ class CreateQueueViewController: UIViewController {
         queue.description = description
         queue.startDate = DateFormatter().getString(from: date)
         queue.expectedTime = 10
-
+        
         let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
         
-        if action == "Создать" {
-            NetworkManager.shared.createQueue(queue: queue) { queue in
-                guard var queue = queue else { return }
-                self.queue = queue
-
-                queue.status = "upcoming"
-                queue.queue = [User]()
-                
-//                ControlViewController.upcomingQueues.append(queue)
-                
-                DispatchQueue.main.async {
-                    self.dismiss(animated: true) {
-                        tabBarController.selectedIndex = 2
-                    }
+        NetworkManager.shared.createQueue(queue: queue) { queue in
+            guard var queue = queue else { return }
+            self.queue = queue
+            
+            queue.status = "upcoming"
+            queue.queue = [User]()
+            
+            
+            
+            DispatchQueue.main.async {
+                self.dismiss(animated: true) {
+                    tabBarController.selectedIndex = 2
                 }
             }
         }
@@ -177,14 +170,14 @@ extension CreateQueueViewController {
             setCurrentDateSwitch.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 0)
         ])
         
-        view.addSubview(actionButton)
+        view.addSubview(createQueueButton)
         
-        actionButton.translatesAutoresizingMaskIntoConstraints = false
-
+        createQueueButton.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
-            actionButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
-            actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            actionButton.widthAnchor.constraint(equalToConstant: 200),
+            createQueueButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
+            createQueueButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            createQueueButton.widthAnchor.constraint(equalToConstant: 200),
         ])
     }
     

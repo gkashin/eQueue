@@ -44,13 +44,13 @@ class NetworkManager {
         task.resume()
     }
     
-    func login(username: String, password: String, completion: @escaping (Int?) -> Void) {
+    func login(email: String, password: String, completion: @escaping (Int?) -> Void) {
         let loginURL = baseURL.appendingPathComponent("/auth/jwt/create")
         var request = URLRequest(url: loginURL)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let data = ["username": username, "password": password]
+        let data = ["email": email, "password": password]
         
         let jsonEncoder = JSONEncoder()
         let jsonData = try! jsonEncoder.encode(data)
@@ -157,6 +157,30 @@ class NetworkManager {
 
 // MARK: - Queues GET
 extension NetworkManager {
+    func getCurrentQueue(completion: @escaping ([Queue]?) -> Void) {
+        let getCurrentQueueURL = baseURL.appendingPathComponent("get_current_queue/")
+        var request = URLRequest(url: getCurrentQueueURL)
+        request.httpMethod = "GET"
+        
+        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
+        request.setValue("JWT \(token)", forHTTPHeaderField: "Authorization")
+        
+        let _ = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data else {
+                print("Couldn't get data, \(error!.localizedDescription)")
+                return completion(nil)
+            }
+            let jsonDecoder = JSONDecoder()
+            
+            guard let dataQueues = try? jsonDecoder.decode(DataQueues.self, from: data) else {
+                print(#line, #function, "Couldn't decode data from \(data)")
+                return completion(nil)
+            }
+            
+            completion(dataQueues.queues)
+        }.resume()
+    }
+    
     func myQueues(completion: @escaping ([Queue]?) -> Void) {
         let myQueuesURL = baseURL.appendingPathComponent("my_queues/")
         var request = URLRequest(url: myQueuesURL)

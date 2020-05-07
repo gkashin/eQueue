@@ -92,7 +92,7 @@ extension QueueItemTableViewCell {
         numberLabel.text = "\(indexPath.row)"
 
         if !isLast {
-            fullNameLabel.text = "\(user.firstName) \(user.lastName)"
+            fullNameLabel.text = "\(user.username)"
         } else {
             fullNameLabel.text = "Вы"
             fullNameLabel.font = .avenir20()
