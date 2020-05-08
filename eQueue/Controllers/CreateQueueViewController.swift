@@ -9,7 +9,7 @@
 import UIKit
 
 class CreateQueueViewController: UIViewController {
-    
+
     var completionHandler: ((Queue) -> Void)?
     
     let titleLabel = UILabel(text: "Создать очередь")
@@ -89,8 +89,6 @@ class CreateQueueViewController: UIViewController {
         queue.startDate = DateFormatter().getString(from: date)
         queue.expectedTime = 10
         
-        let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
-        
         NetworkManager.shared.createQueue(queue: queue) { queue in
             guard var queue = queue else { return }
             self.queue = queue
@@ -99,11 +97,11 @@ class CreateQueueViewController: UIViewController {
             queue.queue = [User]()
             
             
-            
             DispatchQueue.main.async {
-                self.dismiss(animated: true) {
-                    tabBarController.selectedIndex = 2
-                }
+                let qrCodeVC = QRCodeViewController(qrWithText: "\(queue.id)")
+                qrCodeVC.createQueueDelegate = self
+                
+                self.present(qrCodeVC, animated: true)
             }
         }
     }
@@ -188,23 +186,8 @@ extension CreateQueueViewController {
     }
 }
 
-// MARK: - SwiftUI
-import SwiftUI
-
-struct CreateQueueVCProvider: PreviewProvider {
-    static var previews: some View {
-        ContainerView().edgesIgnoringSafeArea(.all)
-    }
-    
-    struct ContainerView: UIViewControllerRepresentable {
-        let createQueueVC = CreateQueueViewController()
-        
-        func makeUIViewController(context: UIViewControllerRepresentableContext<CreateQueueVCProvider.ContainerView>) -> CreateQueueViewController  {
-            return createQueueVC
-        }
-        
-        func updateUIViewController(_ uiViewController: CreateQueueVCProvider.ContainerView.UIViewControllerType, context: UIViewControllerRepresentableContext<CreateQueueVCProvider.ContainerView>) {
-            
-        }
+extension CreateQueueViewController: CreateQueueDelegate {
+    func dismiss() {
+        dismiss(animated: true, completion: nil)
     }
 }

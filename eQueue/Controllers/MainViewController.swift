@@ -83,27 +83,23 @@ class MainViewController: UIViewController {
     }
     
     @objc private func createQueueButtonTapped() {
-        
-        let qrCodeVC = QRCodeViewController(qrWithText: "adsf")
-        present(qrCodeVC, animated: true)
-        
-//        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
-//
-//        NetworkManager.shared.verifyToken(token: token) { statusCode in
-//            if statusCode == 200 {
-//                DispatchQueue.main.async {
+        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
+
+        NetworkManager.shared.verifyToken(token: token) { statusCode in
+            if statusCode == 200 {
+                DispatchQueue.main.async {
+                    let createQueueVC = CreateQueueViewController()
+                    self.present(createQueueVC, animated: true)
+                }
+            } else {
+                DispatchQueue.main.async {
 //                    let createQueueVC = CreateQueueViewController()
 //                    self.present(createQueueVC, animated: true)
-//                }
-//            } else {
-//                DispatchQueue.main.async {
-////                    let createQueueVC = CreateQueueViewController()
-////                    self.present(createQueueVC, animated: true)
-//                    let authVC = AuthViewController()
-//                    self.present(authVC, animated: true)
-//                }
-//            }
-//        }
+                    let authVC = AuthViewController()
+                    self.present(authVC, animated: true)
+                }
+            }
+        }
         
 //        let createQueueVC = CreateQueueViewController()
 //        present(createQueueVC, animated: true)

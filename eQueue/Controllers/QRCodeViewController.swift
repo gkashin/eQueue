@@ -13,6 +13,15 @@ class QRCodeViewController: UIViewController, MFMailComposeViewControllerDelegat
     
     let qrImageView = UIImageView()
     let sendToEmailButton = UIButton(title: "Отправить на email", backgroundColor: .buttonDark(), titleColor: .white, font: .avenir20(), isShadow: false)
+    let closeButton: UIButton = {
+        let button = UIButton()
+        button.setBackgroundImage(UIImage(systemName: "xmark"), for: .normal)
+        button.tintColor = .black
+        
+        return button
+    }()
+    
+    weak var createQueueDelegate: CreateQueueDelegate?
     
     init(qrWithText text: String) {
         super.init(nibName: nil, bundle: nil)
@@ -30,7 +39,12 @@ class QRCodeViewController: UIViewController, MFMailComposeViewControllerDelegat
         
         setupUI()
         
+        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
         sendToEmailButton.addTarget(self, action: #selector(sendToEmailButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func closeButtonTapped() {
+        self.dismiss()
     }
     
     @objc private func sendToEmailButtonTapped() {
@@ -51,8 +65,15 @@ class QRCodeViewController: UIViewController, MFMailComposeViewControllerDelegat
     
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         controller.dismiss(animated: true) {
-            self.dismiss(animated: true, completion: nil)
+            self.dismiss()
         }
+    }
+    
+    func dismiss() {
+        let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
+        self.dismiss(animated: true, completion: nil)
+        self.createQueueDelegate?.dismiss()
+        tabBarController.selectedIndex = 2
     }
     
     func generateQRCode(from string: String) -> UIImage? {
@@ -73,6 +94,15 @@ class QRCodeViewController: UIViewController, MFMailComposeViewControllerDelegat
 // MARK: - UI
 extension QRCodeViewController {
     private func setupUI() {
+        view.addSubview(closeButton)
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            closeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
+            closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            closeButton.widthAnchor.constraint(equalToConstant: 30),
+            closeButton.heightAnchor.constraint(equalToConstant: 30),
+        ])
+        
         view.backgroundColor = .white
         qrImageView.contentMode = .scaleAspectFit
         
@@ -82,7 +112,7 @@ extension QRCodeViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
+            stackView.topAnchor.constraint(equalTo: closeButton.topAnchor, constant: 20),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50)

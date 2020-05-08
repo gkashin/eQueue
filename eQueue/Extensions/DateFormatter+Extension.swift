@@ -11,12 +11,12 @@ import Foundation
 extension DateFormatter {
     
     func getString(from date: Date) -> String {
-        self.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        self.dateFormat = "yyyy-MM-dd HH:mm"
         return self.string(from: date)
     }
     
     func getDate(from string: String) -> Date {
-        self.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        self.dateFormat = "yyyy-MM-dd HH:mm"
         return self.date(from: string)!
     }
 }

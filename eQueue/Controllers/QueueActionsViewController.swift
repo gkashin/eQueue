@@ -122,7 +122,7 @@ class QueueActionsViewController: UIViewController {
     @objc private func removeButtonTapped() {
         NetworkManager.shared.deleteQueue(id: queue.id) { statusCode in
             guard statusCode == 204 else { return }
-            
+
             DispatchQueue.main.async {
                 self.dismiss(animated: true) {
                     self.delegate.updateUI()

@@ -334,6 +334,7 @@ extension NetworkManager {
         
         let _ = URLSession.shared.dataTask(with: request) { _, response, error in
             let httpResponse = response as? HTTPURLResponse
+            print(#line, #function, httpResponse?.statusCode)
             completion(httpResponse?.statusCode)
         }.resume()
     }

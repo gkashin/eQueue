@@ -63,12 +63,13 @@ extension ControlViewController: ControlQueueDelegate {
             //                }
             //                return
             //            }
-            
+        
             if queues != nil {
                 allQueues.append(contentsOf: queues!)
             }
             
             NetworkManager.shared.myQueuesOwner { queues in
+                
                 if queues != nil {
                     allQueues.append(contentsOf: queues!)
                 }
@@ -76,6 +77,9 @@ extension ControlViewController: ControlQueueDelegate {
                 if !allQueues.isEmpty {
                     ControlViewController.upcomingQueues = allQueues.filter({ $0.status == "upcoming" })
                     ControlViewController.completedQueues = allQueues.filter({ $0.status == "past" })
+                } else {
+                    ControlViewController.upcomingQueues = []
+                    ControlViewController.completedQueues = []
                 }
                 
                 DispatchQueue.main.async {

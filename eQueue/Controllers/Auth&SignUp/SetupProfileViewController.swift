@@ -171,7 +171,7 @@ extension SetupProfileViewController {
             stackViewSpacing = 30
             stackViewDistance = 30
             
-            dataStackView.spacing = 10
+            dataStackView.spacing = 20
         }
         
         saveButton.heightAnchor.constraint(equalToConstant: 60).isActive = true

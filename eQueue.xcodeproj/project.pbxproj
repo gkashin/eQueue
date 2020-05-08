@@ -11,6 +11,7 @@
 		5B117390243E33B300B3108A /* AddPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B11738F243E33B300B3108A /* AddPhotoView.swift */; };
 		5B1173B8243F614400B3108A /* QueueDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1173B7243F614400B3108A /* QueueDetailsViewController.swift */; };
 		5B13CEB424641DE700E3AEA3 /* QRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B13CEB324641DE700E3AEA3 /* QRCodeViewController.swift */; };
+		5B13CEB62465645E00E3AEA3 /* CreateQueueDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B13CEB52465645E00E3AEA3 /* CreateQueueDelegate.swift */; };
 		5B38FF562412BE42009F3B0A /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B38FF552412BE42009F3B0A /* NetworkManager.swift */; };
 		5B38FF592412C12B009F3B0A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B38FF582412C12B009F3B0A /* User.swift */; };
 		5B67226E242BCB980038749C /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B67226D242BCB980038749C /* UIViewController+Extension.swift */; };
@@ -51,6 +52,7 @@
 		5B11738F243E33B300B3108A /* AddPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPhotoView.swift; sourceTree = "<group>"; };
 		5B1173B7243F614400B3108A /* QueueDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueDetailsViewController.swift; sourceTree = "<group>"; };
 		5B13CEB324641DE700E3AEA3 /* QRCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeViewController.swift; sourceTree = "<group>"; };
+		5B13CEB52465645E00E3AEA3 /* CreateQueueDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateQueueDelegate.swift; sourceTree = "<group>"; };
 		5B38FF552412BE42009F3B0A /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		5B38FF582412C12B009F3B0A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		5B67226D242BCB980038749C /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
@@ -179,6 +181,7 @@
 			children = (
 				5B91A8CB24116AF2005A23DB /* AuthNavigatingDelegate.swift */,
 				5B7F943824607E51002EAF20 /* ControlQueueDelegate.swift */,
+				5B13CEB52465645E00E3AEA3 /* CreateQueueDelegate.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -339,6 +342,7 @@
 				5B38FF592412C12B009F3B0A /* User.swift in Sources */,
 				5BB7ADCA24194ED8008C21DD /* TextFieldFormView.swift in Sources */,
 				5B1173B8243F614400B3108A /* QueueDetailsViewController.swift in Sources */,
+				5B13CEB62465645E00E3AEA3 /* CreateQueueDelegate.swift in Sources */,
 				5B91A8D724116AF2005A23DB /* UILabel+Extension.swift in Sources */,
 				5BD60929242275440050CB47 /* DateFormatter+Extension.swift in Sources */,
 				5B91A8D624116AF2005A23DB /* UIColor+Extension.swift in Sources */,

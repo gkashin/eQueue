@@ -65,24 +65,27 @@ class SignUpViewController: UIViewController {
         let user = User(username: username, email: email, password: password)
         
         NetworkManager.shared.register(user: user) { user in
-            guard let user = user else { return }
+            guard let _ = user else { return }
+            
             DispatchQueue.main.async {
-                let alert = self.createAlert(withTitle: "Вы успешно зарегистрировались", andMessage: "Пройдите по ссылке в письме активации, отправленному на Ваш email!")
-                self.present(alert, animated: true) {
-                    let loginVC = LoginViewController()
-                    self.present(loginVC, animated: true)
-                    self.dismiss(animated: true, completion: nil)
+                let infoAlert = UIAlertController(title: "Вы успешно зарегистрировались", message: "Пройдите по ссылке в письме активации, отправленному на Ваш email!", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "ОК", style: .default) { _ in
+                    self.dismiss(animated: true) {
+//                        self.delegate?.dismiss()
+                        self.delegate?.toLoginVC()
+                    }
+                    
                 }
-                self.dismiss(animated: true) {
-                    self.delegate?.dismiss()
-                }
+                infoAlert.addAction(okAction)
+                
+                self.present(infoAlert, animated: true)
             }
         }
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
         guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
-        view.frame.origin.y = 0 - 0.5 * keyboardSize.height
+        view.frame.origin.y = 0 - 0.6 * keyboardSize.height
     }
     
     @objc func keyboardWillHide() {
@@ -109,10 +112,10 @@ extension SignUpViewController {
                                                        passwordStackView,
                                                        confirmPasswordStackView,
                                                        signUpButton
-                                                       ],
+            ],
                                     axis: .vertical,
                                     spacing: 40
-                        )
+        )
         
         loginButton.contentHorizontalAlignment = .leading
         let bottomStackView = UIStackView(arrangedSubviews: [alreadyOnBoardLabel, loginButton], axis: .horizontal, spacing: 10)

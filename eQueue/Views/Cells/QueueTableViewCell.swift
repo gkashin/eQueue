@@ -84,7 +84,7 @@ extension QueueTableViewCell {
         
         let dateFormatter = DateFormatter()
         let dateTime = queue.startDate?.split(separator: " ")
-        dateLabel.text = "\(dateTime?.first!)\n\(dateTime?.last!)"
+        dateLabel.text = "\(dateTime!.first!)\n\(dateTime!.last!)"
         
         imageView?.image = queue.ownerId == SceneDelegate.user?.id ? #imageLiteral(resourceName: "crown") : #imageLiteral(resourceName: "circle")
     }
