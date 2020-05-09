@@ -74,9 +74,8 @@ class MainViewController: UIViewController {
             } else {
                 DispatchQueue.main.async {
                     let authVC = AuthViewController()
+                    authVC.updateUIDelegate = self
                     self.present(authVC, animated: true)
-//                    let scanQrVC = ScanQRViewController()
-//                    self.present(scanQrVC, animated: true)
                 }
             }
         }
@@ -93,16 +92,12 @@ class MainViewController: UIViewController {
                 }
             } else {
                 DispatchQueue.main.async {
-//                    let createQueueVC = CreateQueueViewController()
-//                    self.present(createQueueVC, animated: true)
                     let authVC = AuthViewController()
+                    authVC.updateUIDelegate = self
                     self.present(authVC, animated: true)
                 }
             }
         }
-        
-//        let createQueueVC = CreateQueueViewController()
-//        present(createQueueVC, animated: true)
     }
     
     public func updateProfileButton() {
@@ -160,23 +155,9 @@ extension MainViewController {
     }
 }
 
-// MARK: - SwiftUI
-import SwiftUI
-
-struct MainVCProvider: PreviewProvider {
-    static var previews: some View {
-        ContainerView().edgesIgnoringSafeArea(.all)
-    }
-    
-    struct ContainerView: UIViewControllerRepresentable {
-        let tabBarVC = MainTabBarController()
-        
-        func makeUIViewController(context: UIViewControllerRepresentableContext<MainVCProvider.ContainerView>) -> MainTabBarController  {
-            return tabBarVC
-        }
-        
-        func updateUIViewController(_ uiViewController: MainVCProvider.ContainerView.UIViewControllerType, context: UIViewControllerRepresentableContext<MainVCProvider.ContainerView>) {
-            
-        }
+// MARK: - UpdateUIDelegate
+extension MainViewController: UpdateUIDelegate {
+    func updateUI() {
+        updateProfileButton()
     }
 }

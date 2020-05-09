@@ -28,7 +28,23 @@ class QueueViewController: UIViewController {
         return button
     }()
     
-    let stubLabel = UILabel(text: "У вас нет текущей очереди")
+    let loginButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Войти", for: .normal)
+        button.titleLabel?.font = .avenir20()
+        return button
+    }()
+    
+    let notAuthorizedStubLabel: UILabel = {
+        let label = UILabel(text: "Вы не авторизованы.\nВойдите, чтобы продолжить работу")
+        label.textAlignment = .center
+        label.numberOfLines = 2
+        return label
+    }()
+    
+    var notAuthorizedStackView: UIStackView!
+    
+    let emptyQueueStubLabel = UILabel(text: "У вас нет текущей очереди")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,6 +75,7 @@ class QueueViewController: UIViewController {
         terminateQueueButton.addTarget(self, action: #selector(terminateQueueButtonTapped), for: .touchUpInside)
         quitQueueButton.addTarget(self, action: #selector(quitQueueButtonTapped), for: .touchUpInside)
         callNextButton.addTarget(self, action: #selector(callNextButtonTapped), for: .touchUpInside)
+        loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -82,7 +99,7 @@ class QueueViewController: UIViewController {
     @objc private func terminateQueueButtonTapped() {
         NetworkManager.shared.finishQueue(id: QueueViewController.currentQueue!.id) { statusCode in
             guard statusCode == 204 else { return }
-
+            
             QueueViewController.currentQueue = nil
             DispatchQueue.main.async {
                 self.updateUI()
@@ -105,11 +122,18 @@ class QueueViewController: UIViewController {
         NetworkManager.shared.callNext(id: QueueViewController.currentQueue!.id) { statusCode in
             guard statusCode == 204 else { return }
             
-            QueueViewController.currentQueue?.queue.remove(at: 0)
+            // TODO: - Handle empty queue situation
+            QueueViewController.currentQueue?.queue.removeFirst()
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
         }
+    }
+    
+    @objc private func loginButtonTapped() {
+        let authVC = AuthViewController()
+        authVC.updateUIDelegate = self
+        self.present(authVC, animated: true)
     }
 }
 
@@ -162,12 +186,21 @@ extension QueueViewController {
             quitQueueButton.widthAnchor.constraint(equalToConstant: 200),
         ])
         
-        view.addSubview(stubLabel)
-        stubLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(emptyQueueStubLabel)
+        emptyQueueStubLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            stubLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            stubLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            emptyQueueStubLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyQueueStubLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+        ])
+        
+        notAuthorizedStackView = UIStackView(arrangedSubviews: [notAuthorizedStubLabel, loginButton], axis: .vertical, spacing: 20)
+        view.addSubview(notAuthorizedStackView)
+        notAuthorizedStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            notAuthorizedStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            notAuthorizedStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
     }
     
@@ -183,41 +216,17 @@ extension QueueViewController {
         }
     }
     
-    private func updateUI() {
-        tableView.reloadData()
-        
-        guard QueueViewController.currentQueue != nil else {
-            navigationItem.title = "Моя очередь"
-            stubLabel.isHidden = false
-            hideAll()
-            return
-        }
-        
-        stubLabel.isHidden = true
-        
-        if QueueViewController.currentQueue!.ownerId == SceneDelegate.user?.id {
-            queueInfoStackView.isHidden = true
-            totalPeopleLabel.isHidden = false
-            terminateQueueButton.isHidden = false
-            quitQueueButton.isHidden = true
-            
-            callNextButton.isHidden = false
-        } else {
-            queueInfoStackView.isHidden = false
-            totalPeopleLabel.isHidden = true
-            terminateQueueButton.isHidden = true
-            quitQueueButton.isHidden = false
-            
-            callNextButton.isHidden = true
-        }
-    }
-    
     private func hideAll() {
         queueInfoStackView.isHidden = true
         totalPeopleLabel.isHidden = true
         terminateQueueButton.isHidden = true
         quitQueueButton.isHidden = true
         callNextButton.isHidden = true
+        
+        notAuthorizedStackView.isHidden = true
+        emptyQueueStubLabel.isHidden = true
+        
+        tableView.isHidden = true
     }
 }
 
@@ -306,7 +315,7 @@ extension QueueViewController: UITableViewDelegate, UITableViewDataSource {
             return .none
         }
     }
-
+    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         switch editingStyle {
         case .delete:
@@ -323,23 +332,56 @@ extension QueueViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-// MARK: - SwiftUI
-import SwiftUI
-
-struct QueueVCProvider: PreviewProvider {
-    static var previews: some View {
-        ContainerView().edgesIgnoringSafeArea(.all)
-    }
-    
-    struct ContainerView: UIViewControllerRepresentable {
-        let tabBarVC = MainTabBarController()
+// MARK: - UpdateUIDelegate
+extension QueueViewController: UpdateUIDelegate {
+    func updateUI() {
+        hideAll()
+        showSpinner(onView: view)
         
-        func makeUIViewController(context: UIViewControllerRepresentableContext<QueueVCProvider.ContainerView>) -> MainTabBarController  {
-            return tabBarVC
-        }
+        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
         
-        func updateUIViewController(_ uiViewController: QueueVCProvider.ContainerView.UIViewControllerType, context: UIViewControllerRepresentableContext<QueueVCProvider.ContainerView>) {
+        NetworkManager.shared.verifyToken(token: token) { statusCode in
+            if statusCode == 200 {
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                    
+                    self.notAuthorizedStackView.isHidden = true
+                    
+                    guard QueueViewController.currentQueue != nil else {
+                        self.navigationItem.title = "Моя очередь"
+                        self.hideAll()
+                        self.emptyQueueStubLabel.isHidden = false
+                        self.removeSpinner()
+                        return
+                    }
+                    
+                    self.tableView.isHidden = false
+                    self.emptyQueueStubLabel.isHidden = true
+                    
+                    if QueueViewController.currentQueue!.ownerId == SceneDelegate.user?.id {
+                        self.queueInfoStackView.isHidden = true
+                        self.totalPeopleLabel.isHidden = false
+                        self.terminateQueueButton.isHidden = false
+                        self.quitQueueButton.isHidden = true
+                        
+                        self.callNextButton.isHidden = false
+                    } else {
+                        self.queueInfoStackView.isHidden = false
+                        self.totalPeopleLabel.isHidden = true
+                        self.terminateQueueButton.isHidden = true
+                        self.quitQueueButton.isHidden = false
+                        
+                        self.callNextButton.isHidden = true
+                    }
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.hideAll()
+                    self.notAuthorizedStackView.isHidden = false
+                }
+            }
             
+            self.removeSpinner()
         }
     }
 }

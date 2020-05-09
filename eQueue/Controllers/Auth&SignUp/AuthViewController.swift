@@ -12,16 +12,18 @@ class AuthViewController: UIViewController {
     
     let logoImageView = UIImageView(image: #imageLiteral(resourceName: "queue_logo"), contentMode: .scaleAspectFill)
     
-    let alreadyOnboardLabel = UILabel(text: "Already onboard?")
-    let emailLabel = UILabel(text: "Or sign up with")
-    let googleLabel = UILabel(text: "Get started with")
+    let alreadyOnboardLabel = UILabel(text: "Уже зарегистрированы?")
+    let emailLabel = UILabel(text: "Или зарегистрируйтсь с")
+    let googleLabel = UILabel(text: "Начните с")
     
     let emailButton = UIButton(title: "Email", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false)
     let googleButton = UIButton(title: "Google", backgroundColor: .white, titleColor: .black, isShadow: true)
-    let loginButton = UIButton(title: "Login", backgroundColor: .white, titleColor: .buttonRed(), isShadow: true)
+    let loginButton = UIButton(title: "Войти", backgroundColor: .white, titleColor: .buttonRed(), isShadow: true)
     
     let loginVC = LoginViewController()
     let signUpVC = SignUpViewController()
+    
+    weak var updateUIDelegate: UpdateUIDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -90,7 +92,9 @@ extension AuthViewController: AuthNavigatingDelegate {
     }
     
     func dismiss() {
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true) {
+            self.updateUIDelegate?.updateUI()
+        }
     }
 }
 

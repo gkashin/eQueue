@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5B08B2E224669FA000D6FBFB /* UpdateUIDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B08B2E124669FA000D6FBFB /* UpdateUIDelegate.swift */; };
 		5B11738E243E334300B3108A /* SetupProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B11738D243E334300B3108A /* SetupProfileViewController.swift */; };
 		5B117390243E33B300B3108A /* AddPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B11738F243E33B300B3108A /* AddPhotoView.swift */; };
 		5B1173B8243F614400B3108A /* QueueDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1173B7243F614400B3108A /* QueueDetailsViewController.swift */; };
@@ -48,6 +49,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5B08B2E124669FA000D6FBFB /* UpdateUIDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateUIDelegate.swift; sourceTree = "<group>"; };
 		5B11738D243E334300B3108A /* SetupProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupProfileViewController.swift; sourceTree = "<group>"; };
 		5B11738F243E33B300B3108A /* AddPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPhotoView.swift; sourceTree = "<group>"; };
 		5B1173B7243F614400B3108A /* QueueDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueDetailsViewController.swift; sourceTree = "<group>"; };
@@ -182,6 +184,7 @@
 				5B91A8CB24116AF2005A23DB /* AuthNavigatingDelegate.swift */,
 				5B7F943824607E51002EAF20 /* ControlQueueDelegate.swift */,
 				5B13CEB52465645E00E3AEA3 /* CreateQueueDelegate.swift */,
+				5B08B2E124669FA000D6FBFB /* UpdateUIDelegate.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -329,6 +332,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5B861797241696AE0031B776 /* QueueViewController.swift in Sources */,
+				5B08B2E224669FA000D6FBFB /* UpdateUIDelegate.swift in Sources */,
 				5B86179B2416A1660031B776 /* Queue.swift in Sources */,
 				5B91A8B024116AAC005A23DB /* AppDelegate.swift in Sources */,
 				5B91A8DA24116AF2005A23DB /* AuthNavigatingDelegate.swift in Sources */,

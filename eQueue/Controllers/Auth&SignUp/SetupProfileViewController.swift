@@ -57,12 +57,12 @@ class SetupProfileViewController: UIViewController {
     }
     
     @objc private func saveButtonTapped() {
-        guard let name = nameTextField.text,
+        guard let username = nameTextField.text,
 //            let surname = surnameTextField.text,
             //            let email = emailTextField.text,
             let password = passwordTextField.text,
             let avatarImage = fullImageView.circleImageView.image,
-            name != "",
+            username != "",
 //            surname != "",
             //            email != "",
             password != "" else {
@@ -78,10 +78,10 @@ class SetupProfileViewController: UIViewController {
             let oldPassword = confirmAlert.textFields!.first?.text
             guard oldPassword != nil && oldPassword != "" else { return }
             
-            NetworkManager.shared.updateName(name: name, password: oldPassword!) { statusCode in
+            NetworkManager.shared.updateUsername(username: username, password: oldPassword!) { statusCode in
                 guard statusCode == 204 else { return }
                 
-                SceneDelegate.user?.username = name
+                SceneDelegate.user?.username = username
                 
 //                NetworkManager.shared.updateSurname(surname: surname, password: oldPassword!) { statusCode in
 //                    guard statusCode == 204 else { return }
