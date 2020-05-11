@@ -56,6 +56,12 @@ class QueueActionsViewController: UIViewController {
     let startDateLabel = UILabel(text: "Дата", font: .avenir20())
     let peopleCountLabel = UILabel(text: "Участников", font: .avenir20())
     
+    let showQrButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "qrcode"), for: .normal)
+        button.tintColor = .buttonDark()
+        return button
+    }()
     var actionButton = UIButton(title: "Начать", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false)
     let changeButton = UIButton(title: "Изменить", backgroundColor: .white, titleColor: .darkText, font: .avenir16(), isShadow: false)
     
@@ -109,6 +115,7 @@ class QueueActionsViewController: UIViewController {
         actionButton.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
         changeButton.addTarget(self, action: #selector(changeButtonTapped), for: .touchUpInside)
         removeButton.addTarget(self, action: #selector(removeButtonTapped), for: .touchUpInside)
+        showQrButton.addTarget(self, action: #selector(showQrButtonTapped), for: .touchUpInside)
     }
     
     override func viewDidLayoutSubviews() {
@@ -143,7 +150,7 @@ class QueueActionsViewController: UIViewController {
                 
                 DispatchQueue.main.async {
                     self.dismiss(animated: true) {
-                        QueueViewController.currentQueue = self.queue
+//                        QueueViewController.currentQueue = self.queue
                         let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
                         tabBarController.selectedIndex = 1
                     }
@@ -174,6 +181,11 @@ class QueueActionsViewController: UIViewController {
         }
     }
     
+    @objc private func showQrButtonTapped() {
+        let qrCodeVC = QRCodeViewController(qrWithText: "\(queue.id)")
+        present(qrCodeVC, animated: true)
+    }
+    
     @objc private func handleDatePicker(sender: UIDatePicker) {
         let dateFormatter = DateFormatter()
         repeatQueueAlert.textFields?.last?.text = dateFormatter.getString(from: sender.date)
@@ -185,6 +197,15 @@ extension QueueActionsViewController {
     private func updateUI() {
         setupLabels()
         setupButtons()
+        
+        // Qr Button
+        view.addSubview(showQrButton)
+        showQrButton.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            showQrButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            showQrButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
+        ])
         
         // Hide button
         hideButton.translatesAutoresizingMaskIntoConstraints = false
@@ -212,7 +233,7 @@ extension QueueActionsViewController {
         
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 40),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 45),
         ])
         
         // Show people button
@@ -268,18 +289,22 @@ extension QueueActionsViewController {
             actionButton.setTitle("Начать", for: .normal)
             changeButton.isHidden = false
             removeButton.isHidden = false
+            showQrButton.isHidden = false
         case .ownCompleted:
             actionButton.setTitle("Повторить", for: .normal)
             changeButton.isHidden = true
             removeButton.isHidden = false
+            showQrButton.isHidden = true
         case .upcoming:
             actionButton.setTitle("Покинуть", for: .normal)
             changeButton.isHidden = true
             removeButton.isHidden = true
+            showQrButton.isHidden = true
         case .completed:
             actionButton.setTitle("Удалить", for: .normal)
             changeButton.isHidden = true
             removeButton.isHidden = true
+            showQrButton.isHidden = true
         }
     }
     
@@ -379,7 +404,7 @@ extension QueueActionsViewController: UITableViewDelegate, UITableViewDataSource
             ownCreatedQueueItemTableViewCell.setup(with: user, at: indexPath)
         } else {
             let queueItemTableViewCell = cell as! QueueItemTableViewCell
-            queueItemTableViewCell.setup(with: user, at: indexPath, isLast: indexPath.row == queue.queue.count - 1)
+            queueItemTableViewCell.setup(with: user, at: indexPath)
         }
         
         return cell

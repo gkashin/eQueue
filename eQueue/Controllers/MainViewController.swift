@@ -54,10 +54,7 @@ class MainViewController: UIViewController {
         }
     }
     
-    @objc private func scanQrButtonTapped() {
-//        let scanQrVC = ScanQRViewController()
-//        present(scanQrVC, animated: true)
-        
+    @objc private func scanQrButtonTapped() {        
         guard QueueViewController.currentQueue == nil else {
             present(createAlert(withTitle: "Вы уже стоите в очереди", andMessage: ""), animated: true)
             return

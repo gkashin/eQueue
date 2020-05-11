@@ -51,7 +51,7 @@ class QRCodeViewController: UIViewController, MFMailComposeViewControllerDelegat
         if MFMailComposeViewController.canSendMail() {
             let mail = MFMailComposeViewController()
             mail.mailComposeDelegate = self
-            mail.setToRecipients(["georgii.kashin@gmail.com"])
+            mail.setToRecipients(["\(SceneDelegate.user!.email!)"])
             mail.setSubject("QR_Code")
             
             guard let qrData = qrImageView.image!.pngData() else { return }
@@ -81,7 +81,7 @@ class QRCodeViewController: UIViewController, MFMailComposeViewControllerDelegat
 
         if let filter = CIFilter(name: "CIQRCodeGenerator") {
             filter.setValue(data, forKey: "inputMessage")
-            let transform = CGAffineTransform(scaleX: 7, y: 7)
+            let transform = CGAffineTransform(scaleX: 10, y: 10)
 
             if let output = filter.outputImage?.transformed(by: transform) {
                 return UIImage(ciImage: output)

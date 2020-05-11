@@ -30,6 +30,7 @@ class OwnCreatedQueueItemTableViewCell: UITableViewCell {
     let fullNameLabel: UILabel = {
         let label = UILabel()
         label.text = "Full name"
+        label.font = .avenir20()
         return label
     }()
     
@@ -75,7 +76,7 @@ extension OwnCreatedQueueItemTableViewCell {
             numberLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
         
-        let stackView = UIStackView(arrangedSubviews: [fullNameLabel, extraInfoLabel], axis: .vertical, spacing: 10)
+        let stackView = UIStackView(arrangedSubviews: [fullNameLabel], axis: .vertical, spacing: 10)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(stackView)
         

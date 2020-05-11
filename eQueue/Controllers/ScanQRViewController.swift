@@ -52,66 +52,37 @@ class ScanQRViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                 self.session.stopRunning()
                 
                 var queue: Queue!
-                let notFoundAlert = UIAlertController(title: "Очередь не обнаружена", message: "", preferredStyle: .alert)
-                let okAction = UIAlertAction(title: "OK", style: .default) { _ in
-                    self.session.startRunning()
-                }
-                notFoundAlert.addAction(okAction)
                 
+                let notFoundAlert = createAlert(withTitle: "Очередь не обнаружена")
+                
+                // If qr code is not int number
                 guard let queueId = Int(object.stringValue!) else {
                     self.present(notFoundAlert, animated: true)
                     return
                 }
                 
                 NetworkManager.shared.findQueue(id: queueId) { found in
+                    // If queue doesn't found
+                    guard let found = found else {
+                        self.present(notFoundAlert, animated: true)
+                        return
+                    }
+                    
                     queue = found
                     
                     guard queue?.ownerId != SceneDelegate.user?.id else {
+                        // If found queue is own created queue
                         DispatchQueue.main.async {
-                            let infoAlert = UIAlertController(title: "Вы не можете встать в свою очередь", message: "", preferredStyle: .alert)
-                            let okAction = UIAlertAction(title: "Ок", style: .cancel) { _ in
-                                self.session.startRunning()
-                            }
-                            infoAlert.addAction(okAction)
+                            let infoAlert = self.createAlert(withTitle: "Вы не можете встать в свою очередь")
+                            
                             self.present(infoAlert, animated: true)
                         }
                         return
                     }
                     
+                    // If all is OK
                     if queue != nil {
-                        let enterAlert = UIAlertController(title: "Обнаружена очередь", message: object.stringValue, preferredStyle: .alert)
-                        let cancelAction = UIAlertAction(title: "Отменить", style: .cancel) { _ in
-                            self.session.startRunning()
-                        }
-                        enterAlert.addAction(cancelAction)
-                        
-                        enterAlert.addAction(UIAlertAction(title: "Встать в очередь", style: .default, handler: { _ in
-                            NetworkManager.shared.enterQueue(id: queueId) { found in
-                                guard let found = found else { return }
-                                queue = found
-                                
-                                var tabBarController: UITabBarController?
-                                DispatchQueue.main.async {
-                                    tabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController
-                                }
-                                
-                                var index: Int!
-                                if queue.status == "upcoming" {
-                                    index = 2
-                                } else if queue.status == "active" {
-                                    QueueViewController.currentQueue = queue
-                                    DispatchQueue.main.async {
-                                        self.view.layer.sublayers?.removeLast()
-                                    }
-                                    index = 1
-                                }
-                                
-                                DispatchQueue.main.async {
-                                    self.dismiss(animated: true, completion: nil)
-                                    tabBarController?.selectedIndex = index
-                                }
-                            }
-                        }))
+                        let enterAlert = self.createEnterAlert(with: queue)
                         
                         DispatchQueue.main.async {
                             self.present(enterAlert, animated: true, completion: nil)
@@ -124,5 +95,53 @@ class ScanQRViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                 }
             }
         }
+    }
+    
+    private func createAlert(withTitle title: String) -> UIAlertController {
+        let alert = UIAlertController(title: title, message: "", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default) { _ in
+            self.session.startRunning()
+        }
+        alert.addAction(okAction)
+        
+        return alert
+    }
+    
+    private func createEnterAlert(with queue: Queue) -> UIAlertController {
+        let enterAlert = UIAlertController(title: "\(queue.name)", message: queue.description, preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Отменить", style: .cancel) { _ in
+            self.session.startRunning()
+        }
+        enterAlert.addAction(cancelAction)
+        
+        enterAlert.addAction(UIAlertAction(title: "Встать в очередь", style: .default, handler: { _ in
+            NetworkManager.shared.enterQueue(id: queue.id) { found in
+                guard let found = found else { return }
+//                queue = found
+                
+                var tabBarController: UITabBarController?
+                DispatchQueue.main.async {
+                    tabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController
+                }
+                
+                var index: Int!
+                if found.status == "upcoming" {
+                    index = 2
+                } else if found.status == "active" {
+                    //                                    QueueViewController.currentQueue = queue
+                    DispatchQueue.main.async {
+                        self.view.layer.sublayers?.removeLast()
+                    }
+                    index = 1
+                }
+                
+                DispatchQueue.main.async {
+                    self.dismiss(animated: true, completion: nil)
+                    tabBarController?.selectedIndex = index
+                }
+            }
+        }))
+        
+        return enterAlert
     }
 }

@@ -30,6 +30,7 @@ class QueueItemTableViewCell: UITableViewCell {
     let fullNameLabel: UILabel = {
         let label = UILabel()
         label.text = "Full name"
+        label.font = .avenir20()
         return label
     }()
     
@@ -68,7 +69,7 @@ extension QueueItemTableViewCell {
             numberLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
         
-        let stackView = UIStackView(arrangedSubviews: [fullNameLabel, extraInfoLabel], axis: .vertical, spacing: 10)
+        let stackView = UIStackView(arrangedSubviews: [fullNameLabel], axis: .vertical, spacing: 10)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(stackView)
         
@@ -88,14 +89,20 @@ extension QueueItemTableViewCell {
         ])
     }
     
-    func setup(with user: User, at indexPath: IndexPath, isLast: Bool) {
+    func setup(with user: User, at indexPath: IndexPath) {
         numberLabel.text = "\(indexPath.row)"
 
-        if !isLast {
+//        if !isLast {
+//            fullNameLabel.text = "\(user.username)"
+//        } else {
+//            fullNameLabel.text = "Вы"
+//            offerExchangeButton.isHidden = true
+//        }
+        
+        if user.id != SceneDelegate.user?.id {
             fullNameLabel.text = "\(user.username)"
         } else {
             fullNameLabel.text = "Вы"
-            fullNameLabel.font = .avenir20()
             offerExchangeButton.isHidden = true
         }
     }

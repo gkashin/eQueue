@@ -294,8 +294,8 @@ extension QueueViewController: UITableViewDelegate, UITableViewDataSource {
             ownCreatedQueueItemTableViewCell.setup(with: user, at: indexPath)
         } else {
             let queueItemTableViewCell = cell as! QueueItemTableViewCell
-            let isLast = QueueViewController.currentQueue!.queue.count - 1 == indexPath.row
-            queueItemTableViewCell.setup(with: user, at: indexPath, isLast: isLast)
+//            let isLast = QueueViewController.currentQueue!.queue.count - 1 == indexPath.row
+            queueItemTableViewCell.setup(with: user, at: indexPath)
         }
         
         return cell
