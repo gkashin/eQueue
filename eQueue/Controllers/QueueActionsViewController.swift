@@ -146,7 +146,7 @@ class QueueActionsViewController: UIViewController {
         switch queueStatus {
         case .ownUpcoming:
             NetworkManager.shared.callNext(id: queue.id) { statusCode in
-                guard statusCode == 204 else { return }
+                guard statusCode == 200 || statusCode == 204 else { return }
                 
                 DispatchQueue.main.async {
                     self.dismiss(animated: true) {
@@ -368,7 +368,10 @@ extension QueueActionsViewController {
                     queue.queue = [User]()
                     
                     DispatchQueue.main.async {
-                        self.dismiss(animated: true) {
+                        let qrCodeVC = QRCodeViewController(qrWithText: "\(queue.id)")
+                        qrCodeVC.createQueueDelegate = self
+                        
+                        self.present(qrCodeVC, animated: true) {
                             self.delegate.updateUI()
                         }
                     }
@@ -378,6 +381,13 @@ extension QueueActionsViewController {
         
         repeatQueueAlert.addAction(okAction)
         repeatQueueAlert.addAction(cancelAction)
+    }
+}
+
+// MARK: - CreateQueueDelegate
+extension QueueActionsViewController: CreateQueueDelegate {
+    func dismiss() {
+        dismiss(animated: true, completion: nil)
     }
 }
 

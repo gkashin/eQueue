@@ -54,16 +54,36 @@ class MainViewController: UIViewController {
         }
     }
     
-    @objc private func scanQrButtonTapped() {        
-        guard QueueViewController.currentQueue == nil else {
-            present(createAlert(withTitle: "Вы уже стоите в очереди", andMessage: ""), animated: true)
-            return
-        }
+    @objc private func scanQrButtonTapped() {
+//        guard QueueViewController.currentQueue == nil else {
+//            present(createAlert(withTitle: "Вы уже стоите в очереди", andMessage: ""), animated: true)
+//            return
+//        }
         
         let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
 
         NetworkManager.shared.verifyToken(token: token) { statusCode in
             if statusCode == 200 {
+                NetworkManager.shared.getCurrentQueue { queue in
+                    let infoAlert = self.createAlert(withTitle: "Вы уже стоите в очереди", andMessage: "")
+                    
+                    if queue != nil {
+                        DispatchQueue.main.async {
+                            self.present(infoAlert, animated: true)
+                        }
+                        return
+                    }
+                    
+                    NetworkManager.shared.getCurrentOwnerQueue { queue in
+                        if queue != nil {
+                            DispatchQueue.main.async {
+                                self.present(infoAlert, animated: true)
+                            }
+                            return
+                        }
+                    }
+                }
+                
                 DispatchQueue.main.async {
                     let scanQrVC = ScanQRViewController()
                     self.present(scanQrVC, animated: true)

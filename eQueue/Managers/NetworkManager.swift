@@ -181,6 +181,30 @@ extension NetworkManager {
         }.resume()
     }
     
+    func getCurrentOwnerQueue(completion: @escaping ([Queue]?) -> Void) {
+        let getCurrentOwnerQueueURL = baseURL.appendingPathComponent("get_current_queue_owner/")
+        var request = URLRequest(url: getCurrentOwnerQueueURL)
+        request.httpMethod = "GET"
+        
+        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
+        request.setValue("JWT \(token)", forHTTPHeaderField: "Authorization")
+        
+        let _ = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data else {
+                print("Couldn't get data, \(error!.localizedDescription)")
+                return completion(nil)
+            }
+            let jsonDecoder = JSONDecoder()
+            
+            guard let dataQueues = try? jsonDecoder.decode(DataQueues.self, from: data) else {
+                print(#line, #function, "Couldn't decode data from \(data)")
+                return completion(nil)
+            }
+            
+            completion(dataQueues.queues)
+        }.resume()
+    }
+    
     func myQueues(completion: @escaping ([Queue]?) -> Void) {
         let myQueuesURL = baseURL.appendingPathComponent("my_queues/")
         var request = URLRequest(url: myQueuesURL)
@@ -349,6 +373,7 @@ extension NetworkManager {
         
         let _ = URLSession.shared.dataTask(with: request) { _, response, error in
             let httpResponse = response as? HTTPURLResponse
+            print(#line, #function, httpResponse?.statusCode)
             completion(httpResponse?.statusCode)
         }.resume()
     }

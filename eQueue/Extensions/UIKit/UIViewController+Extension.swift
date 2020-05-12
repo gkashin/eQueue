@@ -8,7 +8,7 @@
 
 import UIKit
 
-var vSpinner : UIView?
+var vSpinner: UIView?
 
 extension UIViewController {
     func createAlert(withTitle title: String, andMessage message: String) -> UIAlertController {

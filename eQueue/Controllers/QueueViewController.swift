@@ -71,6 +71,7 @@ class QueueViewController: UIViewController {
         view.addSubview(tableView)
         
         setupUI()
+//        updateUI()
         
         terminateQueueButton.addTarget(self, action: #selector(terminateQueueButtonTapped), for: .touchUpInside)
         quitQueueButton.addTarget(self, action: #selector(quitQueueButtonTapped), for: .touchUpInside)
@@ -83,17 +84,6 @@ class QueueViewController: UIViewController {
         
         self.navigationItem.title = QueueViewController.currentQueue?.name ?? "Моя очередь"
         self.updateUI()
-        
-        NetworkManager.shared.getCurrentQueue { queue in
-            guard let queue = queue else { return }
-            
-            QueueViewController.currentQueue = queue.first!
-            
-            DispatchQueue.main.async {
-                self.navigationItem.title = QueueViewController.currentQueue?.name ?? "Моя очередь"
-                self.updateUI()
-            }
-        }
     }
     
     @objc private func terminateQueueButtonTapped() {
@@ -120,12 +110,24 @@ class QueueViewController: UIViewController {
     
     @objc private func callNextButtonTapped() {
         NetworkManager.shared.callNext(id: QueueViewController.currentQueue!.id) { statusCode in
-            guard statusCode == 204 else { return }
+            guard statusCode == 200 || statusCode == 204 else { return }
             
             // TODO: - Handle empty queue situation
-            QueueViewController.currentQueue?.queue.removeFirst()
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
+//            QueueViewController.currentQueue?.queue.removeFirst()
+            
+            NetworkManager.shared.getCurrentOwnerQueue { queue in
+                guard let queue = queue else { return }
+                QueueViewController.currentQueue = queue.first
+    
+                DispatchQueue.main.async {
+                    self.updateTotalPeopleLabel()
+                    
+                    if QueueViewController.currentQueue!.queue.isEmpty {
+                        self.callNextButton.isHidden = true
+                    }
+                    
+                    self.tableView.reloadData()
+                }
             }
         }
     }
@@ -206,27 +208,128 @@ extension QueueViewController {
     
     private func updateTotalPeopleLabel() {
         if let peopleCount = QueueViewController.currentQueue?.queue.count {
-            totalPeopleLabel.text = "Всего человек: \(peopleCount)"
+            self.totalPeopleLabel.text = "Всего человек: \(peopleCount)"
         }
     }
     
     private func updateLineNumberLabel() {
+        print(#line, #function, QueueViewController.currentQueue?.queue.count)
         if let peopleCount = QueueViewController.currentQueue?.queue.count {
             lineNumberLabel.text = "Вы \(peopleCount) в очереди!"
+            print(#line, #function, peopleCount)
         }
     }
     
     private func hideAll() {
         queueInfoStackView.isHidden = true
         totalPeopleLabel.isHidden = true
-        terminateQueueButton.isHidden = true
         quitQueueButton.isHidden = true
+        
+        terminateQueueButton.isHidden = true
         callNextButton.isHidden = true
         
         notAuthorizedStackView.isHidden = true
         emptyQueueStubLabel.isHidden = true
         
         tableView.isHidden = true
+    }
+}
+
+// MARK: - UpdateUIDelegate
+extension QueueViewController: UpdateUIDelegate {
+    func updateUI() {
+//        updateTotalPeopleLabel()
+//        updateLineNumberLabel()
+        
+        hideAll()
+        showSpinner(onView: view)
+        
+        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
+        
+        NetworkManager.shared.verifyToken(token: token) { statusCode in
+            if statusCode == 200 {
+                
+                // =============================
+                // Get current NOT OWNER queue
+                NetworkManager.shared.getCurrentQueue { queue in
+                    guard let queue = queue else {
+                        
+                        // If not found, try to find current OWNER queue
+                        NetworkManager.shared.getCurrentOwnerQueue { queue in
+                            guard let queue = queue else {
+                                DispatchQueue.main.async {
+                                    self.navigationItem.title = "Моя очередь"
+                                    self.emptyQueueStubLabel.isHidden = false
+                                    
+//                                    self.tableView.reloadData()
+//                                    self.tableView.isHidden = false
+                                    
+                                    self.removeSpinner()
+                                }
+                                return
+                            }
+                            
+                            QueueViewController.currentQueue = queue.first!
+                            
+                            DispatchQueue.main.async {
+                                self.navigationItem.title = QueueViewController.currentQueue?.name
+                                
+                                self.notAuthorizedStackView.isHidden = true
+                                self.emptyQueueStubLabel.isHidden = true
+                                self.tableView.isHidden = false
+                                
+                                self.totalPeopleLabel.isHidden = false
+                                self.terminateQueueButton.isHidden = false
+                                
+                                if QueueViewController.currentQueue!.queue.isEmpty {
+                                    self.callNextButton.isHidden = true
+                                } else {
+                                    self.callNextButton.isHidden = false
+                                }
+                                
+                                self.tableView.reloadData()
+                                
+                                self.removeSpinner()
+                                
+                                self.updateTotalPeopleLabel()
+                                self.updateLineNumberLabel()
+                            }
+                        }
+                        return
+                    }
+                    
+                    // If found
+                    QueueViewController.currentQueue = queue.first!
+                    
+                    DispatchQueue.main.async {
+                        self.navigationItem.title = QueueViewController.currentQueue?.name
+                        
+                        self.notAuthorizedStackView.isHidden = true
+                        self.emptyQueueStubLabel.isHidden = true
+                        self.tableView.isHidden = false
+                        
+                        self.queueInfoStackView.isHidden = false
+                        self.quitQueueButton.isHidden = false
+                        
+                        self.tableView.reloadData()
+                        
+                        self.updateTotalPeopleLabel()
+                        self.updateLineNumberLabel()
+                    }
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.navigationItem.title = "Моя очередь"
+                    self.notAuthorizedStackView.isHidden = false
+                }
+            }
+            
+            DispatchQueue.main.async {
+                self.updateTotalPeopleLabel()
+                self.updateLineNumberLabel()
+            }
+            self.removeSpinner()
+        }
     }
 }
 
@@ -270,7 +373,6 @@ extension QueueViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard QueueViewController.currentQueue != nil else { return UITableViewCell() }
         
-        
         let id = QueueViewController.currentQueue!.ownerId == SceneDelegate.user?.id ? OwnCreatedQueueItemTableViewCell.id : QueueItemTableViewCell.id
         
         let cell = tableView.dequeueReusableCell(withIdentifier: id, for: indexPath)
@@ -294,7 +396,7 @@ extension QueueViewController: UITableViewDelegate, UITableViewDataSource {
             ownCreatedQueueItemTableViewCell.setup(with: user, at: indexPath)
         } else {
             let queueItemTableViewCell = cell as! QueueItemTableViewCell
-//            let isLast = QueueViewController.currentQueue!.queue.count - 1 == indexPath.row
+            //            let isLast = QueueViewController.currentQueue!.queue.count - 1 == indexPath.row
             queueItemTableViewCell.setup(with: user, at: indexPath)
         }
         
@@ -328,60 +430,6 @@ extension QueueViewController: UITableViewDelegate, UITableViewDataSource {
             break
         @unknown default:
             print("New editing styles had appeared")
-        }
-    }
-}
-
-// MARK: - UpdateUIDelegate
-extension QueueViewController: UpdateUIDelegate {
-    func updateUI() {
-        hideAll()
-        showSpinner(onView: view)
-        
-        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
-        
-        NetworkManager.shared.verifyToken(token: token) { statusCode in
-            if statusCode == 200 {
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                    
-                    self.notAuthorizedStackView.isHidden = true
-                    
-                    guard QueueViewController.currentQueue != nil else {
-                        self.navigationItem.title = "Моя очередь"
-                        self.hideAll()
-                        self.emptyQueueStubLabel.isHidden = false
-                        self.removeSpinner()
-                        return
-                    }
-                    
-                    self.tableView.isHidden = false
-                    self.emptyQueueStubLabel.isHidden = true
-                    
-                    if QueueViewController.currentQueue!.ownerId == SceneDelegate.user?.id {
-                        self.queueInfoStackView.isHidden = true
-                        self.totalPeopleLabel.isHidden = false
-                        self.terminateQueueButton.isHidden = false
-                        self.quitQueueButton.isHidden = true
-                        
-                        self.callNextButton.isHidden = false
-                    } else {
-                        self.queueInfoStackView.isHidden = false
-                        self.totalPeopleLabel.isHidden = true
-                        self.terminateQueueButton.isHidden = true
-                        self.quitQueueButton.isHidden = false
-                        
-                        self.callNextButton.isHidden = true
-                    }
-                }
-            } else {
-                DispatchQueue.main.async {
-                    self.hideAll()
-                    self.notAuthorizedStackView.isHidden = false
-                }
-            }
-            
-            self.removeSpinner()
         }
     }
 }

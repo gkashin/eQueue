@@ -83,8 +83,135 @@ extension ControlViewController: ControlQueueDelegate {
     
     func hideAll() {
         notAuthorizedStackView.isHidden = true
+        tableView.isHidden = true
     }
 }
+
+// MARK: - UpdateUIDelegate
+extension ControlViewController: UpdateUIDelegate {
+    func updateUI() {
+        hideAll()
+        showSpinner(onView: view)
+        
+        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
+        
+        NetworkManager.shared.verifyToken(token: token) { statusCode in
+            if statusCode == 200 {
+                DispatchQueue.main.async {
+                    var allQueues = [Queue]()
+                    
+                    NetworkManager.shared.myQueues { queues in
+                        if queues != nil {
+                            allQueues.append(contentsOf: queues!)
+                        }
+                        
+                        NetworkManager.shared.myQueuesOwner { queues in
+                            if queues != nil {
+                                allQueues.append(contentsOf: queues!)
+                            }
+                            
+                            if !allQueues.isEmpty {
+                                ControlViewController.upcomingQueues = allQueues.filter({ $0.status == "upcoming" })
+                                ControlViewController.completedQueues = allQueues.filter({ $0.status == "past" })
+                            } else {
+                                ControlViewController.upcomingQueues = []
+                                ControlViewController.completedQueues = []
+                            }
+                            
+                            DispatchQueue.main.async {
+                                self.tableView.isHidden = false
+                                self.notAuthorizedStackView.isHidden = true
+                                self.tableView.reloadData()
+                            }
+                        }
+                    }
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.notAuthorizedStackView.isHidden = false
+                }
+            }
+            
+            self.removeSpinner()
+        }
+    }
+}
+
+//// MARK: - UpdateUIDelegate
+//extension ControlViewController: UpdateUIDelegate {
+//    func updateUI() {
+//        hideAll()
+//        showSpinner(onView: view)
+//
+//        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
+//
+//        NetworkManager.shared.verifyToken(token: token) { statusCode in
+//            if statusCode == 200 {
+//                DispatchQueue.main.async {
+//
+//                    self.tableView.isHidden = false
+//                    self.notAuthorizedStackView.isHidden = true
+//
+//                    ControlViewController.upcomingQueues = []
+//                    ControlViewController.completedQueues = []
+//
+////                    self.tableView.reloadData()
+//
+////                    guard SceneDelegate.user != nil else {
+////                        ControlViewController.upcomingQueues = []
+////                        ControlViewController.completedQueues = []
+////                        self.tableView.reloadData()
+////                        self.removeSpinner()
+////                        return
+////                    }
+//
+//                    var allQueues = [Queue]()
+//
+//                    NetworkManager.shared.myQueues { queues in
+//                        //            guard let queues = queues else {
+//                        //                ControlViewController.upcomingQueues = []
+//                        //                ControlViewController.completedQueues = []
+//                        //                DispatchQueue.main.async {
+//                        //                    self.tableView.reloadData()
+//                        //                }
+//                        //                return
+//                        //            }
+//
+//                        if queues != nil {
+//                            allQueues.append(contentsOf: queues!)
+//                        }
+//
+//                        NetworkManager.shared.myQueuesOwner { queues in
+//
+//                            if queues != nil {
+//                                allQueues.append(contentsOf: queues!)
+//                            }
+//
+//                            if !allQueues.isEmpty {
+//                                ControlViewController.upcomingQueues = allQueues.filter({ $0.status == "upcoming" })
+//                                ControlViewController.completedQueues = allQueues.filter({ $0.status == "past" })
+//                            } else {
+//                                ControlViewController.upcomingQueues = []
+//                                ControlViewController.completedQueues = []
+//                            }
+//
+//                            DispatchQueue.main.async {
+//                                self.tableView.reloadData()
+//                            }
+//                        }
+//                    }
+//                }
+//            } else {
+//                DispatchQueue.main.async {
+//                    self.tableView.isHidden = true
+//                    self.notAuthorizedStackView.isHidden = false
+//                }
+//            }
+//
+//            self.removeSpinner()
+//        }
+//    }
+//}
 
 // MARK: - UITableViewDelegate, UITableViewDataSource
 extension ControlViewController: UITableViewDelegate, UITableViewDataSource {
@@ -170,76 +297,5 @@ extension ControlViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 120
-    }
-}
-
-// MARK: - UpdateUIDelegate
-extension ControlViewController: UpdateUIDelegate {
-    func updateUI() {
-        hideAll()
-        showSpinner(onView: view)
-        
-        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
-        
-        NetworkManager.shared.verifyToken(token: token) { statusCode in
-            if statusCode == 200 {
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                    
-                    self.tableView.isHidden = false
-                    self.notAuthorizedStackView.isHidden = true
-                    
-                    guard SceneDelegate.user != nil else {
-                        ControlViewController.upcomingQueues = []
-                        ControlViewController.completedQueues = []
-                        self.tableView.reloadData()
-                        return
-                    }
-                    
-                    var allQueues = [Queue]()
-                    
-                    NetworkManager.shared.myQueues { queues in
-                        //            guard let queues = queues else {
-                        //                ControlViewController.upcomingQueues = []
-                        //                ControlViewController.completedQueues = []
-                        //                DispatchQueue.main.async {
-                        //                    self.tableView.reloadData()
-                        //                }
-                        //                return
-                        //            }
-                        
-                        if queues != nil {
-                            allQueues.append(contentsOf: queues!)
-                        }
-                        
-                        NetworkManager.shared.myQueuesOwner { queues in
-                            
-                            if queues != nil {
-                                allQueues.append(contentsOf: queues!)
-                            }
-                            
-                            if !allQueues.isEmpty {
-                                ControlViewController.upcomingQueues = allQueues.filter({ $0.status == "upcoming" })
-                                ControlViewController.completedQueues = allQueues.filter({ $0.status == "past" })
-                            } else {
-                                ControlViewController.upcomingQueues = []
-                                ControlViewController.completedQueues = []
-                            }
-                            
-                            DispatchQueue.main.async {
-                                self.tableView.reloadData()
-                            }
-                        }
-                    }
-                }
-            } else {
-                DispatchQueue.main.async {
-                    self.tableView.isHidden = true
-                    self.notAuthorizedStackView.isHidden = false
-                }
-            }
-            
-            self.removeSpinner()
-        }
     }
 }
