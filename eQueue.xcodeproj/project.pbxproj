@@ -15,6 +15,10 @@
 		5B13CEB62465645E00E3AEA3 /* CreateQueueDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B13CEB52465645E00E3AEA3 /* CreateQueueDelegate.swift */; };
 		5B38FF562412BE42009F3B0A /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B38FF552412BE42009F3B0A /* NetworkManager.swift */; };
 		5B38FF592412C12B009F3B0A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B38FF582412C12B009F3B0A /* User.swift */; };
+		5B53DD7F2473BC1700BA0FAB /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B53DD7E2473BC1700BA0FAB /* Validators.swift */; };
+		5B53DD812473C03700BA0FAB /* AuthError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B53DD802473C03700BA0FAB /* AuthError.swift */; };
+		5B53DD832473C4C700BA0FAB /* CreateQueueError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B53DD822473C4C700BA0FAB /* CreateQueueError.swift */; };
+		5B53DD852473C71900BA0FAB /* EditProfileError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B53DD842473C71900BA0FAB /* EditProfileError.swift */; };
 		5B67226E242BCB980038749C /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B67226D242BCB980038749C /* UIViewController+Extension.swift */; };
 		5B740F3E241BD85E008E093E /* ScanQRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B740F3D241BD85E008E093E /* ScanQRViewController.swift */; };
 		5B7F943924607E51002EAF20 /* ControlQueueDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7F943824607E51002EAF20 /* ControlQueueDelegate.swift */; };
@@ -57,6 +61,10 @@
 		5B13CEB52465645E00E3AEA3 /* CreateQueueDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateQueueDelegate.swift; sourceTree = "<group>"; };
 		5B38FF552412BE42009F3B0A /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		5B38FF582412C12B009F3B0A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		5B53DD7E2473BC1700BA0FAB /* Validators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validators.swift; sourceTree = "<group>"; };
+		5B53DD802473C03700BA0FAB /* AuthError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthError.swift; sourceTree = "<group>"; };
+		5B53DD822473C4C700BA0FAB /* CreateQueueError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateQueueError.swift; sourceTree = "<group>"; };
+		5B53DD842473C71900BA0FAB /* EditProfileError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileError.swift; sourceTree = "<group>"; };
 		5B67226D242BCB980038749C /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		5B740F3D241BD85E008E093E /* ScanQRViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanQRViewController.swift; sourceTree = "<group>"; };
 		5B7F943824607E51002EAF20 /* ControlQueueDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlQueueDelegate.swift; sourceTree = "<group>"; };
@@ -128,6 +136,17 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		5B53DD7D2473BC0600BA0FAB /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				5B53DD7E2473BC1700BA0FAB /* Validators.swift */,
+				5B53DD802473C03700BA0FAB /* AuthError.swift */,
+				5B53DD822473C4C700BA0FAB /* CreateQueueError.swift */,
+				5B53DD842473C71900BA0FAB /* EditProfileError.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		5B8617A02417F1280031B776 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -160,6 +179,7 @@
 				5B91A8E024116B08005A23DB /* App */,
 				5B91A8CF24116AF2005A23DB /* Controllers */,
 				5B91A8C324116AF2005A23DB /* Extensions */,
+				5B53DD7D2473BC0600BA0FAB /* Helpers */,
 				5B38FF542412BE2F009F3B0A /* Managers */,
 				5B38FF572412C11E009F3B0A /* Models */,
 				5B91A8CA24116AF2005A23DB /* Protocols */,
@@ -342,8 +362,10 @@
 				5BE54320245320B000B0A02A /* QueueActionsViewController.swift in Sources */,
 				5B91A8DF24116AF2005A23DB /* LoginViewController.swift in Sources */,
 				5B8617A22417F1460031B776 /* QueueTableViewCell.swift in Sources */,
+				5B53DD7F2473BC1700BA0FAB /* Validators.swift in Sources */,
 				5B91A8D424116AF2005A23DB /* UIImageView+Extension.swift in Sources */,
 				5B38FF592412C12B009F3B0A /* User.swift in Sources */,
+				5B53DD812473C03700BA0FAB /* AuthError.swift in Sources */,
 				5BB7ADCA24194ED8008C21DD /* TextFieldFormView.swift in Sources */,
 				5B1173B8243F614400B3108A /* QueueDetailsViewController.swift in Sources */,
 				5B13CEB62465645E00E3AEA3 /* CreateQueueDelegate.swift in Sources */,
@@ -359,11 +381,13 @@
 				5B7F943924607E51002EAF20 /* ControlQueueDelegate.swift in Sources */,
 				5B91A8D524116AF2005A23DB /* UIFont+Extension.swift in Sources */,
 				5B38FF562412BE42009F3B0A /* NetworkManager.swift in Sources */,
+				5B53DD852473C71900BA0FAB /* EditProfileError.swift in Sources */,
 				5B91A8DD24116AF2005A23DB /* SignUpViewController.swift in Sources */,
 				5B117390243E33B300B3108A /* AddPhotoView.swift in Sources */,
 				5B861795241695CB0031B776 /* MainViewController.swift in Sources */,
 				5B740F3E241BD85E008E093E /* ScanQRViewController.swift in Sources */,
 				5B86179D2416A3D00031B776 /* QueueItemTableViewCell.swift in Sources */,
+				5B53DD832473C4C700BA0FAB /* CreateQueueError.swift in Sources */,
 				5B8617A42417FE5C0031B776 /* OwnCreatedQueueItemTableViewCell.swift in Sources */,
 				5BB7ADC824194CF4008C21DD /* CreateQueueViewController.swift in Sources */,
 				5B91A8B224116AAC005A23DB /* SceneDelegate.swift in Sources */,
@@ -425,7 +449,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -479,7 +503,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -496,6 +520,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 73A856J95H;
 				INFOPLIST_FILE = "$(SRCROOT)/eQueue/App/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -514,6 +539,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 73A856J95H;
 				INFOPLIST_FILE = "$(SRCROOT)/eQueue/App/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

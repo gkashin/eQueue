@@ -64,20 +64,45 @@ class LoginViewController: UIViewController {
         guard let email = emailTextField.text else { return }
         guard let password = passwordTextField.text else { return }
         
-        NetworkManager.shared.login(email: email, password: password) { statusCode in
-            if statusCode == 200 {
-                DispatchQueue.main.async {
-                    self.dismiss(animated: true, completion: nil)
-                    self.delegate?.dismiss()
+        let error = Validators.isFilled(email: email, password: password)
+        
+        switch error {
+        case .emailNotFilled:
+            self.present(self.createAlert(withTitle: "Ошибка", andMessage: error.localizedDescription), animated: true)
+            return
+        case .passwordNotFilled:
+            self.present(self.createAlert(withTitle: "Ошибка", andMessage: error.localizedDescription), animated: true)
+            return
+        case .invalidEmail:
+            self.present(self.createAlert(withTitle: "Ошибка", andMessage: error.localizedDescription), animated: true)
+            return
+        case .noError:
+            NetworkManager.shared.login(email: email, password: password) { statusCode in
+                if statusCode == 200 {
+                    DispatchQueue.main.async {
+                        self.dismiss(animated: true, completion: nil)
+                        self.delegate?.dismiss()
+                    }
+                    
+                    NetworkManager.shared.getCurrentUser { user in
+                        guard let user = user else { return }
+                        SceneDelegate.user = user
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.present(self.createAlert(withTitle: "Ошибка", andMessage: AuthError.wrongData.localizedDescription), animated: true)
+                    }
                 }
-                
-                NetworkManager.shared.getCurrentUser { user in
-                    guard let user = user else { return }
-                    SceneDelegate.user = user
-                }
-            } else {
-                print(statusCode)
             }
+            break
+        case .passwordsNotMatched:
+            break
+        case .wrongData:
+            break
+        case .confirmPasswordNotFilled:
+            break
+        case .nameNotFilled:
+            break
         }
     }
     
@@ -107,6 +132,7 @@ class LoginViewController: UIViewController {
 // MARK: - UI
 extension LoginViewController {
     private func setupConstraints() {
+        passwordTextField.isSecureTextEntry = true
         let loginWithView = ButtonFormView(label: loginWithLabel, button: googleButton)
         let emailStackView = UIStackView(arrangedSubviews: [emailLabel, emailTextField], axis: .vertical, spacing: 0)
         let passwordStackView = UIStackView(arrangedSubviews: [passwordLabel, passwordTextField], axis: .vertical, spacing: 0)

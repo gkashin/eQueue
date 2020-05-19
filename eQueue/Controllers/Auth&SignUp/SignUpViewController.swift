@@ -56,30 +56,63 @@ class SignUpViewController: UIViewController {
     }
     
     @objc private func signUpButtonTapped() {
-        guard let username = usernameTextField.text else { return }
-        guard let email = emailTextField.text else { return }
-        guard let password = passwordTextField.text else { return }
-        guard let confirmPassword = confirmPasswordTextField.text else { return }
-        guard password == confirmPassword else { return }
+        guard let username = usernameTextField.text else {
+            return
+        }
+        guard let email = emailTextField.text else {
+            return
+        }
+        guard let password = passwordTextField.text else {
+            return
+        }
+        guard let confirmPassword = confirmPasswordTextField.text else {
+            return
+        }
         
-        let user = User(username: username, email: email, password: password)
+        let error = Validators.isFilled(username: username, email: email, password: password, confirmPassword: confirmPassword)
         
-        NetworkManager.shared.register(user: user) { user in
-            guard let _ = user else { return }
+        switch error {
+        case .emailNotFilled:
+            self.present(self.createAlert(withTitle: "Ошибка", andMessage: error.localizedDescription), animated: true)
+            return
+        case .passwordNotFilled:
+            self.present(self.createAlert(withTitle: "Ошибка", andMessage: error.localizedDescription), animated: true)
+            return
+        case .invalidEmail:
+            self.present(self.createAlert(withTitle: "Ошибка", andMessage: error.localizedDescription), animated: true)
+            return
+        case .noError:
+                    let user = User(username: username, email: email, password: password)
             
-            DispatchQueue.main.async {
-                let infoAlert = UIAlertController(title: "Вы успешно зарегистрировались", message: "Пройдите по ссылке в письме активации, отправленному на Ваш email!", preferredStyle: .alert)
-                let okAction = UIAlertAction(title: "ОК", style: .default) { _ in
-                    self.dismiss(animated: true) {
-//                        self.delegate?.dismiss()
-                        self.delegate?.toLoginVC()
-                    }
-                    
-                }
-                infoAlert.addAction(okAction)
+            NetworkManager.shared.register(user: user) { user in
+                guard let _ = user else { return }
                 
-                self.present(infoAlert, animated: true)
+                DispatchQueue.main.async {
+                    let infoAlert = UIAlertController(title: "Вы успешно зарегистрировались", message: "Пройдите по ссылке в письме активации, отправленному на Ваш email!", preferredStyle: .alert)
+                    let okAction = UIAlertAction(title: "ОК", style: .default) { _ in
+                        self.dismiss(animated: true) {
+                            //                        self.delegate?.dismiss()
+                            self.delegate?.toLoginVC()
+                        }
+                        
+                    }
+                    infoAlert.addAction(okAction)
+                    
+                    self.present(infoAlert, animated: true)
+                }
             }
+            break
+        case .passwordsNotMatched:
+            self.present(self.createAlert(withTitle: "Ошибка", andMessage: error.localizedDescription), animated: true)
+            return
+        case .wrongData:
+            break
+        case .confirmPasswordNotFilled:
+            self.present(self.createAlert(withTitle: "Ошибка", andMessage: error.localizedDescription), animated: true)
+            return
+        case .nameNotFilled:
+            self.present(self.createAlert(withTitle: "Ошибка", andMessage: error.localizedDescription), animated: true)
+            return
         }
     }
     
@@ -100,6 +133,8 @@ class SignUpViewController: UIViewController {
 // MARK: - UI
 extension SignUpViewController {
     private func setupConstraints() {
+        passwordTextField.isSecureTextEntry = true
+        confirmPasswordTextField.isSecureTextEntry = true
         let usernameStackView = UIStackView(arrangedSubviews: [usernameLabel, usernameTextField], axis: .vertical, spacing: 0)
         let emailStackView = UIStackView(arrangedSubviews: [emailLabel, emailTextField], axis: .vertical, spacing: 0)
         let passwordStackView = UIStackView(arrangedSubviews: [passwordLabel, passwordTextField], axis: .vertical, spacing: 0)
@@ -145,26 +180,5 @@ extension SignUpViewController {
             bottomStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
             bottomStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40)
         ])
-    }
-}
-
-// MARK: - SwiftUI
-import SwiftUI
-
-struct SignUpVCProvider: PreviewProvider {
-    static var previews: some View {
-        ContainerView().edgesIgnoringSafeArea(.all)
-    }
-    
-    struct ContainerView: UIViewControllerRepresentable {
-        let signUpVC = SignUpViewController()
-        
-        func makeUIViewController(context: UIViewControllerRepresentableContext<SignUpVCProvider.ContainerView>) -> SignUpViewController {
-            return signUpVC
-        }
-        
-        func updateUIViewController(_ uiViewController: SignUpVCProvider.ContainerView.UIViewControllerType, context: UIViewControllerRepresentableContext<SignUpVCProvider.ContainerView>) {
-            
-        }
     }
 }

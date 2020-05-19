@@ -382,7 +382,7 @@ extension NetworkManager {
 // MARK: - Update Info
 extension NetworkManager {
     func updateUsername(username: String, password: String, completion: @escaping (Int?) -> Void) {
-        let updateUsernameURL = baseURL.appendingPathComponent("auth/users/set_username/")
+        let updateUsernameURL = baseURL.appendingPathComponent("set_username/")
         var request = URLRequest(url: updateUsernameURL)
         request.httpMethod = "POST"
         

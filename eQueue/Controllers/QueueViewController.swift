@@ -264,8 +264,8 @@ extension QueueViewController: UpdateUIDelegate {
 //                                    self.tableView.reloadData()
 //                                    self.tableView.isHidden = false
                                     
-                                    self.removeSpinner()
                                 }
+                                self.removeSpinner()
                                 return
                             }
                             
@@ -288,13 +288,13 @@ extension QueueViewController: UpdateUIDelegate {
                                 }
                                 
                                 self.tableView.reloadData()
-                                
-                                self.removeSpinner()
-                                
+                                                                
                                 self.updateTotalPeopleLabel()
                                 self.updateLineNumberLabel()
+                                self.removeSpinner()
                             }
                         }
+                        self.removeSpinner()
                         return
                     }
                     
@@ -315,12 +315,14 @@ extension QueueViewController: UpdateUIDelegate {
                         
                         self.updateTotalPeopleLabel()
                         self.updateLineNumberLabel()
+                        self.removeSpinner()
                     }
                 }
             } else {
                 DispatchQueue.main.async {
                     self.navigationItem.title = "Моя очередь"
                     self.notAuthorizedStackView.isHidden = false
+                    self.removeSpinner()
                 }
             }
             

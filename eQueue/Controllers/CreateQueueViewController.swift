@@ -74,35 +74,47 @@ class CreateQueueViewController: UIViewController {
     @objc private func createQueueButtonTapped() {
         guard let name = nameTextField.text,
             let description = descriptionTextField.text,
-            let startDate = startDateTextField.text,
-            name != "",
-            description != "",
-            startDate != "" else {
+            let startDate = startDateTextField.text else {
                 return
         }
         
-        let dateFormatter = DateFormatter()
-        let date = dateFormatter.getDate(from: startDate)
-        
-        queue.name = name
-        queue.description = description
-        queue.startDate = DateFormatter().getString(from: date)
-        queue.expectedTime = 10
-        
-        NetworkManager.shared.createQueue(queue: queue) { queue in
-            guard var queue = queue else { return }
-            self.queue = queue
+        let error = Validators.isFilled(name: name, desc: description, startDate: startDate)
+    
+        switch error {
+        case .nameNotFilled:
+            self.present(self.createAlert(withTitle: "Ошибка", andMessage: error.localizedDescription), animated: true)
+            return
+        case .noError:
+            let dateFormatter = DateFormatter()
+            let date = dateFormatter.getDate(from: startDate)
             
-            queue.status = "upcoming"
-            queue.queue = [User]()
+            queue.name = name
+            queue.description = description
+            queue.startDate = DateFormatter().getString(from: date)
+            queue.expectedTime = 10
             
-            
-            DispatchQueue.main.async {
-                let qrCodeVC = QRCodeViewController(qrWithText: "\(queue.id)")
-                qrCodeVC.createQueueDelegate = self
+            NetworkManager.shared.createQueue(queue: queue) { queue in
+                guard var queue = queue else { return }
+                self.queue = queue
                 
-                self.present(qrCodeVC, animated: true)
+                queue.status = "upcoming"
+                queue.queue = [User]()
+                
+                
+                DispatchQueue.main.async {
+                    let qrCodeVC = QRCodeViewController(qrWithText: "\(queue.id)")
+                    qrCodeVC.createQueueDelegate = self
+                    
+                    self.present(qrCodeVC, animated: true)
+                }
             }
+            return
+        case .descNotFilled:
+            self.present(self.createAlert(withTitle: "Ошибка", andMessage: error.localizedDescription), animated: true)
+            return
+        case .dateNotFilled:
+            self.present(self.createAlert(withTitle: "Ошибка", andMessage: error.localizedDescription), animated: true)
+            return
         }
     }
     

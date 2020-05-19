@@ -98,24 +98,3 @@ extension AuthViewController: AuthNavigatingDelegate {
     }
 }
 
-// MARK: - SwiftUI
-import SwiftUI
-
-struct AuthViewControllerProvider: PreviewProvider {
-    static var previews: some View {
-        ContainerView().edgesIgnoringSafeArea(.all)
-    }
-    
-    struct ContainerView: UIViewControllerRepresentable {
-        let viewController = AuthViewController()
-        
-        func makeUIViewController(context: UIViewControllerRepresentableContext<AuthViewControllerProvider.ContainerView>) -> AuthViewController {
-            return viewController
-        }
-        
-        func updateUIViewController(_ uiViewController: AuthViewControllerProvider.ContainerView.UIViewControllerType, context: UIViewControllerRepresentableContext<AuthViewControllerProvider.ContainerView>) {
-            
-        }
-    }
-}
-

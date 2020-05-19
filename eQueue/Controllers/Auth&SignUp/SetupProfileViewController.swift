@@ -13,12 +13,12 @@ class SetupProfileViewController: UIViewController {
     let welcomeLabel = UILabel(text: "Настроить профиль", font: .avenir26())
     
     let nameLabel = UILabel(text: "Имя")
-//    let surnameLabel = UILabel(text: "Фамилия")
+    //    let surnameLabel = UILabel(text: "Фамилия")
     let emailLabel = UILabel(text: "Email")
     let passwordLabel = UILabel(text: "Пароль")
     
     let nameTextField = OneLineTextField(font: .avenir20())
-//    let surnameTextField = OneLineTextField(font: .avenir20())
+    //    let surnameTextField = OneLineTextField(font: .avenir20())
     let emailTextField = OneLineTextField(font: .avenir20())
     let phoneNumberTextField = OneLineTextField(font: .avenir20())
     let passwordTextField = OneLineTextField(font: .avenir20())
@@ -58,39 +58,55 @@ class SetupProfileViewController: UIViewController {
     
     @objc private func saveButtonTapped() {
         guard let username = nameTextField.text,
-//            let surname = surnameTextField.text,
+            //            let surname = surnameTextField.text,
             //            let email = emailTextField.text,
             let password = passwordTextField.text,
-            let avatarImage = fullImageView.circleImageView.image,
-            username != "",
-//            surname != "",
-            //            email != "",
-            password != "" else {
+            let avatarImage = fullImageView.circleImageView.image
+            else {
                 return
         }
         
-        let confirmAlert = UIAlertController(title: "Введите текущий пароль", message: "", preferredStyle: .alert)
-        confirmAlert.addTextField { textField in
-            
-        }
+        let error = Validators.isFilled(name: username, password: password)
         
-        let confirmAction = UIAlertAction(title: "Подтвердить", style: .default) { _ in
-            let oldPassword = confirmAlert.textFields!.first?.text
-            guard oldPassword != nil && oldPassword != "" else { return }
+        switch error {
             
-            NetworkManager.shared.updateUsername(username: username, password: oldPassword!) { statusCode in
-                guard statusCode == 204 else { return }
+        case .nameNotFilled:
+            self.present(self.createAlert(withTitle: "Ошибка", andMessage: error.localizedDescription), animated: true)
+            return
+        case .noError:
+            let confirmAlert = UIAlertController(title: "Введите текущий пароль", message: "", preferredStyle: .alert)
+            confirmAlert.addTextField { textField in
+                textField.isSecureTextEntry = true
+            }
+            
+            let confirmAction = UIAlertAction(title: "Подтвердить", style: .default) { _ in
+                let oldPassword = confirmAlert.textFields!.first?.text
+                guard oldPassword != nil && oldPassword != "" else {
+                    DispatchQueue.main.async {
+                        self.present(self.createAlert(withTitle: "Ошибка", andMessage: EditProfileError.passwordNotFilled.localizedDescription), animated: true)
+                    }
+                    return
+                }
                 
-                SceneDelegate.user?.username = username
-                
-//                NetworkManager.shared.updateSurname(surname: surname, password: oldPassword!) { statusCode in
-//                    guard statusCode == 204 else { return }
-//
-//                    SceneDelegate.user?.lastName = surname
+                NetworkManager.shared.updateUsername(username: username, password: oldPassword!) { statusCode in
+                    guard statusCode == 204 else {
+                        DispatchQueue.main.async {
+                            self.present(self.createAlert(withTitle: "Ошибка", andMessage:
+                                EditProfileError.passwordNotMatched.localizedDescription), animated: true)
+                        }
+                        return
+                    }
+                    
+                    SceneDelegate.user?.username = username
+                    
+                    //                NetworkManager.shared.updateSurname(surname: surname, password: oldPassword!) { statusCode in
+                    //                    guard statusCode == 204 else { return }
+                    //
+                    //                    SceneDelegate.user?.lastName = surname
                     
                     NetworkManager.shared.updatePassword(newPassword: password, password: oldPassword!) { statusCode in
                         guard statusCode == 204 else { return }
-                     
+                        
                         SceneDelegate.user?.avatarData = avatarImage.pngData()!
                         SceneDelegate.user?.password = password
                         //        SceneDelegate.user?.email = email
@@ -101,14 +117,21 @@ class SetupProfileViewController: UIViewController {
                         DispatchQueue.main.async {
                             self.updateProfileButton()
                         }
-//                    }
+                        //                    }
+                    }
                 }
             }
+            
+            confirmAlert.addAction(confirmAction)
+            
+            present(confirmAlert, animated: true)
+            return
+        case .passwordNotFilled:
+            self.present(self.createAlert(withTitle: "Ошибка", andMessage: error.localizedDescription), animated: true)
+            return
+        case .passwordNotMatched:
+            break
         }
-        
-        confirmAlert.addAction(confirmAction)
-        
-        present(confirmAlert, animated: true)
     }
     
     private func updateProfileButton() {
@@ -144,6 +167,7 @@ class SetupProfileViewController: UIViewController {
 // MARK: - UI
 extension SetupProfileViewController {
     private func setupUI() {
+        passwordTextField.isSecureTextEntry = true
         var welcomeLabelDistance: CGFloat = 60
         var fullImageViewDistance: CGFloat = 30
         var stackViewSpacing: CGFloat = 60
@@ -153,7 +177,7 @@ extension SetupProfileViewController {
         
         if let user = SceneDelegate.user {
             nameTextField.text = user.username
-//            surnameTextField.text = user.lastName
+            //            surnameTextField.text = user.lastName
             if let avatarData = user.avatarData {
                 fullImageView.circleImageView.image = UIImage(data: avatarData)
             }
@@ -222,27 +246,6 @@ extension SetupProfileViewController: UINavigationControllerDelegate, UIImagePic
         picker.dismiss(animated: true, completion: nil)
         guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
         fullImageView.circleImageView.image = image
-    }
-}
-
-// MARK: - SwiftUI
-import SwiftUI
-
-struct SetupProfileVCProvider: PreviewProvider {
-    static var previews: some View {
-        ContainerView().edgesIgnoringSafeArea(.all)
-    }
-    
-    struct ContainerView: UIViewControllerRepresentable {
-        let setupProfileVC = SetupProfileViewController()
-        
-        func makeUIViewController(context: UIViewControllerRepresentableContext<SetupProfileVCProvider.ContainerView>) -> SetupProfileViewController {
-            return setupProfileVC
-        }
-        
-        func updateUIViewController(_ uiViewController: SetupProfileVCProvider.ContainerView.UIViewControllerType, context: UIViewControllerRepresentableContext<SetupProfileVCProvider.ContainerView>) {
-            
-        }
     }
 }
 
