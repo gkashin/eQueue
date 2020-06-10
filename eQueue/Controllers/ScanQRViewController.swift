@@ -11,15 +11,18 @@ import UIKit
 
 class ScanQRViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
-    var video = AVCaptureVideoPreviewLayer()
+    // MARK: Stored Properties
     let session = AVCaptureSession()
+    var video = AVCaptureVideoPreviewLayer()
     
+    // MARK: UIViewController Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         setupVideo()
         startRunning()
     }
     
+    // MARK: QR Methods
     func setupVideo() {
         let captureDevice = AVCaptureDevice.default(for: AVMediaType.video)
         
@@ -55,7 +58,7 @@ class ScanQRViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                 
                 let notFoundAlert = createAlert(withTitle: "Очередь не обнаружена")
                 
-                // If qr code is not int number
+                // If qr code is not integer number
                 guard let queueId = Int(object.stringValue!) else {
                     self.present(notFoundAlert, animated: true)
                     return
@@ -96,7 +99,10 @@ class ScanQRViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             }
         }
     }
-    
+}
+
+// MARK: - UI
+extension ScanQRViewController {
     private func createAlert(withTitle title: String) -> UIAlertController {
         let alert = UIAlertController(title: title, message: "", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "OK", style: .default) { _ in
@@ -117,7 +123,6 @@ class ScanQRViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         enterAlert.addAction(UIAlertAction(title: "Встать в очередь", style: .default, handler: { _ in
             NetworkManager.shared.enterQueue(id: queue.id) { found in
                 guard let found = found else { return }
-//                queue = found
                 
                 var tabBarController: UITabBarController?
                 DispatchQueue.main.async {
@@ -128,7 +133,6 @@ class ScanQRViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                 if found.status == "upcoming" {
                     index = 2
                 } else if found.status == "active" {
-                    //                                    QueueViewController.currentQueue = queue
                     DispatchQueue.main.async {
                         self.view.layer.sublayers?.removeLast()
                     }

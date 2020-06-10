@@ -8,22 +8,22 @@
 
 import UIKit
 
-enum QueueStatus {
-    case ownUpcoming
-    case ownCompleted
-    case upcoming
-    case completed
-}
-
 class QueueActionsViewController: UIViewController {
     
+    // MARK: Stored Properties
     var queue: Queue!
     let selectedRow: Int
     
+    
+    // MARK: Delegates
     var delegate: ControlQueueDelegate
     
+    
+    // MARK: TableView
     var tableView: UITableView!
     
+    
+    // MARK: Lazy Properties
     lazy var queueStatus: QueueStatus = {
         let isOwnQueue = SceneDelegate.user?.id == queue.ownerId
         var status: QueueStatus = .completed
@@ -45,16 +45,13 @@ class QueueActionsViewController: UIViewController {
         return status
     }()
     
+    
+    // MARK: Buttons
     let hideButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setImage(#imageLiteral(resourceName: "hide"), for: .normal)
         return button
     }()
-    
-    let nameLabel = UILabel(text: "Название", font: .avenir20())
-    let descriptionLabel = UILabel(text: "Описание", font: .avenir20())
-    let startDateLabel = UILabel(text: "Дата", font: .avenir20())
-    let peopleCountLabel = UILabel(text: "Участников", font: .avenir20())
     
     let showQrButton: UIButton = {
         let button = UIButton()
@@ -62,6 +59,7 @@ class QueueActionsViewController: UIViewController {
         button.tintColor = .buttonDark()
         return button
     }()
+    
     var actionButton = UIButton(title: "Начать", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false)
     let changeButton = UIButton(title: "Изменить", backgroundColor: .white, titleColor: .darkText, font: .avenir16(), isShadow: false)
     
@@ -71,6 +69,7 @@ class QueueActionsViewController: UIViewController {
         button.setTitleColor(.darkText, for: .normal)
         return button
     }()
+    
     let removeButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(#imageLiteral(resourceName: "bin"), for: .normal)
@@ -78,8 +77,19 @@ class QueueActionsViewController: UIViewController {
         return button
     }()
     
+    
+    // MARK: Labels
+    let nameLabel = UILabel(text: "Название", font: .avenir20())
+    let descriptionLabel = UILabel(text: "Описание", font: .avenir20())
+    let startDateLabel = UILabel(text: "Дата", font: .avenir20())
+    let peopleCountLabel = UILabel(text: "Участников", font: .avenir20())
+    
+    
+    // MARK: Alerts
     let repeatQueueAlert = UIAlertController(title: "", message: "", preferredStyle: .alert)
     
+    
+    // MARK: Initializers
     init(queue: Queue, controlQueueDelegate: ControlQueueDelegate, selectedRow: Int) {
         self.queue = queue
         self.delegate = controlQueueDelegate
@@ -91,26 +101,15 @@ class QueueActionsViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    // MARK: UIViewController Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
-        
-        view.layer.cornerRadius = 30
-        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        view.clipsToBounds = true
-        
-        tableView = UITableView()
-        let cellType = queue.ownerId == SceneDelegate.user?.id ? OwnCreatedQueueItemTableViewCell.self : QueueItemTableViewCell.self
-        let cellId = queue.ownerId == SceneDelegate.user?.id ? OwnCreatedQueueItemTableViewCell.id : QueueItemTableViewCell.id
-        tableView.register(cellType, forCellReuseIdentifier: cellId)
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        
+        setupUI()
         updateUI()
-        setupAlert()
         
+        // Targets
         hideButton.addTarget(self, action: #selector(hideButtonTapped), for: .touchUpInside)
         actionButton.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
         changeButton.addTarget(self, action: #selector(changeButtonTapped), for: .touchUpInside)
@@ -121,7 +120,11 @@ class QueueActionsViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         updateUI()
     }
-    
+}
+
+// MARK: - OBJC Methods
+extension QueueActionsViewController {
+    // MARK: Button's Targets
     @objc private func hideButtonTapped() {
         self.dismiss(animated: true, completion: nil)
     }
@@ -129,7 +132,7 @@ class QueueActionsViewController: UIViewController {
     @objc private func removeButtonTapped() {
         NetworkManager.shared.deleteQueue(id: queue.id) { statusCode in
             guard statusCode == 204 else { return }
-
+            
             DispatchQueue.main.async {
                 self.dismiss(animated: true) {
                     self.delegate.updateUI()
@@ -150,7 +153,6 @@ class QueueActionsViewController: UIViewController {
                 
                 DispatchQueue.main.async {
                     self.dismiss(animated: true) {
-//                        QueueViewController.currentQueue = self.queue
                         let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
                         tabBarController.selectedIndex = 1
                     }
@@ -186,6 +188,8 @@ class QueueActionsViewController: UIViewController {
         present(qrCodeVC, animated: true)
     }
     
+    
+    // MARK: Selectors
     @objc private func handleDatePicker(sender: UIDatePicker) {
         let dateFormatter = DateFormatter()
         repeatQueueAlert.textFields?.last?.text = dateFormatter.getString(from: sender.date)
@@ -194,6 +198,27 @@ class QueueActionsViewController: UIViewController {
 
 // MARK: - UI
 extension QueueActionsViewController {
+    private func setupUI() {
+        setupTableView()
+        setupAlert()
+        
+        view.backgroundColor = .white
+        
+        view.layer.cornerRadius = 30
+        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        view.clipsToBounds = true
+    }
+    
+    private func setupTableView() {
+        tableView = UITableView()
+        let cellType = queue.ownerId == SceneDelegate.user?.id ? OwnCreatedQueueItemTableViewCell.self : QueueItemTableViewCell.self
+        let cellId = queue.ownerId == SceneDelegate.user?.id ? OwnCreatedQueueItemTableViewCell.id : QueueItemTableViewCell.id
+        tableView.register(cellType, forCellReuseIdentifier: cellId)
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+    }
+    
     private func updateUI() {
         setupLabels()
         setupButtons()
@@ -201,7 +226,7 @@ extension QueueActionsViewController {
         // Qr Button
         view.addSubview(showQrButton)
         showQrButton.translatesAutoresizingMaskIntoConstraints = false
-
+        
         NSLayoutConstraint.activate([
             showQrButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             showQrButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
@@ -352,12 +377,12 @@ extension QueueActionsViewController {
                     guard statusCode == 200 else { return }
                     
                     DispatchQueue.main.async {
-//                        self.dismiss(animated: true) {
+                        //                        self.dismiss(animated: true) {
                         self.delegate.updateUI()
                         self.nameLabel.text = self.repeatQueueAlert.textFields![0].text!
                         self.descriptionLabel.text = self.repeatQueueAlert.textFields![1].text!
                         self.startDateLabel.text = self.repeatQueueAlert.textFields![2].text!
-//                        }
+                        //                        }
                     }
                 }
             } else if self.queueStatus == .ownCompleted {
@@ -384,6 +409,7 @@ extension QueueActionsViewController {
     }
 }
 
+
 // MARK: - CreateQueueDelegate
 extension QueueActionsViewController: CreateQueueDelegate {
     func dismiss() {
@@ -391,12 +417,17 @@ extension QueueActionsViewController: CreateQueueDelegate {
     }
 }
 
-// MARK: - UITableViewDelegate, UITableViewDataSource
-extension QueueActionsViewController: UITableViewDelegate, UITableViewDataSource {
-    //    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    //        return "Участники"
-    //    }
-    
+
+// MARK: - UITableViewDelegate
+extension QueueActionsViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80
+    }
+}
+
+
+// MARK: - UITableViewDataSource
+extension QueueActionsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return queue.queue.count
     }
@@ -420,10 +451,6 @@ extension QueueActionsViewController: UITableViewDelegate, UITableViewDataSource
         return cell
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
-    }
-    
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         guard QueueViewController.currentQueue != nil else { return .none }
         
@@ -437,7 +464,6 @@ extension QueueActionsViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         switch editingStyle {
         case .delete:
-            //            queue.people.remove(at: indexPath.row)
             tableView.reloadData()
         case .insert:
             break
@@ -448,4 +474,3 @@ extension QueueActionsViewController: UITableViewDelegate, UITableViewDataSource
         }
     }
 }
-

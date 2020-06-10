@@ -10,9 +10,9 @@
 		5B08B2E224669FA000D6FBFB /* UpdateUIDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B08B2E124669FA000D6FBFB /* UpdateUIDelegate.swift */; };
 		5B11738E243E334300B3108A /* SetupProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B11738D243E334300B3108A /* SetupProfileViewController.swift */; };
 		5B117390243E33B300B3108A /* AddPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B11738F243E33B300B3108A /* AddPhotoView.swift */; };
-		5B1173B8243F614400B3108A /* QueueDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1173B7243F614400B3108A /* QueueDetailsViewController.swift */; };
 		5B13CEB424641DE700E3AEA3 /* QRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B13CEB324641DE700E3AEA3 /* QRCodeViewController.swift */; };
 		5B13CEB62465645E00E3AEA3 /* CreateQueueDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B13CEB52465645E00E3AEA3 /* CreateQueueDelegate.swift */; };
+		5B26D3F72490C8B500E6798C /* QueueStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B26D3F62490C8B500E6798C /* QueueStatus.swift */; };
 		5B38FF562412BE42009F3B0A /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B38FF552412BE42009F3B0A /* NetworkManager.swift */; };
 		5B38FF592412C12B009F3B0A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B38FF582412C12B009F3B0A /* User.swift */; };
 		5B53DD7F2473BC1700BA0FAB /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B53DD7E2473BC1700BA0FAB /* Validators.swift */; };
@@ -56,9 +56,9 @@
 		5B08B2E124669FA000D6FBFB /* UpdateUIDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateUIDelegate.swift; sourceTree = "<group>"; };
 		5B11738D243E334300B3108A /* SetupProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupProfileViewController.swift; sourceTree = "<group>"; };
 		5B11738F243E33B300B3108A /* AddPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPhotoView.swift; sourceTree = "<group>"; };
-		5B1173B7243F614400B3108A /* QueueDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueDetailsViewController.swift; sourceTree = "<group>"; };
 		5B13CEB324641DE700E3AEA3 /* QRCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeViewController.swift; sourceTree = "<group>"; };
 		5B13CEB52465645E00E3AEA3 /* CreateQueueDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateQueueDelegate.swift; sourceTree = "<group>"; };
+		5B26D3F62490C8B500E6798C /* QueueStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueStatus.swift; sourceTree = "<group>"; };
 		5B38FF552412BE42009F3B0A /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		5B38FF582412C12B009F3B0A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		5B53DD7E2473BC1700BA0FAB /* Validators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validators.swift; sourceTree = "<group>"; };
@@ -131,6 +131,7 @@
 			isa = PBXGroup;
 			children = (
 				5B86179A2416A1660031B776 /* Queue.swift */,
+				5B26D3F62490C8B500E6798C /* QueueStatus.swift */,
 				5B38FF582412C12B009F3B0A /* User.swift */,
 			);
 			path = Models;
@@ -234,7 +235,6 @@
 				5BE5431F245320B000B0A02A /* QueueActionsViewController.swift */,
 				5BE543212453364700B0A02A /* Transition */,
 				5B861792241695820031B776 /* MainTabBarController.swift */,
-				5B1173B7243F614400B3108A /* QueueDetailsViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -367,8 +367,8 @@
 				5B38FF592412C12B009F3B0A /* User.swift in Sources */,
 				5B53DD812473C03700BA0FAB /* AuthError.swift in Sources */,
 				5BB7ADCA24194ED8008C21DD /* TextFieldFormView.swift in Sources */,
-				5B1173B8243F614400B3108A /* QueueDetailsViewController.swift in Sources */,
 				5B13CEB62465645E00E3AEA3 /* CreateQueueDelegate.swift in Sources */,
+				5B26D3F72490C8B500E6798C /* QueueStatus.swift in Sources */,
 				5B91A8D724116AF2005A23DB /* UILabel+Extension.swift in Sources */,
 				5BD60929242275440050CB47 /* DateFormatter+Extension.swift in Sources */,
 				5B91A8D624116AF2005A23DB /* UIColor+Extension.swift in Sources */,

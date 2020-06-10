@@ -9,10 +9,17 @@
 import MessageUI
 import UIKit
 
-class QRCodeViewController: UIViewController, MFMailComposeViewControllerDelegate {
+class QRCodeViewController: UIViewController {
     
+    // MARK: Delegates
+    weak var createQueueDelegate: CreateQueueDelegate?
+    
+    // MARK: Image Views
     let qrImageView = UIImageView()
+    
+    // MARK: Buttons
     let sendToEmailButton = UIButton(title: "Отправить на email", backgroundColor: .buttonDark(), titleColor: .white, font: .avenir20(), isShadow: false)
+    
     let closeButton: UIButton = {
         let button = UIButton()
         button.setBackgroundImage(UIImage(systemName: "xmark"), for: .normal)
@@ -21,8 +28,7 @@ class QRCodeViewController: UIViewController, MFMailComposeViewControllerDelegat
         return button
     }()
     
-    weak var createQueueDelegate: CreateQueueDelegate?
-    
+    // MARK: Initializers
     init(qrWithText text: String) {
         super.init(nibName: nil, bundle: nil)
         
@@ -34,15 +40,28 @@ class QRCodeViewController: UIViewController, MFMailComposeViewControllerDelegat
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: UIViewController Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupUI()
         
+        // Targets
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
         sendToEmailButton.addTarget(self, action: #selector(sendToEmailButtonTapped), for: .touchUpInside)
     }
     
+    func dismiss() {
+        let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
+        self.dismiss(animated: true, completion: nil)
+        self.createQueueDelegate?.dismiss()
+        tabBarController.selectedIndex = 2
+    }
+}
+
+// MARK: - OBJC Methods
+extension QRCodeViewController {
+    // MARK: Button's Targets
     @objc private func closeButtonTapped() {
         self.dismiss()
     }
@@ -62,20 +81,10 @@ class QRCodeViewController: UIViewController, MFMailComposeViewControllerDelegat
             // show failure alert
         }
     }
-    
-    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
-        controller.dismiss(animated: true) {
-            self.dismiss()
-        }
-    }
-    
-    func dismiss() {
-        let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
-        self.dismiss(animated: true, completion: nil)
-        self.createQueueDelegate?.dismiss()
-        tabBarController.selectedIndex = 2
-    }
-    
+}
+
+// MARK: - QR Methods
+extension QRCodeViewController {
     func generateQRCode(from string: String) -> UIImage? {
         let data = string.data(using: String.Encoding.ascii)
 
@@ -117,5 +126,14 @@ extension QRCodeViewController {
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50)
         ])
+    }
+}
+
+// MARK: - MFMailComposeViewControllerDelegate
+extension QRCodeViewController: MFMailComposeViewControllerDelegate {
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        controller.dismiss(animated: true) {
+            self.dismiss()
+        }
     }
 }

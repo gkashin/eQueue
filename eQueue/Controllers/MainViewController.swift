@@ -10,7 +10,7 @@ import UIKit
 
 class MainViewController: UIViewController {
     
-    // Stored Properties
+    // MARK: Image Views
     let avatarImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = #imageLiteral(resourceName: "avatar")
@@ -25,13 +25,13 @@ class MainViewController: UIViewController {
         return imageView
     }()
     
+    // MARK: Buttons
     let profileButton = UIButton()
-    
     let scanQrButton = UIButton(title: "Отсканировать QR", backgroundColor: .white, titleColor: .black, font: .avenir20(), isShadow: true, cornerRadius: 4)
     let findQueueButton = UIButton(title: "Найти очередь", backgroundColor: .white, titleColor: .black, font: .avenir20(), isShadow: true, cornerRadius: 4)
     let createQueueButton = UIButton(title: "Создать", backgroundColor: .darkGray, titleColor: .white, font: .avenir20(), isShadow: false, cornerRadius: 4)
     
-    // UIViewController Methods
+    // MARK: UIViewController Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -47,7 +47,7 @@ class MainViewController: UIViewController {
         profileButton.addTarget(self, action: #selector(profileButtonTapped), for: .touchUpInside)
     }
     
-    // Button's Targets
+    // MARK: Button's Targets
     @objc private func profileButtonTapped() {
         if SceneDelegate.user != nil {
             // If user is logged, show SetupProfileViewController

@@ -10,23 +10,29 @@ import UIKit
 
 class CreateQueueViewController: UIViewController {
 
+    // MARK: Stored Properties
+    var queue = Queue()
     var completionHandler: ((Queue) -> Void)?
     
+    // MARK: Labels
     let titleLabel = UILabel(text: "Создать очередь")
     let nameLabel = UILabel(text: "Название очереди")
     let descriptionLabel = UILabel(text: "Описание")
     let startDateLabel = UILabel(text: "Дата начала")
+    let setCurrentDateLabel = UILabel(text: "Использовать текущую дату?", font: .avenir16())
+    
+    // MARK: TextFields
     let nameTextField = OneLineTextField(font: .avenir20())
     let descriptionTextField = OneLineTextField(font: .avenir20())
     let startDateTextField = OneLineTextField(font: .avenir20())
     
-    let setCurrentDateLabel = UILabel(text: "Использовать текущую дату?", font: .avenir16())
+    // MARK: Switches
     let setCurrentDateSwitch = UISwitch()
     
-    var queue = Queue()
-    
+    // MARK: Buttons
     let createQueueButton = UIButton(title: "Создать", backgroundColor: .buttonDark(), titleColor: .white, font: .avenir20(), isShadow: false)
     
+    // MARK: Initializers
     init() {
         super.init(nibName: nil, bundle: nil)
     }
@@ -46,22 +52,28 @@ class CreateQueueViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: UIViewController Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
-        
         setupUI()
         
+        // Observers
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         
+        // Targets
         setCurrentDateSwitch.addTarget(self, action: #selector(setCurrentDateSwitchTapped), for: .touchUpInside)
-        
         createQueueButton.addTarget(self, action: #selector(createQueueButtonTapped), for: .touchUpInside)
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+}
+
+// MARK: - OBJC Methods
+extension CreateQueueViewController {
     @objc func keyboardWillShow(notification: NSNotification) {
         guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
         view.frame.origin.y = 0 - 0.5 * keyboardSize.height
@@ -127,14 +139,18 @@ class CreateQueueViewController: UIViewController {
         }
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
+    @objc private func handleDatePicker(sender: UIDatePicker) {
+        let dateFormatter = DateFormatter()
+        setCurrentDateSwitch.isOn = false
+        startDateTextField.text = dateFormatter.getString(from: sender.date)
     }
 }
 
 // MARK: - UI
 extension CreateQueueViewController {
     private func setupUI() {
+        view.backgroundColor = .white
+        
         let nameTextFieldFormView = TextFieldFormView(label: nameLabel, textField: nameTextField)
         let descriptionTextFieldFormView = TextFieldFormView(label: descriptionLabel, textField: descriptionTextField)
         let startDateTextFieldFormView = TextFieldFormView(label: startDateLabel, textField: startDateTextField)
@@ -190,14 +206,9 @@ extension CreateQueueViewController {
             createQueueButton.widthAnchor.constraint(equalToConstant: 200),
         ])
     }
-    
-    @objc private func handleDatePicker(sender: UIDatePicker) {
-        let dateFormatter = DateFormatter()
-        setCurrentDateSwitch.isOn = false
-        startDateTextField.text = dateFormatter.getString(from: sender.date)
-    }
 }
 
+// MARK: - CreateQueueDelegate
 extension CreateQueueViewController: CreateQueueDelegate {
     func dismiss() {
         dismiss(animated: true, completion: nil)
