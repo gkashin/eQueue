@@ -10,18 +10,7 @@ import UIKit
 
 class MainTabBarController: UITabBarController {
     
-//    private let currentUser: MUser
-    
-//    init(currentUser: MUser = MUser(id: "",
-//                                    email: "",
-//                                    username: "",
-//                                    imageName: "",
-//                                    description: "",
-//                                    sex: "")) {
-//        self.currentUser = currentUser
-//        super.init(nibName: nil, bundle: nil)
-//    }
-    
+    // MARK: Initializers
     init() {
         super.init(nibName: nil, bundle: nil)
     }
@@ -30,14 +19,17 @@ class MainTabBarController: UITabBarController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    // MARK: UITabBarController Methods
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        setupUI()
         
+        // Setup VCs
         let mainViewController = MainViewController()
         let queueViewController = QueueViewController()
         let controlViewController = ControlViewController()
-        
-        tabBar.tintColor = #colorLiteral(red: 0.5568627451, green: 0.3529411765, blue: 0.968627451, alpha: 1)
         
         let boldConfig = UIImage.SymbolConfiguration(weight: .medium)
          
@@ -58,6 +50,13 @@ class MainTabBarController: UITabBarController {
         navigationVC.tabBarItem.image = image
         
         return navigationVC
+    }
+}
+
+// MARK: - UI
+extension MainTabBarController {
+    private func setupUI() {
+        tabBar.tintColor = #colorLiteral(red: 0.5568627451, green: 0.3529411765, blue: 0.968627451, alpha: 1)
     }
 }
 

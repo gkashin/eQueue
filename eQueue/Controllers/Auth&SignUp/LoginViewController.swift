@@ -10,16 +10,23 @@ import UIKit
 
 class LoginViewController: UIViewController {
     
-    let welcomeLabel = UILabel(text: "Добро пожаловать!", font: .avenir26())
+    // MARK: Delegates
+    weak var delegate: AuthNavigatingDelegate?
     
+    
+    // MARK: Labels
+    let welcomeLabel = UILabel(text: "Добро пожаловать!", font: .avenir26())
     let loginWithLabel = UILabel(text: "Войти с помощью")
     let orLabel = UILabel(text: "или")
     let emailLabel = UILabel(text: "Email")
     let passwordLabel = UILabel(text: "Пароль")
     let needAnAccountLabel = UILabel(text: "Нужен аккаунт?", font: .avenir20())
     
+    
+    // MARK: Buttons
     let googleButton = UIButton(title: "Google", backgroundColor: .white, titleColor: .black, isShadow: true)
     let loginButton = UIButton(title: "Войти", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false)
+   
     let signUpButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Зарегистрироваться", for: .normal)
@@ -29,11 +36,13 @@ class LoginViewController: UIViewController {
         return button
     }()
     
+    
+    // MARK: TextFields
     let emailTextField = OneLineTextField(font: .avenir20())
     let passwordTextField = OneLineTextField(font: .avenir20())
     
-    weak var delegate: AuthNavigatingDelegate?
     
+    // MARK: Initializers
     init(email: String = "") {
         super.init(nibName: nil, bundle: nil)
         emailTextField.text = email
@@ -43,23 +52,31 @@ class LoginViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    // MARK: UIViewController Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
+        setupUI()
         
-        setupConstraints()
-        googleButton.customizeGoogleButton()
-        
+        // Targets
         loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         signUpButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
         googleButton.addTarget(self, action: #selector(googleButtonTapped), for: .touchUpInside)
         
+        // Observers
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+}
+
+// MARK: - OBJC Methods
+extension LoginViewController {
+    // MARK: Button's Targets
     @objc private func loginButtonTapped() {
         guard let email = emailTextField.text else { return }
         guard let password = passwordTextField.text else { return }
@@ -113,8 +130,11 @@ class LoginViewController: UIViewController {
     }
     
     @objc private func googleButtonTapped() {
+        // TODO: Google Auth
     }
     
+    
+    // MARK: Observers
     @objc func keyboardWillShow(notification: NSNotification) {
         guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
         view.frame.origin.y = 0 - keyboardSize.height
@@ -123,14 +143,16 @@ class LoginViewController: UIViewController {
     @objc func keyboardWillHide() {
         view.frame.origin.y = .zero
     }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
-    }
 }
 
 // MARK: - UI
 extension LoginViewController {
+    private func setupUI() {
+        view.backgroundColor = .white
+        googleButton.customizeGoogleButton()
+        setupConstraints()
+    }
+    
     private func setupConstraints() {
         passwordTextField.isSecureTextEntry = true
         let loginWithView = ButtonFormView(label: loginWithLabel, button: googleButton)

@@ -10,18 +10,22 @@ import UIKit
 
 class SetupProfileViewController: UIViewController {
     
+    // MARK: Labels
     let welcomeLabel = UILabel(text: "Настроить профиль", font: .avenir26())
-    
     let nameLabel = UILabel(text: "Имя")
-    //    let surnameLabel = UILabel(text: "Фамилия")
     let emailLabel = UILabel(text: "Email")
     let passwordLabel = UILabel(text: "Пароль")
     
+    
+    // MARK: TextFields
     let nameTextField = OneLineTextField(font: .avenir20())
-    //    let surnameTextField = OneLineTextField(font: .avenir20())
     let emailTextField = OneLineTextField(font: .avenir20())
     let phoneNumberTextField = OneLineTextField(font: .avenir20())
     let passwordTextField = OneLineTextField(font: .avenir20())
+    
+    
+    // MARK: Buttons
+    let saveButton = UIButton(title: "Сохранить", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false, cornerRadius: 4)
     
     var exitButton: UIButton = {
         let button = UIButton()
@@ -29,26 +33,35 @@ class SetupProfileViewController: UIViewController {
         return button
     }()
     
-    let saveButton = UIButton(title: "Сохранить", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false, cornerRadius: 4)
     
+    // MARK: ImageViews
     let fullImageView = AddPhotoView()
     
+    
+    // MARK: UIViewController Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
         setupUI()
         
+        // Targets
         saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
         fullImageView.plusButton.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
-        
         exitButton.addTarget(self, action: #selector(exitButtonTapped), for: .touchUpInside)
         
+        // Obseervers
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+}
+
+// MARK: - OBJC Methods
+extension SetupProfileViewController {
+    // MARK: Button's Targets
     @objc private func exitButtonTapped() {
         SceneDelegate.defaults.set("", forKey: "token")
         SceneDelegate.user = nil
@@ -58,8 +71,6 @@ class SetupProfileViewController: UIViewController {
     
     @objc private func saveButtonTapped() {
         guard let username = nameTextField.text,
-            //            let surname = surnameTextField.text,
-            //            let email = emailTextField.text,
             let password = passwordTextField.text,
             let avatarImage = fullImageView.circleImageView.image
             else {
@@ -99,25 +110,15 @@ class SetupProfileViewController: UIViewController {
                     
                     SceneDelegate.user?.username = username
                     
-                    //                NetworkManager.shared.updateSurname(surname: surname, password: oldPassword!) { statusCode in
-                    //                    guard statusCode == 204 else { return }
-                    //
-                    //                    SceneDelegate.user?.lastName = surname
-                    
                     NetworkManager.shared.updatePassword(newPassword: password, password: oldPassword!) { statusCode in
                         guard statusCode == 204 else { return }
                         
                         SceneDelegate.user?.avatarData = avatarImage.pngData()!
                         SceneDelegate.user?.password = password
-                        //        SceneDelegate.user?.email = email
-                        //        if !password.isEmpty {
-                        //            SceneDelegate.user?.password = password
-                        //        }
                         
                         DispatchQueue.main.async {
                             self.updateProfileButton()
                         }
-                        //                    }
                     }
                 }
             }
@@ -134,15 +135,6 @@ class SetupProfileViewController: UIViewController {
         }
     }
     
-    private func updateProfileButton() {
-        dismiss(animated: true) {
-            let tabBarVC = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
-            let navigationVC = tabBarVC.viewControllers?.first! as! UINavigationController
-            let rootVC = navigationVC.viewControllers.first as! MainViewController
-            rootVC.updateProfileButton()
-        }
-    }
-    
     @objc private func plusButtonTapped() {
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
@@ -150,6 +142,8 @@ class SetupProfileViewController: UIViewController {
         present(imagePickerController, animated: true)
     }
     
+    
+    // MARK: Observers
     @objc func keyboardWillShow(notification: NSNotification) {
         guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
         view.frame.origin.y = 0 - 0.6 * keyboardSize.height
@@ -158,15 +152,13 @@ class SetupProfileViewController: UIViewController {
     @objc func keyboardWillHide() {
         view.frame.origin.y = .zero
     }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
-    }
 }
 
 // MARK: - UI
 extension SetupProfileViewController {
     private func setupUI() {
+        view.backgroundColor = .white
+        
         passwordTextField.isSecureTextEntry = true
         var welcomeLabelDistance: CGFloat = 60
         var fullImageViewDistance: CGFloat = 30
@@ -177,7 +169,6 @@ extension SetupProfileViewController {
         
         if let user = SceneDelegate.user {
             nameTextField.text = user.username
-            //            surnameTextField.text = user.lastName
             if let avatarData = user.avatarData {
                 fullImageView.circleImageView.image = UIImage(data: avatarData)
             }
@@ -237,6 +228,15 @@ extension SetupProfileViewController {
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
             stackView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -80),
         ])
+    }
+    
+    private func updateProfileButton() {
+        dismiss(animated: true) {
+            let tabBarVC = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
+            let navigationVC = tabBarVC.viewControllers?.first! as! UINavigationController
+            let rootVC = navigationVC.viewControllers.first as! MainViewController
+            rootVC.updateProfileButton()
+        }
     }
 }
 

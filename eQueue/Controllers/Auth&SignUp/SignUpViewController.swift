@@ -10,20 +10,29 @@ import UIKit
 
 class SignUpViewController: UIViewController {
     
-    let welcomeLabel = UILabel(text: "Рады видеть Вас!", font: .avenir26())
+    // MARK: Delegates
+    weak var delegate: AuthNavigatingDelegate?
     
+    
+    // MARK: Labels
+    let welcomeLabel = UILabel(text: "Рады видеть Вас!", font: .avenir26())
     let usernameLabel = UILabel(text: "Имя")
     let emailLabel = UILabel(text: "Email")
     let passwordLabel = UILabel(text: "Пароль")
     let confirmPasswordLabel = UILabel(text: "Подтвердите пароль")
     let alreadyOnBoardLabel = UILabel(text: "Already onboard?")
     
+    
+    // MARK: TextFields
     let usernameTextField = OneLineTextField(font: .avenir20())
     let emailTextField = OneLineTextField(font: .avenir20())
     let passwordTextField = OneLineTextField(font: .avenir20())
     let confirmPasswordTextField = OneLineTextField(font: .avenir20())
     
+    
+    // MARK: Buttons
     let signUpButton = UIButton(title: "Зарегистрироваться", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false)
+    
     let loginButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Войти", for: .normal)
@@ -33,22 +42,30 @@ class SignUpViewController: UIViewController {
         return button
     }()
     
-    weak var delegate: AuthNavigatingDelegate?
     
+    // MARK: UIViewController Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
-        setupConstraints()
+        setupUI()
         
+        // Targets
         loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         signUpButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
         
+        // Observers
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+}
+
+// MARK: - OBJC Methods
+extension SignUpViewController {
+    // MARK: Button's Targets
     @objc private func loginButtonTapped() {
         dismiss(animated: true) {
             self.delegate?.toLoginVC()
@@ -116,6 +133,8 @@ class SignUpViewController: UIViewController {
         }
     }
     
+    
+    // MARK: Observers
     @objc func keyboardWillShow(notification: NSNotification) {
         guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
         view.frame.origin.y = 0 - 0.6 * keyboardSize.height
@@ -124,14 +143,15 @@ class SignUpViewController: UIViewController {
     @objc func keyboardWillHide() {
         view.frame.origin.y = .zero
     }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
-    }
 }
 
 // MARK: - UI
 extension SignUpViewController {
+    private func setupUI() {
+        view.backgroundColor = .white
+        setupConstraints()
+    }
+    
     private func setupConstraints() {
         passwordTextField.isSecureTextEntry = true
         confirmPasswordTextField.isSecureTextEntry = true

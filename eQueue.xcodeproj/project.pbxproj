@@ -13,6 +13,11 @@
 		5B13CEB424641DE700E3AEA3 /* QRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B13CEB324641DE700E3AEA3 /* QRCodeViewController.swift */; };
 		5B13CEB62465645E00E3AEA3 /* CreateQueueDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B13CEB52465645E00E3AEA3 /* CreateQueueDelegate.swift */; };
 		5B26D3F72490C8B500E6798C /* QueueStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B26D3F62490C8B500E6798C /* QueueStatus.swift */; };
+		5B26D3F92492123300E6798C /* DimmPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B26D3F82492123300E6798C /* DimmPresentationController.swift */; };
+		5B26D3FB249212D000E6798C /* PresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B26D3FA249212D000E6798C /* PresentationController.swift */; };
+		5B26D3FD249218E900E6798C /* ModalScaleState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B26D3FC249218E900E6798C /* ModalScaleState.swift */; };
+		5B26D3FF2492191F00E6798C /* DismissAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B26D3FE2492191F00E6798C /* DismissAnimation.swift */; };
+		5B26D40124921A1B00E6798C /* PresentAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B26D40024921A1B00E6798C /* PresentAnimation.swift */; };
 		5B38FF562412BE42009F3B0A /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B38FF552412BE42009F3B0A /* NetworkManager.swift */; };
 		5B38FF592412C12B009F3B0A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B38FF582412C12B009F3B0A /* User.swift */; };
 		5B53DD7F2473BC1700BA0FAB /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B53DD7E2473BC1700BA0FAB /* Validators.swift */; };
@@ -59,6 +64,11 @@
 		5B13CEB324641DE700E3AEA3 /* QRCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeViewController.swift; sourceTree = "<group>"; };
 		5B13CEB52465645E00E3AEA3 /* CreateQueueDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateQueueDelegate.swift; sourceTree = "<group>"; };
 		5B26D3F62490C8B500E6798C /* QueueStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueStatus.swift; sourceTree = "<group>"; };
+		5B26D3F82492123300E6798C /* DimmPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DimmPresentationController.swift; sourceTree = "<group>"; };
+		5B26D3FA249212D000E6798C /* PresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationController.swift; sourceTree = "<group>"; };
+		5B26D3FC249218E900E6798C /* ModalScaleState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalScaleState.swift; sourceTree = "<group>"; };
+		5B26D3FE2492191F00E6798C /* DismissAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DismissAnimation.swift; sourceTree = "<group>"; };
+		5B26D40024921A1B00E6798C /* PresentAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentAnimation.swift; sourceTree = "<group>"; };
 		5B38FF552412BE42009F3B0A /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		5B38FF582412C12B009F3B0A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		5B53DD7E2473BC1700BA0FAB /* Validators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validators.swift; sourceTree = "<group>"; };
@@ -133,6 +143,7 @@
 				5B86179A2416A1660031B776 /* Queue.swift */,
 				5B26D3F62490C8B500E6798C /* QueueStatus.swift */,
 				5B38FF582412C12B009F3B0A /* User.swift */,
+				5B26D3FC249218E900E6798C /* ModalScaleState.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -233,8 +244,8 @@
 				5B861796241696AE0031B776 /* QueueViewController.swift */,
 				5B861798241697980031B776 /* ControlViewController.swift */,
 				5BE5431F245320B000B0A02A /* QueueActionsViewController.swift */,
-				5BE543212453364700B0A02A /* Transition */,
 				5B861792241695820031B776 /* MainTabBarController.swift */,
+				5BE543212453364700B0A02A /* Transition */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -277,7 +288,11 @@
 		5BE543212453364700B0A02A /* Transition */ = {
 			isa = PBXGroup;
 			children = (
+				5B26D3F82492123300E6798C /* DimmPresentationController.swift */,
+				5B26D3FE2492191F00E6798C /* DismissAnimation.swift */,
 				5BE543222453366900B0A02A /* PanelTransition.swift */,
+				5B26D40024921A1B00E6798C /* PresentAnimation.swift */,
+				5B26D3FA249212D000E6798C /* PresentationController.swift */,
 			);
 			path = Transition;
 			sourceTree = "<group>";
@@ -354,11 +369,14 @@
 				5B861797241696AE0031B776 /* QueueViewController.swift in Sources */,
 				5B08B2E224669FA000D6FBFB /* UpdateUIDelegate.swift in Sources */,
 				5B86179B2416A1660031B776 /* Queue.swift in Sources */,
+				5B26D3FB249212D000E6798C /* PresentationController.swift in Sources */,
 				5B91A8B024116AAC005A23DB /* AppDelegate.swift in Sources */,
 				5B91A8DA24116AF2005A23DB /* AuthNavigatingDelegate.swift in Sources */,
 				5B67226E242BCB980038749C /* UIViewController+Extension.swift in Sources */,
 				5BE543232453366900B0A02A /* PanelTransition.swift in Sources */,
 				5B13CEB424641DE700E3AEA3 /* QRCodeViewController.swift in Sources */,
+				5B26D40124921A1B00E6798C /* PresentAnimation.swift in Sources */,
+				5B26D3FF2492191F00E6798C /* DismissAnimation.swift in Sources */,
 				5BE54320245320B000B0A02A /* QueueActionsViewController.swift in Sources */,
 				5B91A8DF24116AF2005A23DB /* LoginViewController.swift in Sources */,
 				5B8617A22417F1460031B776 /* QueueTableViewCell.swift in Sources */,
@@ -373,12 +391,14 @@
 				5BD60929242275440050CB47 /* DateFormatter+Extension.swift in Sources */,
 				5B91A8D624116AF2005A23DB /* UIColor+Extension.swift in Sources */,
 				5B91A8DC24116AF2005A23DB /* ButtonFormView.swift in Sources */,
+				5B26D3FD249218E900E6798C /* ModalScaleState.swift in Sources */,
 				5B91A8DB24116AF2005A23DB /* OneLineTextField.swift in Sources */,
 				5B91A8D924116AF2005A23DB /* UIStackView+Extension.swift in Sources */,
 				5B91A8D824116AF2005A23DB /* UIButton+Extension.swift in Sources */,
 				5B91A8DE24116AF2005A23DB /* AuthViewController.swift in Sources */,
 				5B11738E243E334300B3108A /* SetupProfileViewController.swift in Sources */,
 				5B7F943924607E51002EAF20 /* ControlQueueDelegate.swift in Sources */,
+				5B26D3F92492123300E6798C /* DimmPresentationController.swift in Sources */,
 				5B91A8D524116AF2005A23DB /* UIFont+Extension.swift in Sources */,
 				5B38FF562412BE42009F3B0A /* NetworkManager.swift in Sources */,
 				5B53DD852473C71900BA0FAB /* EditProfileError.swift in Sources */,

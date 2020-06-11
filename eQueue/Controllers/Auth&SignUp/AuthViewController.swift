@@ -10,36 +10,50 @@ import UIKit
 
 class AuthViewController: UIViewController {
     
+    // MARK: Delegates
+    weak var updateUIDelegate: UpdateUIDelegate?
+    
+    
+    // MARK: VCs
+    let loginVC = LoginViewController()
+    let signUpVC = SignUpViewController()
+    
+    
+    // MARK: Image Views
     let logoImageView = UIImageView(image: #imageLiteral(resourceName: "queue_logo"), contentMode: .scaleAspectFill)
     
+    
+    // MARK: Labels
     let alreadyOnboardLabel = UILabel(text: "Уже зарегистрированы?")
     let emailLabel = UILabel(text: "Или зарегистрируйтсь с")
     let googleLabel = UILabel(text: "Начните с")
     
+    
+    // MARK: Buttons
     let emailButton = UIButton(title: "Email", backgroundColor: .buttonDark(), titleColor: .white, isShadow: false)
     let googleButton = UIButton(title: "Google", backgroundColor: .white, titleColor: .black, isShadow: true)
     let loginButton = UIButton(title: "Войти", backgroundColor: .white, titleColor: .buttonRed(), isShadow: true)
+
     
-    let loginVC = LoginViewController()
-    let signUpVC = SignUpViewController()
-    
-    weak var updateUIDelegate: UpdateUIDelegate?
-    
+    // MARK: UIViewController Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
-        setupConstraints()
-        googleButton.customizeGoogleButton()
-        
-        emailButton.addTarget(self, action: #selector(emailButtonTapped), for: .touchUpInside)
-        loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
-        googleButton.addTarget(self, action: #selector(googleButtonTapped), for: .touchUpInside)
+        setupUI()
         
         loginVC.delegate = self
         signUpVC.delegate = self
+        
+        // Targets
+        emailButton.addTarget(self, action: #selector(emailButtonTapped), for: .touchUpInside)
+        loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+        googleButton.addTarget(self, action: #selector(googleButtonTapped), for: .touchUpInside)
     }
-    
+}
+
+// MARK: - OBJC Methods
+extension AuthViewController {
+    // MARK: Button's Targets
     @objc private func emailButtonTapped() {
         present(signUpVC, animated: true)
     }
@@ -49,12 +63,18 @@ class AuthViewController: UIViewController {
     }
     
     @objc private func googleButtonTapped() {
-
+        // TODO: Google Auth
     }
 }
 
 // MARK: - UI
 extension AuthViewController {
+    private func setupUI() {
+        googleButton.customizeGoogleButton()
+        view.backgroundColor = .white
+        setupConstraints()
+    }
+    
     private func setupConstraints() {
         logoImageView.translatesAutoresizingMaskIntoConstraints = false
         
