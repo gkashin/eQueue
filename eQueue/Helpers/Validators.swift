@@ -10,12 +10,8 @@ import Foundation
 
 class Validators {
     
+    // isFilled
     static func isFilled(email: String?, password: String?) -> AuthError {
-//        guard let email = email,
-//            let password = password else {
-//                return .noError
-//        }
-        
         guard email != "" else {
             return .emailNotFilled
         }
@@ -89,6 +85,7 @@ class Validators {
         return .noError
     }
     
+    // Email check
     static func isSimpleEmail(_ email: String) -> Bool {
         let emailRegEx = "^.+@.+\\..{2,}$"
         return check(text: email, regEx: emailRegEx)

@@ -17,7 +17,6 @@ struct Queue: Codable {
     var expectedTime = Int()
     
     var queue: [User]!
-//    var queue = [User]()
     
     var status: String!
     
@@ -25,7 +24,6 @@ struct Queue: Codable {
         self.name = name
         self.description = description
         self.startDate = startDate
-//        self.queue = people
         self.ownerId = SceneDelegate.user?.id ?? 0
     }
     
@@ -37,7 +35,6 @@ struct Queue: Codable {
         case ownerId = "owner"
         case expectedTime = "expected_time"
         
-//        case people = "people"
         case queue = "queue"
         
         case status = "status"

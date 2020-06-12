@@ -121,6 +121,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5B26D4072493AA0100E6798C /* Errors */ = {
+			isa = PBXGroup;
+			children = (
+				5B53DD802473C03700BA0FAB /* AuthError.swift */,
+				5B53DD822473C4C700BA0FAB /* CreateQueueError.swift */,
+				5B53DD842473C71900BA0FAB /* EditProfileError.swift */,
+			);
+			path = Errors;
+			sourceTree = "<group>";
+		};
 		5B38FF5324116FE1009F3B0A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -151,10 +161,8 @@
 		5B53DD7D2473BC0600BA0FAB /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				5B26D4072493AA0100E6798C /* Errors */,
 				5B53DD7E2473BC1700BA0FAB /* Validators.swift */,
-				5B53DD802473C03700BA0FAB /* AuthError.swift */,
-				5B53DD822473C4C700BA0FAB /* CreateQueueError.swift */,
-				5B53DD842473C71900BA0FAB /* EditProfileError.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
