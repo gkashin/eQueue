@@ -232,7 +232,7 @@ extension SetupProfileViewController {
     
     private func updateProfileButton() {
         dismiss(animated: true) {
-            let tabBarVC = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
+            let tabBarVC = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController as! MainTabBarController
             let navigationVC = tabBarVC.viewControllers?.first! as! UINavigationController
             let rootVC = navigationVC.viewControllers.first as! MainViewController
             rootVC.updateProfileButton()

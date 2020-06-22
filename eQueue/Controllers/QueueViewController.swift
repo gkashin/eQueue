@@ -234,10 +234,8 @@ extension QueueViewController {
     }
     
     private func updateLineNumberLabel() {
-        print(#line, #function, QueueViewController.currentQueue?.queue.count)
         if let peopleCount = QueueViewController.currentQueue?.queue.count {
             lineNumberLabel.text = "Вы \(peopleCount) в очереди!"
-            print(#line, #function, peopleCount)
         }
     }
     

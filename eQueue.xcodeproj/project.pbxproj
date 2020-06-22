@@ -18,6 +18,8 @@
 		5B26D3FD249218E900E6798C /* ModalScaleState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B26D3FC249218E900E6798C /* ModalScaleState.swift */; };
 		5B26D3FF2492191F00E6798C /* DismissAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B26D3FE2492191F00E6798C /* DismissAnimation.swift */; };
 		5B26D40124921A1B00E6798C /* PresentAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B26D40024921A1B00E6798C /* PresentAnimation.swift */; };
+		5B26D40924A0829300E6798C /* DataQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B26D40824A0829300E6798C /* DataQueue.swift */; };
+		5B26D40B24A082AA00E6798C /* DataQueues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B26D40A24A082AA00E6798C /* DataQueues.swift */; };
 		5B38FF562412BE42009F3B0A /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B38FF552412BE42009F3B0A /* NetworkManager.swift */; };
 		5B38FF592412C12B009F3B0A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B38FF582412C12B009F3B0A /* User.swift */; };
 		5B53DD7F2473BC1700BA0FAB /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B53DD7E2473BC1700BA0FAB /* Validators.swift */; };
@@ -69,6 +71,8 @@
 		5B26D3FC249218E900E6798C /* ModalScaleState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalScaleState.swift; sourceTree = "<group>"; };
 		5B26D3FE2492191F00E6798C /* DismissAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DismissAnimation.swift; sourceTree = "<group>"; };
 		5B26D40024921A1B00E6798C /* PresentAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentAnimation.swift; sourceTree = "<group>"; };
+		5B26D40824A0829300E6798C /* DataQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataQueue.swift; sourceTree = "<group>"; };
+		5B26D40A24A082AA00E6798C /* DataQueues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataQueues.swift; sourceTree = "<group>"; };
 		5B38FF552412BE42009F3B0A /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		5B38FF582412C12B009F3B0A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		5B53DD7E2473BC1700BA0FAB /* Validators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validators.swift; sourceTree = "<group>"; };
@@ -131,6 +135,17 @@
 			path = Errors;
 			sourceTree = "<group>";
 		};
+		5B26D40C24A082B800E6798C /* Queue */ = {
+			isa = PBXGroup;
+			children = (
+				5B26D40824A0829300E6798C /* DataQueue.swift */,
+				5B26D40A24A082AA00E6798C /* DataQueues.swift */,
+				5B86179A2416A1660031B776 /* Queue.swift */,
+				5B26D3F62490C8B500E6798C /* QueueStatus.swift */,
+			);
+			path = Queue;
+			sourceTree = "<group>";
+		};
 		5B38FF5324116FE1009F3B0A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -150,8 +165,7 @@
 		5B38FF572412C11E009F3B0A /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				5B86179A2416A1660031B776 /* Queue.swift */,
-				5B26D3F62490C8B500E6798C /* QueueStatus.swift */,
+				5B26D40C24A082B800E6798C /* Queue */,
 				5B38FF582412C12B009F3B0A /* User.swift */,
 				5B26D3FC249218E900E6798C /* ModalScaleState.swift */,
 			);
@@ -383,6 +397,7 @@
 				5B67226E242BCB980038749C /* UIViewController+Extension.swift in Sources */,
 				5BE543232453366900B0A02A /* PanelTransition.swift in Sources */,
 				5B13CEB424641DE700E3AEA3 /* QRCodeViewController.swift in Sources */,
+				5B26D40924A0829300E6798C /* DataQueue.swift in Sources */,
 				5B26D40124921A1B00E6798C /* PresentAnimation.swift in Sources */,
 				5B26D3FF2492191F00E6798C /* DismissAnimation.swift in Sources */,
 				5BE54320245320B000B0A02A /* QueueActionsViewController.swift in Sources */,
@@ -410,6 +425,7 @@
 				5B91A8D524116AF2005A23DB /* UIFont+Extension.swift in Sources */,
 				5B38FF562412BE42009F3B0A /* NetworkManager.swift in Sources */,
 				5B53DD852473C71900BA0FAB /* EditProfileError.swift in Sources */,
+				5B26D40B24A082AA00E6798C /* DataQueues.swift in Sources */,
 				5B91A8DD24116AF2005A23DB /* SignUpViewController.swift in Sources */,
 				5B117390243E33B300B3108A /* AddPhotoView.swift in Sources */,
 				5B861795241695CB0031B776 /* MainViewController.swift in Sources */,

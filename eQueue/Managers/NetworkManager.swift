@@ -10,22 +10,26 @@ import Foundation
 
 class NetworkManager {
     
+    // MARK: Static Properties
     static var shared = NetworkManager()
     
-    private init() {}
-    
+    // MARK: Stored Properties
     let baseURL = URL(string: "http://queues.herokuapp.com")!
     
+    // MARK: Initializers
+    private init() {}
+}
+
+// MARK: - Auth
+extension NetworkManager {
     func register(user: User, completion: @escaping (User?) -> Void) {
         let registerURL = baseURL.appendingPathComponent("/auth/users/")
         var request = URLRequest(url: registerURL)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        //        let data = ["user": user]
         
         let jsonEncoder = JSONEncoder()
         let jsonData = try! jsonEncoder.encode(user)
-        //        let jsonString = String(data: jsonData, encoding: .utf8)!
         
         request.httpBody = jsonData
         
@@ -54,7 +58,6 @@ class NetworkManager {
         
         let jsonEncoder = JSONEncoder()
         let jsonData = try! jsonEncoder.encode(data)
-        //        let jsonString = String(data: jsonData, encoding: .utf8)!
         
         request.httpBody = jsonData
         
@@ -63,11 +66,12 @@ class NetworkManager {
                 print("Couldn't get data, \(error!.localizedDescription)")
                 return completion(nil)
             }
-            //            let jsonDecoder = JSONDecoder()
+            
             guard let jsonDictionary = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
                 print("Couldn't decode data from \(data)")
                 return completion(nil)
             }
+            
             guard let token = jsonDictionary["access"] as? String else {
                 print("Couldn't get access token from \(jsonDictionary)")
                 return completion(nil)
@@ -97,65 +101,10 @@ class NetworkManager {
             completion(httpResponse?.statusCode)
         }.resume()
     }
-    
-    func enterQueue(id: Int, completion: @escaping (Queue?) -> Void) {
-        let enterQueueURL = baseURL.appendingPathComponent("enqueue/\(id)")
-        
-        var request = URLRequest(url: enterQueueURL)
-        request.httpMethod = "POST"
-        
-        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
-        request.setValue("JWT \(token)", forHTTPHeaderField: "Authorization")
-        
-        let _ = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data else {
-                print("Couldn't get data, \(error!.localizedDescription)")
-                return completion(nil)
-            }
-            let jsonDecoder = JSONDecoder()
-            
-            let httpResponse = response as? HTTPURLResponse
-            
-            guard httpResponse?.statusCode == 200 else {
-                print(#line, #function, "Response with status code \(httpResponse?.statusCode)")
-                return completion(nil)
-            }
-            
-            guard let dataQueue = try? jsonDecoder.decode(DataQueue.self, from: data) else {
-                print("Couldn't decode data from \(data)")
-                return completion(nil)
-            }
-            
-            completion(dataQueue.queue)
-        }.resume()
-    }
-    
-    func getCurrentUser(completion: @escaping (User?) -> Void) {
-        let getCurrentUserURL = baseURL.appendingPathComponent("auth/users/me/")
-        var request = URLRequest(url: getCurrentUserURL)
-        request.httpMethod = "GET"
-        
-        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
-        request.setValue("JWT \(token)", forHTTPHeaderField: "Authorization")
-        
-        let _ = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data else {
-                print("Couldn't get data, \(error!.localizedDescription)")
-                return completion(nil)
-            }
-            let jsonDecoder = JSONDecoder()
-            
-            guard let user = try? jsonDecoder.decode(User.self, from: data) else {
-                print(#line, #function, "Couldn't decode data from \(data)")
-                return completion(nil)
-            }
-            
-            completion(user)
-        }.resume()
-    }
 }
 
-// MARK: - Queues GET
+// MARK: - Queues
+// MARK: Queues GET
 extension NetworkManager {
     func getCurrentQueue(completion: @escaping ([Queue]?) -> Void) {
         let getCurrentQueueURL = baseURL.appendingPathComponent("get_current_queue/")
@@ -272,7 +221,7 @@ extension NetworkManager {
             let httpResponse = response as? HTTPURLResponse
             
             guard httpResponse?.statusCode == 200 else {
-                print(#line, #function, "Response with status code \(httpResponse?.statusCode)")
+                print(#line, #function, "Response with status code \(String(describing: httpResponse?.statusCode))")
                 return completion(nil)
             }
             
@@ -287,7 +236,7 @@ extension NetworkManager {
     }
 }
 
-// MARK: - Queues POST
+// MARK: Queues POST
 extension NetworkManager {
     func createQueue(queue: Queue, completion: @escaping (Queue?) -> Void) {
         let createQueueURL = baseURL.appendingPathComponent("create/")
@@ -358,7 +307,7 @@ extension NetworkManager {
         
         let _ = URLSession.shared.dataTask(with: request) { _, response, error in
             let httpResponse = response as? HTTPURLResponse
-            print(#line, #function, httpResponse?.statusCode)
+            print(#line, #function, httpResponse?.statusCode ?? "")
             completion(httpResponse?.statusCode)
         }.resume()
     }
@@ -373,13 +322,97 @@ extension NetworkManager {
         
         let _ = URLSession.shared.dataTask(with: request) { _, response, error in
             let httpResponse = response as? HTTPURLResponse
-            print(#line, #function, httpResponse?.statusCode)
+            print(#line, #function, httpResponse?.statusCode ?? "")
+            completion(httpResponse?.statusCode)
+        }.resume()
+    }
+    
+    func enterQueue(id: Int, completion: @escaping (Queue?) -> Void) {
+        let enterQueueURL = baseURL.appendingPathComponent("enqueue/\(id)")
+        
+        var request = URLRequest(url: enterQueueURL)
+        request.httpMethod = "POST"
+        
+        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
+        request.setValue("JWT \(token)", forHTTPHeaderField: "Authorization")
+        
+        let _ = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data else {
+                print("Couldn't get data, \(error!.localizedDescription)")
+                return completion(nil)
+            }
+            let jsonDecoder = JSONDecoder()
+            
+            let httpResponse = response as? HTTPURLResponse
+            
+            guard httpResponse?.statusCode == 200 else {
+                print(#line, #function, "Response with status code \(httpResponse?.statusCode ?? 0)")
+                return completion(nil)
+            }
+            
+            guard let dataQueue = try? jsonDecoder.decode(DataQueue.self, from: data) else {
+                print("Couldn't decode data from \(data)")
+                return completion(nil)
+            }
+            
+            completion(dataQueue.queue)
+        }.resume()
+    }
+}
+
+// MARK: Queue PUT
+extension NetworkManager {
+    func updateQueue(queue: Queue, completion: @escaping (Int?) -> Void) {
+        let updateQueueURL = baseURL.appendingPathComponent("update_queue/\(queue.id)")
+        var request = URLRequest(url: updateQueueURL)
+        request.httpMethod = "PUT"
+        
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
+        request.setValue("JWT \(token)", forHTTPHeaderField: "Authorization")
+        
+        let jsonEncoder = JSONEncoder()
+        let jsonData = try! jsonEncoder.encode(queue)
+        
+        request.httpBody = jsonData
+        
+        let _ = URLSession.shared.dataTask(with: request) { _, response, error in
+            let httpResponse = response as? HTTPURLResponse
             completion(httpResponse?.statusCode)
         }.resume()
     }
 }
 
-// MARK: - Update Info
+// MARK: - Users
+// MARK: Users GET
+extension NetworkManager {
+    func getCurrentUser(completion: @escaping (User?) -> Void) {
+        let getCurrentUserURL = baseURL.appendingPathComponent("auth/users/me/")
+        var request = URLRequest(url: getCurrentUserURL)
+        request.httpMethod = "GET"
+        
+        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
+        request.setValue("JWT \(token)", forHTTPHeaderField: "Authorization")
+        
+        let _ = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data else {
+                print("Couldn't get data, \(error!.localizedDescription)")
+                return completion(nil)
+            }
+            let jsonDecoder = JSONDecoder()
+            
+            guard let user = try? jsonDecoder.decode(User.self, from: data) else {
+                print(#line, #function, "Couldn't decode data from \(data)")
+                return completion(nil)
+            }
+            
+            completion(user)
+        }.resume()
+    }
+}
+
+// MARK: Users POST
 extension NetworkManager {
     func updateUsername(username: String, password: String, completion: @escaping (Int?) -> Void) {
         let updateUsernameURL = baseURL.appendingPathComponent("set_username/")
@@ -419,29 +452,6 @@ extension NetworkManager {
         let jsonEncoder = JSONEncoder()
         let jsonData = try! jsonEncoder.encode(data)
         
-        request.httpBody = jsonData
-        
-        let _ = URLSession.shared.dataTask(with: request) { _, response, error in
-            let httpResponse = response as? HTTPURLResponse
-            completion(httpResponse?.statusCode)
-        }.resume()
-    }
-    
-    func updateQueue(queue: Queue, completion: @escaping (Int?) -> Void) {
-        let updateQueueURL = baseURL.appendingPathComponent("update_queue/\(queue.id)")
-        var request = URLRequest(url: updateQueueURL)
-        request.httpMethod = "PUT"
-        
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let token = SceneDelegate.defaults.object(forKey: "token") as? String ?? ""
-        request.setValue("JWT \(token)", forHTTPHeaderField: "Authorization")
-        
-//        let data = ["new_password": newPassword, "re_new_password": newPassword, "current_password": password]
-        
-        let jsonEncoder = JSONEncoder()
-        let jsonData = try! jsonEncoder.encode(queue)
-    
         request.httpBody = jsonData
         
         let _ = URLSession.shared.dataTask(with: request) { _, response, error in

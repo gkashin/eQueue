@@ -52,7 +52,7 @@ class QRCodeViewController: UIViewController {
     }
     
     func dismiss() {
-        let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
+        let tabBarController = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController as! MainTabBarController
         self.dismiss(animated: true, completion: nil)
         self.createQueueDelegate?.dismiss()
         tabBarController.selectedIndex = 2

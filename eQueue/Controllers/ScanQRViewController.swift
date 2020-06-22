@@ -126,7 +126,7 @@ extension ScanQRViewController {
                 
                 var tabBarController: UITabBarController?
                 DispatchQueue.main.async {
-                    tabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController
+                    tabBarController = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController as? MainTabBarController
                 }
                 
                 var index: Int!

@@ -10,8 +10,11 @@ import UIKit
 
 class QueueItemTableViewCell: UITableViewCell {
     
+    // MARK: Static Properties
     static let id = "queueItemCellId"
     
+    
+    // MARK: Labels
     let numberLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = #colorLiteral(red: 1, green: 0.7843137255, blue: 0.1725490196, alpha: 1)
@@ -40,12 +43,16 @@ class QueueItemTableViewCell: UITableViewCell {
         return label
     }()
     
+    
+    // MARK: Buttons
     let offerExchangeButton: UIButton = {
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "exchange"), for: .normal)
         return button
     }()
 
+    
+    // MARK: Initializers
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -91,13 +98,6 @@ extension QueueItemTableViewCell {
     
     func setup(with user: User, at indexPath: IndexPath) {
         numberLabel.text = "\(indexPath.row)"
-
-//        if !isLast {
-//            fullNameLabel.text = "\(user.username)"
-//        } else {
-//            fullNameLabel.text = "Вы"
-//            offerExchangeButton.isHidden = true
-//        }
         
         if user.id != SceneDelegate.user?.id {
             fullNameLabel.text = "\(user.username)"

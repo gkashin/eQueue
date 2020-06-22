@@ -153,7 +153,7 @@ extension QueueActionsViewController {
                 
                 DispatchQueue.main.async {
                     self.dismiss(animated: true) {
-                        let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! MainTabBarController
+                        let tabBarController = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController as! MainTabBarController
                         tabBarController.selectedIndex = 1
                     }
                 }
@@ -305,7 +305,7 @@ extension QueueActionsViewController {
         nameLabel.text = queue.name
         descriptionLabel.text = queue.description
         startDateLabel.text = queue.startDate
-        peopleCountLabel.text = "Участников: \(queue.queue.count ?? 10)"
+        peopleCountLabel.text = "Участников: \(queue.queue.count)"
     }
     
     private func setupButtons() {

@@ -10,8 +10,11 @@ import UIKit
 
 class QueueTableViewCell: UITableViewCell {
     
+    // MARK: Static Properties
     static let id = "queueCellId"
     
+    
+    // MARK: Labels
     let nameLabel: UILabel = {
         let label = UILabel()
         label.text = "Зачет по алгоритмам"
@@ -38,6 +41,8 @@ class QueueTableViewCell: UITableViewCell {
         return label
     }()
     
+    
+    // MARK: Initializers
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -46,13 +51,15 @@ class QueueTableViewCell: UITableViewCell {
         setupConstraints()
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    // MARK: UITableViewCell Methods
     override func layoutSubviews() {
         super.layoutSubviews()
         imageView?.frame = CGRect(x: 20, y: frame.size.height / 2 - 20, width: 40, height: 40)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }
 
@@ -82,7 +89,6 @@ extension QueueTableViewCell {
         extraInfoLabel.text = queue.description
         peopleCountLabel.text = "Участники: \(String(describing: queue.queue?.count ?? 0))"
         
-        let dateFormatter = DateFormatter()
         let dateTime = queue.startDate?.split(separator: " ")
         dateLabel.text = "\(dateTime!.first!)\n\(dateTime!.last!)"
         

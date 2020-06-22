@@ -10,6 +10,7 @@ import UIKit
 
 class AddPhotoView: UIView {
     
+    // MARK: Computable Properties
     let circleImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -32,6 +33,8 @@ class AddPhotoView: UIView {
         return button
     }()
     
+    
+    // MARK: Initializers
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -41,12 +44,21 @@ class AddPhotoView: UIView {
         setupConstraints()
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    // MARK: UIView Methods
     override func layoutSubviews() {
         super.layoutSubviews()
         circleImageView.layer.masksToBounds = true
         circleImageView.layer.cornerRadius = circleImageView.frame.width * 0.5
     }
-    
+}
+
+// MARK: - UI
+extension AddPhotoView {
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             circleImageView.topAnchor.constraint(equalTo: topAnchor),
@@ -64,10 +76,6 @@ class AddPhotoView: UIView {
         
         bottomAnchor.constraint(equalTo: circleImageView.bottomAnchor).isActive = true
         trailingAnchor.constraint(equalTo: plusButton.trailingAnchor).isActive = true
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }
 

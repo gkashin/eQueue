@@ -10,8 +10,11 @@ import UIKit
 
 class OwnCreatedQueueItemTableViewCell: UITableViewCell {
     
+    // MARK: Static Properties
     static let id = "secondQueueItemCellId"
     
+    
+    // MARK: Labels
     let numberLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = #colorLiteral(red: 1, green: 0.7843137255, blue: 0.1725490196, alpha: 1)
@@ -40,15 +43,18 @@ class OwnCreatedQueueItemTableViewCell: UITableViewCell {
         return label
     }()
     
+    
+    // MARK: Buttons
     let exchangeButton: UIButton = {
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "remove"), for: .normal)
         return button
     }()
     
+    
+    // MARK: Initializers
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
         
         setupConstraints()
         
@@ -58,7 +64,9 @@ class OwnCreatedQueueItemTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
     
+    // TODO: Implement exchange button tap
     @objc private func exchangeButtonTapped() {
         
     }
@@ -102,6 +110,7 @@ extension OwnCreatedQueueItemTableViewCell {
         } else {
             numberLabel.text = "\(indexPath.row + 1)"
         }
+        
         fullNameLabel.text = "\(user.username)"
     }
 }
