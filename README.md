@@ -13,6 +13,7 @@ This app uses own created backend for registration and authentication. It also s
 3. Others:
    - Join queue;
    - Leave queue;
+   - Load queues list;
    - Get queue by scanning QR-code;
    - etc...
 
