@@ -9,7 +9,7 @@ Create Your Own Queue  |  Get the QR-code to Allow People to Join
 
 View Real Time Participants List           |  And Manage People in the Queue
 :-------------------------:|:-------------------------:
-![](https://a.radikal.ru/a32/2010/af/37f1ced97ed2.png) | ![](https://b.radikal.ru/b25/2010/c2/ea56e1e984ba.png)
+![](https://c.radikal.ru/c24/2010/4c/63f26ad26353.png) | ![](https://b.radikal.ru/b25/2010/c2/ea56e1e984ba.png)
 
 ### For Queue Members
 Join Queue by Scanning QR-code  
