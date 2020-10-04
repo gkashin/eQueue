@@ -18,7 +18,7 @@ This app uses own created backend for registration and authentication. It also s
 
 All queues are synchronized between all associated users that allows queue organizers view participants list in *real time*, and queue members see their *actual* position in the queue.
 
-Thus, managing and participating in queues becomes very easy and fun!
+This makes managing and participating in queues super easy and fun!
 
 ## Sneak Peek
 ### For Queue Organizers
