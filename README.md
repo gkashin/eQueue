@@ -1,5 +1,5 @@
 # eQueue
-Application for easy creation, booking and management of queues online!
+Application for easy Creation, Booking and Management of Queues online!
 
 ## Sneak Peek
 ### For Queue Organizers
