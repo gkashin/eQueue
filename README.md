@@ -16,7 +16,9 @@ This app uses own created backend for registration and authentication. It also s
    - Get queue by scanning QR-code;
    - etc...
 
-All queues are synchronized between all associated users that allows queue organizers view participants list in *real time*, and queue members see their *actual* position in the queue. Thus, managing and participating in queues becomes very easy and fun.
+All queues are synchronized between all associated users that allows queue organizers view participants list in *real time*, and queue members see their *actual* position in the queue.
+
+Thus, managing and participating in queues becomes very easy and fun!
 
 ## Sneak Peek
 ### For Queue Organizers
@@ -33,7 +35,7 @@ Join Queue by Scanning QR-code
 :-------------------------:
 ![](https://a.radikal.ru/a38/2010/74/a4bf72733a88.png)
 
-Watch Your Position in the Queue         |  And Manage Your Queues List
+Keep Track of your Position in the Queue         |  And Manage Your Queues List
 :-------------------------:|:-------------------------:
 ![](https://c.radikal.ru/c28/2010/ff/a672179a005b.png) | ![](https://d.radikal.ru/d23/2010/56/757117335963.png)
 
