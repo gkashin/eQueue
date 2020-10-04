@@ -2,14 +2,20 @@
 Application for easy creation, management and booking of queues online
 
 ## Sneak Peek
-Home Page        |  Log in
+### For Queue Organizers
+Create Your Own Queue       |  Get People Joined by Giving Them QR Code
 :-------------------------:|:-------------------------:
 ![]() | ![]()
 
-Create Queue          |  Show Queue Info
+View Real Time Participants List           |  Manage People in the Queue
 :-------------------------:|:-------------------------:
 ![]() | ![]()
 
-Join Queue         |  Show Queues History
+### For Queue Members
+Join Queue by Scanning QR Code         |  Watch Your Position in the Queue
+:-------------------------:|:-------------------------:
+![]() | ![]()
+
+Leave the Queue in Any Moment        |  And Manage Your Queues List
 :-------------------------:|:-------------------------:
 ![]() | ![]()
