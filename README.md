@@ -1,9 +1,9 @@
 # eQueue
-Application for easy Creation, Booking and Management of Queues online!
+Application for easy Creation, Booking and Managing of Queues online!
 
 ## Description
 This app uses own created backend for registration and authentication. It also stores all the data about queues and profiles and handles requests for:
-1. Management queues:
+1. Managing queues:
    - Creation;
    - Starting;
    - Deletion;
