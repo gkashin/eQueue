@@ -15,6 +15,7 @@ View Real Time Participants List           |  And Manage People in the Queue
 And Manage Your Queues List
 :-------------------------:
 ![](https://d.radikal.ru/d23/2010/56/757117335963.png)
+
 Join Queue by Scanning QR-code         |  Watch Your Position in the Queue
 :-------------------------:|:-------------------------:
 ![](https://a.radikal.ru/a38/2010/74/a4bf72733a88.png) | ![](https://c.radikal.ru/c28/2010/ff/a672179a005b.png)
